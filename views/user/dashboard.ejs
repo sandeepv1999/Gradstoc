@@ -1,0 +1,146 @@
+<%- include('../header') %>
+
+    <body class="home">
+        <div class="main-wrapper">
+            <section class="section-middle">
+                <div class="page-title">
+                    <div class="container">
+                        <div class="page-title-in">
+                            <h2>Dashboard</h2>
+                        </div>
+                    </div>
+                </div><!-- page-title -->
+
+                <div class="dashboard-content">
+                    <div class="container">
+                        <div class="row">
+                            <%- include('./sidebar') %>
+                                <!--col-md-3-->
+
+                                <div class="col-md-9">
+                                    <div class="dashboard-right-area">
+                                        <div class="dashboard-right">
+                                            <ul>
+                                                <li>
+                                                    <a href="tutor-my-upload.html">
+                                                        <div class="dashboard-box1">
+                                                            <h3>50</h3>
+                                                            <p>My Uploads</p>
+                                                        </div>
+                                                        <div class="dashboard-box2"><i class="fas fa-file-alt"></i>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="tutor-myearnings.html">
+                                                        <div class="dashboard-box1">
+                                                            <h3>$120.00</h3>
+                                                            <p>My Earnings</p>
+                                                        </div>
+                                                        <div class="dashboard-box2"><i class="fas fa-dollar-sign"></i>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="tutor-balances.html">
+                                                        <div class="dashboard-box1">
+                                                            <h3>$50.00</h3>
+                                                            <p>Balances</p>
+                                                        </div>
+                                                        <div class="dashboard-box2"><i
+                                                                class="fas fa-hand-holding-usd"></i>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="tutor-myorders.html">
+                                                        <div class="dashboard-box1">
+                                                            <h3>15</h3>
+                                                            <p>My Orders</p>
+                                                        </div>
+                                                        <div class="dashboard-box2"><i class="fas fa-square-full"></i>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="tutor-mybookmarks.html">
+                                                        <div class="dashboard-box1">
+                                                            <h3>23</h3>
+                                                            <p>My Bookmarks</p>
+                                                        </div>
+                                                        <div class="dashboard-box2"><i class="fas fa-bookmark"></i>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="tutor-my-question.html">
+                                                        <div class="dashboard-box1">
+                                                            <h3>05</h3>
+                                                            <p>My question</p>
+                                                        </div>
+                                                        <div class="dashboard-box2"><i
+                                                                class="far fa-question-circle"></i>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="gra"><img src="images/gra.png" alt="" /></div>
+                                    </div>
+                                </div>
+                                <!--col-md-9-->
+
+                        </div>
+                        <!--row-->
+                    </div>
+                    <!--container-->
+                </div>
+                <!--dashboard-content-->
+
+                <div class="chatbox-popup-setion">
+                    <button class="chatbox-open">
+                        <i class="fas fa-comments fa-2x"></i>
+                    </button>
+                    <div class="chatbox-popup">
+                        <div class="chatbox-popup__header">
+                            <div class="chatbox-popup-back" style="flex:1">
+                                <button class="chatbox-btn-back">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                            </div>
+                            <div class="chatbox-profile-img" style="flex:2">
+                                <span class="chatbox-profile-img">
+                                    <i class="fa fa-user-circle fa-3x" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                            <div class="chatbox-uName" style="flex:9">
+                                <h1>Sussanah Austin</h1> <small><span class="online"></span> Online</small>
+                            </div>
+                        </div>
+                        <div class="chatbox-popup__main">
+                            We make it simple and seamless for<br> bussiness and people to talk to each<br> other. Ask
+                            us
+                            anything.
+                        </div>
+                        <div class="chatbox-popup__footer">
+                            <div class="chatbox-popup-attach" style="flex:1;">
+                                <button class="chatbox-attach-btn">
+                                    <i class="fas fa-paperclip"></i>
+                                </button>
+                            </div>
+                            <div class="chatbox-popup-message" style="flex:10">
+                                <textarea type="text" placeholder="Type your message here..." autofocus></textarea>
+                            </div>
+                            <div class="chatbox-popup-send" style="flex:1;">
+                                <button class="chatbox-send-btn">
+                                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <%- include('../footer') %>
+
+    </body>

@@ -1,0 +1,93 @@
+/* CSS Document */
+@font-face {
+    font-family: Radikal-Regular;
+    src: url('../fonts/Radikal/Radikal-Regular.eot');
+    src: url('../fonts/Radikal/Radikal-Regular.eot?#iefix')
+             format('embedded-opentype'),
+         url('../fonts/Radikal/Radikal-Regular.woff') format('woff'),
+		 url('../fonts/Radikal/Radikal-Regular.svg#webfont') format('svg'),      
+	     url('../fonts/Radikal/Radikal-Regular.ttf') format('truetype'); 
+}
+@font-face {
+    font-family: Radikal-Italic;
+    src: url('../fonts/Radikal/Radikal-Italic.eot');
+    src: url('../fonts/Radikal/Radikal-Italic.eot?#iefix')
+             format('embedded-opentype'),
+         url('../fonts/Radikal/Radikal-Italic.woff') format('woff'),
+		 url('../fonts/Radikal/Radikal-Italic.svg#webfont') format('svg'),      
+	     url('../fonts/Radikal/Radikal-Italic.ttf') format('truetype'); 
+}
+@font-face {
+    font-family: Radikal-Medium;
+    src: url('../fonts/Radikal/Radikal-Medium.eot');
+    src: url('../fonts/Radikal/Radikal-Medium.eot?#iefix')
+             format('embedded-opentype'),
+         url('../fonts/Radikal/Radikal-Medium.woff') format('woff'),
+		 url('../fonts/Radikal/Radikal-Medium.svg#webfont') format('svg'),      
+	     url('../fonts/Radikal/Radikal-Medium.ttf') format('truetype'); 
+}
+@font-face {
+    font-family: Radikal-Light;
+    src: url('../fonts/Radikal/Radikal-Light.eot');
+    src: url('../fonts/Radikal/Radikal-Light.eot?#iefix')
+             format('embedded-opentype'),
+         url('../fonts/Radikal/Radikal-Light.woff') format('woff'),
+		 url('../fonts/Radikal/Radikal-Light.svg#webfont') format('svg'),      
+	     url('../fonts/Radikal/Radikal-Light.ttf') format('truetype'); 
+}
+@font-face {
+    font-family: Radikal-UltraThin;
+    src: url('../fonts/Radikal/Radikal-UltraThin.eot');
+    src: url('../fonts/Radikal/Radikal-UltraThin.eot?#iefix')
+             format('embedded-opentype'),
+         url('../fonts/Radikal/Radikal-UltraThin.woff') format('woff'),
+		 url('../fonts/Radikal/Radikal-UltraThin.svg#webfont') format('svg'),      
+	     url('../fonts/Radikal/Radikal-UltraThin.ttf') format('truetype'); 
+}
+@font-face {
+    font-family: Radikal-Bold;
+    src: url('../fonts/Radikal/Radikal-Bold.eot');
+    src: url('../fonts/Radikal/Radikal-Bold.eot?#iefix')
+             format('embedded-opentype'),
+         url('../fonts/Radikal/Radikal-Bold.woff') format('woff'),
+		 url('../fonts/Radikal/Radikal-Bold.svg#webfont') format('svg'),      
+	     url('../fonts/Radikal/Radikal-Bold.ttf') format('truetype'); 
+}
+@font-face {
+    font-family: BrandonText-Regular;
+    src: url('../fonts/brandon-text/BrandonText-Regular.eot');
+    src: url('../fonts/brandon-text/BrandonText-Regular.eot?#iefix')
+             format('embedded-opentype'),
+         url('../fonts/brandon-text/BrandonText-Regular.woff') format('woff'),
+		 url('../fonts/brandon-text/BrandonText-Regular.svg#webfont') format('svg'),      
+	     url('../fonts/brandon-text/BrandonText-Regular.ttf') format('truetype'); 
+}
+@font-face {
+    font-family: BrandonText-Medium;
+    src: url('../fonts/brandon-text/BrandonText-Medium.eot');
+    src: url('../fonts/brandon-text/BrandonText-Medium.eot?#iefix')
+             format('embedded-opentype'),
+         url('../fonts/brandon-text/BrandonText-Medium.woff') format('woff'),
+		 url('../fonts/brandon-text/BrandonText-Medium.svg#webfont') format('svg'),      
+	     url('../fonts/brandon-text/BrandonText-Medium.ttf') format('truetype'); 
+}
+@font-face {
+    font-family: BrandonText-Light;
+    src: url('../fonts/brandon-text/BrandonText-Light.eot');
+    src: url('../fonts/brandon-text/BrandonText-Light.eot?#iefix')
+             format('embedded-opentype'),
+         url('../fonts/brandon-text/BrandonText-Light.woff') format('woff'),
+		 url('../fonts/brandon-text/BrandonText-Light.svg#webfont') format('svg'),      
+	     url('../fonts/brandon-text/BrandonText-Light.ttf') format('truetype'); 
+}
+@font-face {
+    font-family: BrandonText-Bold;
+    src: url('../fonts/brandon-text/BrandonText-Bold.eot');
+    src: url('../fonts/brandon-text/BrandonText-Bold.eot?#iefix')
+             format('embedded-opentype'),
+         url('../fonts/brandon-text/BrandonText-Bold.woff') format('woff'),
+		 url('../fonts/brandon-text/BrandonText-Bold.svg#webfont') format('svg'),      
+	     url('../fonts/brandon-text/BrandonText-Bold.ttf') format('truetype'); 
+}
+
+
