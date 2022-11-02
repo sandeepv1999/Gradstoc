@@ -70,7 +70,7 @@ if ( typeof Object.create !== 'function' ) {
                 if ( this.options.heading ) {
                     _toastContent +='<h2 class="jq-toast-heading">' + this.options.heading + '</h2>';
                 };
-                _toastContent += this.options.text;
+                _toastContent += `<p class="toastText" >${this.options.text} </p>`;
             }
 
             this._toastEl.html( _toastContent );

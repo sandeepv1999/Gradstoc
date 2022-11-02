@@ -6,6 +6,8 @@ const salt = bcrypt.genSaltSync(10);
 const otpGenerator = require('otp-generator');
 const verification = require('../../../mail')
 const jwt = require('jsonwebtoken');
+const joi = require('joi');
+const joiValidation = require('../../../middleware/joiValidation');
 
 class AuthController {
 
@@ -15,7 +17,7 @@ class AuthController {
 
     registration = async (req, res) => {
         try {
-            const body = req.body;
+            const body = req.body
             let image = req.files.profile;
             let password = body.password;
             let profileImage = await this.saveImageDirectorys(image);
@@ -29,6 +31,16 @@ class AuthController {
                 profile: profileImage,
                 password: hashPassword
             }
+            let schema = joi.object({
+                firstName: joi.string().trim().required(),
+                lastName: joi.string().trim().required(),
+                email:joi.string().required().email(),
+                password:joi.string().trim().required(),
+                type:joi.string().trim().required(),
+                profile:joi.string().required()
+            });
+
+            await joiValidation.validateBodyRequest(userData, schema);
             let response = await User.create(userData);
             req.session.status = 'Success'
             req.session.message = 'Thank you for register .We have sent you a verification email please verify'
@@ -70,6 +82,8 @@ class AuthController {
             }
         } catch (error) {
             console.log('email verification error', error);
+            res.json({ message: error.message });
+
         }
     }
 
@@ -77,6 +91,11 @@ class AuthController {
 
     login = async (req, res) => {
         try {
+            let schema = joi.object({
+                email: joi.string().required() .email(),
+                password: joi.string().trim().required()
+            });
+            await joiValidation.validateBodyRequest(req.body, schema);
             let { email, password } = req.body;
             let user = await User.findOne({ email: email });
             let data = {}
@@ -106,7 +125,7 @@ class AuthController {
                 );
             } else {
                 data.success = false;
-                data.message = 'Enter valid email address';
+                data.message = 'Invalid credentials';
                 res.json(data);
             }
         } catch (e) {
@@ -118,9 +137,12 @@ class AuthController {
 
     forget_password = async (req, res) => {
         try {
+            let schema = joi.object({
+                email: joi.string().required() .email(),
+            });
+            await joiValidation.validateBodyRequest(req.body, schema);
             let email = req.body.email;
             let user = await User.findOne({ email: email });
-            console.log('user', user);
             let data = {}
             if (user) {
                 let token = jwt.sign(user.email, 'gradstoctoken');
@@ -128,7 +150,7 @@ class AuthController {
                 let now = new Date();
                 let expiryTime = this.AddMinutesToDate(now, 10);
                 let template = ` <div>
-                <h1>Email Confirmation</h1>
+                <h1>Forget Password</h1>
                 <h2>Hello ${user.firstName}</h2>
                 <p>Use the link below to set up a new password for your account. If you did not request to reset your password , ignore this email and the link will expire on its own</p>
                 <a href=http://localhost:3300/reset_Password?token=${token}&email=${user.email}  => Click here</a>
@@ -146,7 +168,7 @@ class AuthController {
             }
         } catch (e) {
             console.log('ERROR', e);
-            res.json({ message: e.message });
+            res.json({ success:false,message: e.message });
         }
     }
 
@@ -166,10 +188,10 @@ class AuthController {
                 isUserLoggedIn,
                 userData
             }
-            if(req.session.status && req.session.message){
+            if (req.session.status && req.session.message) {
                 data.status = req.session.status;
                 data.message = req.session.message;
-                delete req.session.status ,req.session.message;
+                delete req.session.status, req.session.message;
             }
             const token = req.query.token;
             const email = req.query.email;
@@ -203,11 +225,22 @@ class AuthController {
         var response = await User.updateOne({ email: email }, { password: hashPassword });
         let data = {}
         if (response) {
+            req.session.status = "success";
+            req.session.message = "Your password has been set successfully";
             data.success = true;
             res.json(data)
         } else {
             data.success = false;
             res.json(data)
+        }
+    }
+
+    logout = async (req, res) => {
+        if (req.session.isCustomerLoggedIn) {
+            delete req.session.isCustomerLoggedIn;
+            req.session.status = "success";
+            req.session.message = "SuccessFully logged out"
+            res.redirect('/');
         }
     }
 

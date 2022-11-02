@@ -7,6 +7,4 @@ app.use('/' , visitorRoute);
 
 app.use('/' , tutorRoute);
 
-
-
 module.exports = app

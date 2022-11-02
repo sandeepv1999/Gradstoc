@@ -6,7 +6,7 @@ const connectToMongo = async () => {
     try {
         mongoose.connect(mongoURL , (error , response)=>{
             if(error){
-                copnsole.log('mongo connection error');
+                copnsole.log('mongo connection error', error);
             }else{
                 console.log('DB Connection successfully stablist');
             }

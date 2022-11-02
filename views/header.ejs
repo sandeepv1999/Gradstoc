@@ -117,7 +117,7 @@
     <div class="row">
       <div class="col-md-3">
         <div class="main-logo">
-          <a href="index.html"><img src="images/logo.png" alt="logo" /></a>
+          <a href="/"><img src="images/logo.png" alt="logo" /></a>
         </div>
       </div>
       <div class="col-md-9">
@@ -126,12 +126,12 @@
             <div class="search-area">
               <div class="input-group">
                 <div class="input-group-prepend">
-                   <select class="form-control">
-                     <option selected="" value="">Select Option...</option>
-                     <option value="">Fiction Book</option>
-                     <option value="">Non-Fiction Book</option>
-                     <option value="">Text Book</option>
-                   </select>
+                  <select class="form-control">
+                    <option selected="" value="">Select Option...</option>
+                    <option value="">Fiction Book</option>
+                    <option value="">Non-Fiction Book</option>
+                    <option value="">Text Book</option>
+                  </select>
                 </div>
                 <input type="text" class="form-control" placeholder="Search here..." />
                 <div class="input-group-btn">
@@ -142,7 +142,8 @@
               </div>
             </div>
             <div class="tutorHelp">
-              <a href="tutor-my-question.html">Tutor Help <i class="far fa-question-circle" data-toggle="tooltip" title="Get an Expert Tutor to help you with your homework"></i></a>
+              <a href="tutor-my-question.html">Tutor Help <i class="far fa-question-circle" data-toggle="tooltip"
+                  title="Get an Expert Tutor to help you with your homework"></i></a>
             </div>
           </div>
           <div class="header-menus">
@@ -156,109 +157,115 @@
               </button>
               <div class="nav nav-container">
                 <ul class="links">
-                  <li class="active"><a href="school-list.html">School</a>
+                  <li class="active"><a href="/school">School</a>
                     <ul>
                       <li>
                         <a href="#">
-                          <p>Liberty University</p> 
+                          <p>Liberty University</p>
                           <div class="sub-img"><img src="images/liberty-university.jpg" alt="" /></div>
                         </a>
                       </li>
                       <li>
                         <a href="#">
-                          <p>Biology</p> 
+                          <p>Biology</p>
                           <div class="sub-img"><img src="images/biology.jpg" alt="" /></div>
                         </a>
                       </li>
                       <li>
                         <a href="#">
-                          <p>Business Textbook</p> 
+                          <p>Business Textbook</p>
                           <div class="sub-img"><img src="images/businessTextbook.jpg" alt="" /></div>
                         </a>
                       </li>
                     </ul>
                   </li>
-                  <li class=""><a href="fiction-book.html">Subject</a></li>
+                  <li class=""><a href="/book">Subject</a></li>
                   <li class=""><a href="books-page.html">Books</a></li>
                   <li class=""><a href="tutor-list.html">Ask Tutors</a></li>
                   <li class=""><a href="blog.html">Blog</a></li>
                 </ul>
               </div>
             </div>
-          <% if(!isUserLoggedIn) { %>
-            <div class="header-sign">
-              <ul>
-                <li><a href="#" class="login-btn btn" data-toggle="modal" data-target="#myModal">Login</a></li>
-                <li><a href="#" class="signup-btn btn" data-toggle="modal" data-target="#myModal">Sign up</a></li>
-              </ul>
-            </div>
-            <% } else { %>
-            <div class="user-top">
-              <div class="user-top-menu">
-                <a href="#"> 
-                  <span><img src="/uploads/<%=userData.profile %>" height="50px" width="50px" class="img-rounded"/></span> 
-                  <span class="user-name"><%= userData.firstName  %><i class="fas fa-chevron-down"></i></span>
-                </a> 
-              </div>
-              <div class="user-top-drop">
+            <% if(!isUserLoggedIn) { %>
+              <div class="header-sign">
                 <ul>
-                  <li><span><i class="fas fa-user-graduate"></i><%- userData.type == '1' ? 'Tutor':'Student' %></span></li>
-                  <li><a href="/dashboard"><i class="fas fa-columns"></i> Dashboard</a></li>
-                  <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                  <li><a href="#" class="login-btn btn" data-toggle="modal" data-target="#myModal">Login</a></li>
+                  <li><a href="#" class="signup-btn btn" data-toggle="modal" data-target="#myModal">Sign up</a></li>
                 </ul>
               </div>
-            </div>
-            <div class="notification-area">
-                <button class="notification-btn btn">
+              <% } else { %>
+                <div class="user-top">
+                  <div class="user-top-menu">
+                    <a href="#">
+                      <span><img src="/uploads/<%=userData.profile %>" height="50px" width="50px"
+                          class="img-rounded" /></span>
+                      <span class="user-name">
+                        <%= userData.firstName %><i class="fas fa-chevron-down"></i>
+                      </span>
+                    </a>
+                  </div>
+                  <div class="user-top-drop">
+                    <ul>
+                      <li><span><i class="fas fa-user-graduate"></i>
+                          <%- userData.type=='1' ? 'Tutor' :'Student' %>
+                        </span></li>
+                      <li><a href="/dashboard"><i class="fas fa-columns"></i> Dashboard</a></li>
+                      <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="notification-area">
+                  <button class="notification-btn btn">
                     <i class="fas fa-bell"></i>
                     <span class="notification-dots">2</span>
-                </button>
-                <div class="notification-box">
+                  </button>
+                  <div class="notification-box">
                     <ul>
-                        <li>
-                            <a href="#">
-                                <h4>Latest Job Posted</h4>
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                                <h6>December 24, 2019 12:44am</h6>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <h4>Payment</h4>
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                                <h6>December 24, 2019 12:44am</h6>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <h4>Order Confirmation</h4>
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                                <h6>December 24, 2019 12:44am</h6>
-                            </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                              <h4>Order Confirmation</h4>
-                              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                              <h6>December 24, 2019 12:44am</h6>
-                          </a>
+                      <li>
+                        <a href="#">
+                          <h4>Latest Job Posted</h4>
+                          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                          <h6>December 24, 2019 12:44am</h6>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <h4>Payment</h4>
+                          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                          <h6>December 24, 2019 12:44am</h6>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <h4>Order Confirmation</h4>
+                          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                          <h6>December 24, 2019 12:44am</h6>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <h4>Order Confirmation</h4>
+                          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                          <h6>December 24, 2019 12:44am</h6>
+                        </a>
                       </li>
                     </ul>
+                  </div>
                 </div>
-            </div>
-            <div class="cart-sign">
-              <ul>
-                <li><a href="my-cart.html" class="cart-btn btn">
-                  <i class="fas fa-shopping-cart"></i>
-                  <span class="notification-dots">2</span>
-                </a></li>
-              </ul>
-            </div>
-            <% } %>
+                <div class="cart-sign">
+                  <ul>
+                    <li><a href="my-cart.html" class="cart-btn btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="notification-dots">2</span>
+                      </a></li>
+                  </ul>
+                </div>
+                <% } %>
           </div>
         </div>
       </div>
     </div>
   </div>
 </header>
+
 </html>

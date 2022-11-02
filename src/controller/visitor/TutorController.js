@@ -12,7 +12,6 @@ class TutorController {
 
     //***************** DASHBOARD *******************
 
-
     dashboard = async (req, res) => {
         try {
             let isUserLoggedIn = false;
@@ -67,7 +66,6 @@ class TutorController {
 
     //***************** POST CHANGE PASSWORD ***********************
 
-    
     changePassword = async (req, res) => {
         try {
             let currentPass = req.body.currentPassword;

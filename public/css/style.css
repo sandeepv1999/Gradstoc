@@ -119,6 +119,12 @@ span.notification-dots {
     right: -8px;
     z-index: 1;
 }
+#togglePassword{
+    position: absolute;
+    right: 27px;
+    bottom: 22px;
+}
+
 .user-top-menu a {
     color: #1f1a17;
     font-size: 16px;
@@ -3102,6 +3108,9 @@ span.chatbox-profile-img {
     font-size: 20px;
     cursor: pointer;
     outline: none !important;
+}
+.commonButton{
+    text-align: center;
 }
 
 /* chatBox css */

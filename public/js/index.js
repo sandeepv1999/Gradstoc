@@ -143,14 +143,19 @@ $("#submitLoginForm").submit(function (event) {
     var loginPass = document.getElementById("userPass").value;
     console.log(loginEmail, loginPass);
     if (loginEmail == '') {
+        document.getElementById("userEmailError").innerHTML = '';
         document.getElementById('userEmailError').innerHTML = "This field is required";
         return false;
-    } else {
+    } else if (!emailFormat.test(loginEmail)) {
+        document.getElementById("userPassError").innerHTML = '';
+        document.getElementById("userEmailError").innerHTML = 'Email must be a valid email';
+    }
+    else {
         if (loginPass == '') {
             document.getElementById("userPassError").innerHTML = 'This field is required';
             return false;
         } else {
-            loginAjaxCalling(loginEmail,loginPass);
+            loginAjaxCalling(loginEmail, loginPass);
         }
     }
     event.preventDefault();
@@ -158,18 +163,18 @@ $("#submitLoginForm").submit(function (event) {
 
 // Ajax for login  
 
-function loginAjaxCalling (email,password){
+function loginAjaxCalling(email, password) {
     $.ajax({
         type: 'POST',
         url: "/login",
         data: { email: email, password: password },
         dataType: "json",
-        async:false,
+        async: false,
         success: function (data) {
             console.log('data', data);
             if (data.success) {
                 location.href = 'http://localhost:3300'
-            }else if(data.isEmailVerify == '0'){
+            } else if (data.isEmailVerify == '0') {
                 document.getElementById('userPassError').innerHTML = data.message;
             }
             else {
@@ -183,21 +188,19 @@ function loginAjaxCalling (email,password){
 
 // Forget Password using ajax method
 
-$('#forgetPassword').submit((e)=>{
+$('#forgetPassword').submit((e) => {
     let email = $('#forgetPassEmail').val();
-    console.log('email',email);
+    console.log('email', email);
     if (email == '') {
-        // $("#forgetEmailError").addClass("text text-danger");
-        $("#forgetEmailError").addClass("text text-success");
         document.getElementById('forgetEmailError').innerHTML = "This field is required";
         return false;
-    }else{
+    } else {
         $.ajax({
             type: 'POST',
             url: "/forget_pasword",
-            data: { email: email},
+            data: { email: email },
             dataType: "json",
-            async:false,
+            async: false,
             success: function (data) {
                 console.log('data', data);
                 if (data.success) {
@@ -210,11 +213,41 @@ $('#forgetPassword').submit((e)=>{
                 }
             }
         });
-    }   
+    }
     e.preventDefault();
 });
 
 
+// ResendMail using ajax method
+
+$('#resendMail').submit((e) => {
+    let email = $('#resendEmail').val();
+    console.log('email', email);
+    if (email == '') {
+        document.getElementById('resendEmailError').innerHTML = "This field is required";
+        return false;
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: "/resendMail",
+            data: { email: email },
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                console.log('data', data);
+                if (data.success) {
+                    document.getElementById('resendEmailError').innerHTML = '';
+                    document.getElementById('resendEmailSuccess').innerHTML = data.message;
+                }
+                else {
+                    console.log('error', data.message);
+                    document.getElementById('resendEmailError').innerHTML = data.message;
+                }
+            }
+        });
+    }
+    e.preventDefault();
+});
 
 const togglePassword = document.querySelector("#togglePassword");
 const password = document.querySelector("#userPass");

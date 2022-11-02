@@ -47,11 +47,11 @@ jQuery(document).ready(function($) {
         $(".modal-forgot-in").show();
         $(".modal-sign-up").hide();
     });
-    // $(".sendMail").click(function(){
-    //     $(".modal-sign-in").hide();
-    //     $(".modal-sendMail-in").show();
-    //     $(".modal-sign-up").hide();
-    // });
+    $(".resendMail").click(function(){
+        $(".modal-sign-in").hide();
+        $(".modal-resendMail-in").show();
+        $(".modal-sign-up").hide();
+    });
 
     // search area
 
