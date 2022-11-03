@@ -3,7 +3,6 @@ const app = express();
 const User = require('../../model/user');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
-const otpGenerator = require('otp-generator');
 const verification = require('../../../mail')
 const jwt = require('jsonwebtoken');
 const joi = require('joi');
@@ -34,10 +33,10 @@ class AuthController {
             let schema = joi.object({
                 firstName: joi.string().trim().required(),
                 lastName: joi.string().trim().required(),
-                email:joi.string().required().email(),
-                password:joi.string().trim().required(),
-                type:joi.string().trim().required(),
-                profile:joi.string().required()
+                email: joi.string().required().email(),
+                password: joi.string().trim().required(),
+                type: joi.string().trim().required(),
+                profile: joi.string().required()
             });
 
             await joiValidation.validateBodyRequest(userData, schema);
@@ -87,12 +86,55 @@ class AuthController {
         }
     }
 
+    //***************** Email Verification ***********************
+
+    socialLogin = async (req, res) => {
+        try {
+            let data1 = req.user;
+            let user = await User.findOne({ email: data1.email });
+            console.log('user',user);
+            if (user) {
+                if (user.is_social == 1) {
+                    req.session.status = 'success';
+                    req.session.message = 'You have successfully logged in';
+                    req.session.isCustomerLoggedIn = user;
+                    console.log('0')
+                    res.redirect('/');
+                } else {
+                    console.log('1');
+                    req.session.status = 'error';
+                    req.session.message = 'This email is already registerd';
+                    res.redirect('/');
+                }
+            } else {
+                let userData1 = {
+                    firstName: data1.given_name,
+                    lastName: data1.family_name,
+                    email: data1.email,
+                    profile: data1.picture,
+                    provider: data1.provider,
+                    is_social: 1,
+                    isEmailVerify: 1
+                }
+                let response = await User.create(userData1);
+                console.log('response',response);
+                req.session.status = 'success';
+                req.session.message = 'You have successfully logged in';
+                req.session.isCustomerLoggedIn = response;
+                res.redirect('/');
+            }
+        } catch (error) {
+            console.log('email verification error', error);
+            res.json({ message: error.message });
+        }
+    }
+
     //***************** User Login  ***********************
 
     login = async (req, res) => {
         try {
             let schema = joi.object({
-                email: joi.string().required() .email(),
+                email: joi.string().required().email(),
                 password: joi.string().trim().required()
             });
             await joiValidation.validateBodyRequest(req.body, schema);
@@ -107,7 +149,7 @@ class AuthController {
                         if (isMatch) {
                             if (user.isEmailVerify == '0') {
                                 data.success = false;
-                                data.message = 'Your Email is not verify, please verify email';
+                                data.message = 'Your Email is not verify, please verify your email by click Resend Email link';
                                 res.json(data);
                             } else {
                                 req.session.status = 'Success';
@@ -138,7 +180,7 @@ class AuthController {
     forget_password = async (req, res) => {
         try {
             let schema = joi.object({
-                email: joi.string().required() .email(),
+                email: joi.string().required().email(),
             });
             await joiValidation.validateBodyRequest(req.body, schema);
             let email = req.body.email;
@@ -168,7 +210,7 @@ class AuthController {
             }
         } catch (e) {
             console.log('ERROR', e);
-            res.json({ success:false,message: e.message });
+            res.json({ success: false, message: e.message });
         }
     }
 

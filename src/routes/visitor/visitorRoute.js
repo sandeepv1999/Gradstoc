@@ -1,8 +1,10 @@
+require('dotenv').config()
 const express = require('express');
 const app = express();
 const AdminController = require('../../controller/admin/AdminController');
 const AuthController = require('../../controller/visitor/AuthController');
 const CheckUser = require('../../../middleware/CheckUser');
+const passport = require('passport');
 
 
 app.get('/',AdminController.homePage);
@@ -27,10 +29,15 @@ app.get('/logout',CheckUser.isValidUser,AuthController.logout);
 
 app.get('/school',AdminController.school);
 
+app.get('/document',AdminController.document);
+
 app.get('/book',AdminController.book);
 
 app.get('/blog',AdminController.blog);
 
+app.get('/google',passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get('/add_Info',passport.authenticate('google'), AuthController.socialLogin);
 
 
 module.exports = app

@@ -18,12 +18,10 @@ const UserSchema = new Schema({
     
     password: {
         type: String,
-        required: true,
     },
     type: {
         type: String,
         enum: [0, 1],
-        required: true
     },
     is_social: {
         type: String,
@@ -41,6 +39,9 @@ const UserSchema = new Schema({
     },
     token: {
         type: String,
+    },
+    provider:{
+        type:String
     },
     expiry_time: {
     },

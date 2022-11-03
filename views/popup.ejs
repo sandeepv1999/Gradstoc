@@ -1,242 +1,288 @@
 <div class="modal fade" id="myModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-sign-div">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-sign-div">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
 
-          <div class="modal-sign-in">
-            <div class="modal-sign-head">
-              <h2>Log In to Your Account</h2>
+        <div class="modal-sign-in">
+          <div class="modal-sign-head">
+            <h2>Log In to Your Account</h2>
+          </div>
+          <div class="modal-sign-body">
+            <div class="social-div">
+              <ul>
+                <li><a href="/facebook" class="fb_model"><i class="fab fa-facebook-f"></i> <span>Login with facebook</span></a>
+                </li>
+                <li><a href="/google" class="google_modal"><i class="fab fa-google-plus-g"></i> <span>Login with
+                      google</span></a></li>
+              </ul>
             </div>
-            <div class="modal-sign-body">
-              <div class="social-div">
-                <ul>
-                  <li><a href="#"><i class="fab fa-facebook-f"></i> <span>Login with facebook</span></a></li>
-                  <li><a href="#"><i class="fab fa-google-plus-g"></i> <span>Login with google</span></a></li>
-                </ul>
-              </div>
-              <div class="sign-or"><span>OR</span></div>
-              <div class="sign-form">
-                <form method="post" action="javascript:void(0)" id="submitLoginForm" class="signin-form">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>Email Address <span>*</span></label>
-                        <input type="text" class="form-control commonEmail" name="userEmail" id="userEmail"
-                          placeholder="Enter your email address..." value="" />
-                        <small id="userEmailError" style="color:red;"></small>
-                      </div>
-                    </div>
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>Password <span>*</span></label>
-                        <input type="password" class="form-control" id="userPass" name="userPass"
-                          placeholder="Password" value="" />
-                        <i class="bi bi-eye-slash" id="togglePassword"></i>
-                        <small id="userPassError" style="color:red;"></small>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <span class="checkbox-accept">
-                          <label>
-                            <input type="checkbox" name="" value="">
-                            <span></span>
-                            Keep me logged in
-                          </label>
-                        </span>
-                      </div>
-                    </div>
-                    <div class="col-md-6 showButton">
-                      <div class="form-group forgotP">
-                        <label><a href="#" class="forgotPbtn">Forgot Password?</a></label>
-                        <label><a href="#" class="resendMail">Resend Email</a></label>
-                      </div>
-                      <!-- <div class="form-group forgotP">
-                      </div> -->
-                      <div class="form-group something">
-                      </div>
-                    </div>
-                    <div class="col-md-12">
-                      <div class="form-group commonButton">
-                        <input type="submit" class="btn" value="Login" />
-                      </div>
+            <div class="sign-or"><span>OR</span></div>
+            <div class="sign-form">
+              <form method="post" action="javascript:void(0)" id="submitLoginForm" class="signin-form">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Email Address <span>*</span></label>
+                      <input type="text" class="form-control commonEmail" name="userEmail" id="userEmail"
+                        placeholder="Enter your email address..." value="" />
+                      <small id="userEmailError" style="color:red;"></small>
                     </div>
                   </div>
-                </form>
-              </div>
-            </div>
-            <div class="modal-sign-footer">
-              <p>New to Gradstoc? <a href="#" class="footer-sign-up">Sign Up</a></p>
-            </div>
-          </div>
-
-          <div class="modal-sign-up">
-            <div class="modal-sign-head">
-              <h2>Create a FREE account now to get started</h2>
-            </div>
-            <div class="modal-sign-body">
-              <form action="register" onsubmit="return checkFormValidation()" method="post" class="register-form"
-                enctype="multipart/form-data">
-                <div class="currently-div ">
-                  <p>I am currently a <span style="color:red;">*</span></p>
-                  <ul>
-                    <li>
-                      <label>
-                        <input type="radio" name="type" value=0 />
-                        <span><i class="fas fa-chalkboard-teacher"></i> Student</span>
-                      </label>
-                    </li>
-                    <li>
-                      <label>
-                        <input type="radio" name="type" value=1 />
-                        <span><i class="fas fa-user-graduate"></i> Tutor</span>
-                      </label>
-                    </li>
-                  </ul>
-                  <small id="typeError" style="color:red;"></small>
-                </div>
-                <div class="sign-form">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label>First Name <span>*</span></label>
-                        <input type="text" class="form-control" maxlength="15" name="firstName" id="firstNameId"
-                          placeholder="First Name" value="" />
-                        <small id="firstName_warning" style="color:red;"></small>
-                      </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Password <span>*</span></label>
+                      <i class="bi bi-eye-slash" id="togglePassword"></i>
+                      <input type="password" class="form-control" id="userPass" name="userPass" placeholder="Password"
+                        value="" />
+                      <small id="userPassError" style="color:red;"></small>
                     </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label>Last Name <span>*</span></label>
-                        <input type="text" class="form-control" name="lastName" maxlength="15" id="lastNameId"
-                          placeholder="Last Name" value="" />
-                        <small id="lastName_warning" style="color:red;"></small>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label>Profile photo <span>*</span></label>
-                        <input type="file" name="profile" id="file-1" class="inputfile inputfile-1"
-                          accept="image/*" />
-                        <label class="inputfile-label" for="file-1">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" fill="#2c2f8c"
-                            viewBox="0 0 20 17">
-                            <path
-                              d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
-                          </svg>
-                          <span>Select photo</span>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <span class="checkbox-accept">
+                        <label>
+                          <input type="checkbox" name="" value="">
+                          <span></span>
+                          Keep me logged in
                         </label>
-                        <small id="imageError" style="color:red"></small>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label>Email <span>*</span></label>
-                        <input type="text" class="form-control commonEmail" id="email" name="email"
-                          onkeyup="checkMailIsExist()" placeholder="Email" />
-                        <small id="email_warning" style="color:red;"></small>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label>Password <span>*</span></label>
-                        <input type="password" class="form-control" id="password" maxlength="16" name="password"
-                          placeholder="Password" value="" />
-                        <small id="passwordError" style="color:red;"></small>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label>Confirm password <span>*</span></label>
-                        <input type="password" class="form-control" id="confirm_password" maxlength="16"
-                          name="confirm_password" placeholder="Confirm password" value="" />
-                        <small id='message'></small>
-                      </div>
-                    </div>
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <span class="checkbox-accept">
-                          <label>
-                            <input type="checkbox" name="selectCheckbox" id="isChecked" value="" />
-                            <span></span>
-                          </label>
-                        </span>
-                        <label>I have read and accept the <a href="#">Terms & Conditions</a></label>
-                        <br>
-                        <small id="checkBoxError" style="color:red;"></small>
-                      </div>
-                    </div>
-                    <div class="col-md-12">
-                      <div class="form-group commonButton">
-                        <input type="submit" class="btn otp_modal" id="submit_id" value="Sign Up">
-                      </div>
+                      </span>
                     </div>
                   </div>
+                  <div class="col-md-6 showButton">
+                    <div class="form-group forgotP">
+                      <label><a href="#" class="forgotPbtn">Forgot Password?</a></label>
+                      <label><a href="#" class="resendMail">Resend Email</a></label>
+                    </div>
+                    <!-- <div class="form-group forgotP">
+                      </div> -->
+                    <div class="form-group something">
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group commonButton">
+                      <input type="submit" class="btn" value="Login" />
+                    </div>
+                  </div>
+                </div>
               </form>
             </div>
           </div>
-
           <div class="modal-sign-footer">
-            <p>Already on Gradstoc? <a href="#" class="footer-sign-in">Sign In</a></p>
+            <p>New to Gradstoc? <a href="#" class="footer-sign-up">Sign Up</a></p>
           </div>
         </div>
 
-        <div class="modal-forgot-in">
+        <div class="modal-sign-up">
           <div class="modal-sign-head">
-            <h2>Forgot Password</h2>
+            <h2>Create a FREE account now to get started</h2>
           </div>
           <div class="modal-sign-body">
-            <div class="sign-form">
-              <form action="javascript:void(0)" method="post" id="forgetPassword" class="signin-form">
+            <form action="register" onsubmit="return checkFormValidation()" method="post" class="register-form"
+              enctype="multipart/form-data">
+              <div class="currently-div ">
+                <p>I am currently a <span style="color:red;">*</span></p>
+                <ul>
+                  <li>
+                    <label>
+                      <input type="radio" name="type" value=0 />
+                      <span><i class="fas fa-chalkboard-teacher"></i> Student</span>
+                    </label>
+                  </li>
+                  <li>
+                    <label>
+                      <input type="radio" name="type" value=1 />
+                      <span><i class="fas fa-user-graduate"></i> Tutor</span>
+                    </label>
+                  </li>
+                </ul>
+                <small id="typeError" style="color:red;"></small>
+              </div>
+              <div class="sign-form">
                 <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>First Name <span>*</span></label>
+                      <input type="text" class="form-control" maxlength="15" name="firstName" id="firstNameId"
+                        placeholder="First Name" value="" />
+                      <small id="firstName_warning" style="color:red;"></small>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Last Name <span>*</span></label>
+                      <input type="text" class="form-control" name="lastName" maxlength="15" id="lastNameId"
+                        placeholder="Last Name" value="" />
+                      <small id="lastName_warning" style="color:red;"></small>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Profile photo <span>*</span></label>
+                      <input type="file" name="profile" id="file-1" class="inputfile inputfile-1" accept="image/*" />
+                      <label class="inputfile-label" for="file-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" fill="#2c2f8c"
+                          viewBox="0 0 20 17">
+                          <path
+                            d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+                        </svg>
+                        <span>Select photo</span>
+                      </label>
+                      <small id="imageError" style="color:red"></small>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Email <span>*</span></label>
+                      <input type="text" class="form-control commonEmail" id="email" name="email"
+                        onkeyup="checkMailIsExist()" placeholder="Email" />
+                      <small id="email_warning" style="color:red;"></small>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Password <span>*</span></label>
+                      <input type="password" class="form-control" id="password" maxlength="16" name="password"
+                        placeholder="Password" value="" />
+                      <small id="passwordError" style="color:red;"></small>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Confirm password <span>*</span></label>
+                      <input type="password" class="form-control" id="confirm_password" maxlength="16"
+                        name="confirm_password" placeholder="Confirm password" value="" />
+                      <small id='message'></small>
+                    </div>
+                  </div>
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label>Email Address <span>*</span></label>
-                      <input type="text" class="form-control" id="forgetPassEmail"
-                        placeholder="Enter your email address..." value="" />
-                      <small id="forgetEmailError" class="text text-danger"></small>
-                      <small id="forgetEmailSuccess" class="text text-success"></small>
+                      <span class="checkbox-accept">
+                        <label>
+                          <input type="checkbox" name="selectCheckbox" id="isChecked" value="" />
+                          <span></span>
+                        </label>
+                      </span>
+                      <label>I have read and accept the <a href="#">Terms & Conditions</a></label>
+                      <br>
+                      <small id="checkBoxError" style="color:red;"></small>
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="form-group commonButton">
-                      <input type="submit" class="btn" value="Send">
+                      <input type="submit" class="btn otp_modal" id="submit_id" value="Sign Up">
                     </div>
                   </div>
                 </div>
-              </form>
-            </div>
+            </form>
           </div>
         </div>
 
-        <div class="modal-resendMail-in" style="display:none;">
-          <div class="modal-sign-head">
-            <h2>Email Verification</h2>
-          </div>
-          <div class="modal-sign-body">
-            <div class="sign-form">
-              <form action="javascript:void(0)" method="post" id="resendMail" class="signin-form">
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label>Email Address <span>*</span></label>
-                      <input type="text" class="form-control" id="resendEmail"
-                        placeholder="Enter your email address..." value="" />
-                      <small id="resendEmailError" class="text text-danger"></small>
-                      <small id="resendEmailSuccess" class="text text-success"></small>
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group commonButton">
-                      <input type="submit" class="btn" value="Send">
-                    </div>
+        <div class="modal-sign-footer">
+          <p>Already on Gradstoc? <a href="#" class="footer-sign-in">Sign In</a></p>
+        </div>
+      </div>
+
+      <!-- Select Your Role for login with Google -->
+
+      <!-- <div class="modal-google-in" style="display:none;">
+        <div class="modal-sign-head">
+          <h2>Select Role</h2>
+        </div>
+        <div class="modal-sign-body">
+          <div class="sign-form">
+            <form action="/google" method="post" id="google_login" class="signin-form">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="currently-div ">
+                    <p>I am currently a <span style="color:red;">*</span></p>
+                    <ul>
+                      <li>
+                        <label>
+                          <input type="radio" name="role" value=0 />
+                          <span><i class="fas fa-chalkboard-teacher"></i> Student</span>
+                        </label>
+                      </li>
+                      <li>
+                        <label>
+                          <input type="radio" name="role" value=1 />
+                          <span><i class="fas fa-user-graduate"></i> Tutor</span>
+                        </label>
+                      </li>
+                    </ul>
+                    <small id="typeError1" style="color:red;"></small>
                   </div>
                 </div>
-              </form>
-            </div>
+                <div class="col-md-12">
+                  <div class="form-group commonButton">
+                    <input type="submit" class="btn" value="Login">
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- Forget password modal -->
+
+      <div class="modal-forgot-in">
+        <div class="modal-sign-head">
+          <h2>Forgot Password</h2>
+        </div>
+        <div class="modal-sign-body">
+          <div class="sign-form">
+            <form action="javascript:void(0)" method="post" id="forgetPassword" class="signin-form">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Email Address <span>*</span></label>
+                    <input type="text" class="form-control" id="forgetPassEmail"
+                      placeholder="Enter your email address..." value="" />
+                    <small id="forgetEmailError" class="text text-danger"></small>
+                    <small id="forgetEmailSuccess" class="text text-success"></small>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group commonButton">
+                    <input type="submit" class="btn" value="Send">
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resend Email Modal -->
+
+      <div class="modal-resendMail-in" style="display:none;">
+        <div class="modal-sign-head">
+          <h2>Email Verification</h2>
+        </div>
+        <div class="modal-sign-body">
+          <div class="sign-form">
+            <form action="javascript:void(0)" method="post" id="resendMail" class="signin-form">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Email Address <span>*</span></label>
+                    <input type="text" class="form-control" id="resendEmail" placeholder="Enter your email address..."
+                      value="" />
+                    <small id="resendEmailError" class="text text-danger"></small>
+                    <small id="resendEmailSuccess" class="text text-success"></small>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group commonButton">
+                    <input type="submit" class="btn" value="Send">
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>

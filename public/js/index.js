@@ -1,9 +1,9 @@
 let emailFormat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+// User Registration form
 
 function checkFormValidation() {
 
-    console.log('execute')
     // check Radio button is selected or not
 
     let type = document.querySelector('input[type="radio"][name="type"]:checked');
@@ -99,7 +99,6 @@ function checkFormValidation() {
         document.getElementById('checkBoxError').innerHTML = '';
     }
 }
-
 
 // Check mail is valid or not
 
@@ -249,6 +248,9 @@ $('#resendMail').submit((e) => {
     e.preventDefault();
 });
 
+
+// Toogle Password
+
 const togglePassword = document.querySelector("#togglePassword");
 const password = document.querySelector("#userPass");
 
@@ -260,4 +262,20 @@ togglePassword.addEventListener("click", function () {
     // toggle the icon
     this.classList.toggle("bi-eye");
 });
+
+// Submit google form
+
+$('#google_login').submit(()=>{
+    console.log('function execute');
+    let type = document.querySelector('input[type="radio"][name="role"]:checked');
+    if (type == "" || type == null) {
+        console.log('Please select your Role');
+        document.querySelector('small[id="typeError1"]').innerHTML = "Please select your Role";
+        return false;
+    } else {
+        document.querySelector('small[id="typeError1"]').innerHTML = "";
+    }
+})
+
+
 
