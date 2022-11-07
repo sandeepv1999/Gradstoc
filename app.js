@@ -36,6 +36,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileupload());
 require('./config/passport-setup');
+require('./config/passport-facebook');
 
 
 // calling other router

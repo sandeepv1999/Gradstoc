@@ -37,7 +37,15 @@ app.get('/blog',AdminController.blog);
 
 app.get('/google',passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-app.get('/add_Info',passport.authenticate('google'), AuthController.socialLogin);
+app.get('/add_Info',passport.authenticate('google'), AuthController.googleLogin);
+
+app.get('/auth/facebook', passport.authenticate('facebook',   { scope: 'email' } ));
+
+app.get('/addInfo_fb',passport.authenticate('facebook'), AuthController.facebookLogin);
+
+app.get('/add_Information', AdminController.addInformation);
+
+app.post('/add_Information', AuthController.add_additional_data);
 
 
 module.exports = app

@@ -1,0 +1,234 @@
+<%- include('../header') %>
+
+    <body class="home">
+        <div class="main-wrapper">
+            <section class="section-middle">
+                <div class="page-title">
+                    <div class="container">
+                        <div class="page-title-in">
+                            <h2>Add Information</h2>
+                        </div>
+                    </div>
+                </div><!-- page-title -->
+
+                <div class="dashboard-content">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-8 offset-2">
+                                <div class="uploads-right-area">
+                                    <div class="update-right card card-body box-sh">
+                                        <form action="/add_Information" method="post" id="addInformation"
+                                            class="update-form" enctype="multipart/form-data">
+                                            <div class="row">
+                                                <div class="currently-div ">
+                                                    <p>I am currently a <span style="color:red;">*</span></p>
+                                                    <ul>
+                                                        <li>
+                                                            <label>
+                                                                <input type="radio" name="type" value=0 />
+                                                                <span><i class="fas fa-chalkboard-teacher"></i>
+                                                                    Student</span>
+                                                            </label>
+                                                        </li>
+                                                        <li>
+                                                            <label>
+                                                                <input type="radio" name="type" value=1 />
+                                                                <span><i class="fas fa-user-graduate"></i> Tutor</span>
+                                                            </label>
+                                                        </li>
+                                                    </ul>
+                                                    <small id="typeError" style="color:red;"></small>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label>First Name <span>*</span></label>
+                                                        <input type="text" class="form-control" name="firstName"
+                                                            id="firstName" placeholder="First Name" value="">
+                                                        <small id="firstName_warning" class="text text-danger"></small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label>Last Name <span>*</span></label>
+                                                        <input type="text" class="form-control" name="lastName"
+                                                            id="lastName" placeholder="Last Name" value="">
+                                                        <small id="lastName_warning" class="text text-danger"></small>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label>Phone Number <span>*</span></label>
+                                                        <input type="text" class="form-control" name="phone" id="phone"
+                                                            placeholder="Phone Number" value="">
+                                                        <small id="phoneError" class="text text-danger"></small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label id="emailLable">Email <span>*</span></label>
+                                                        <input type="email" class="form-control" onchange="checkMailIsExist()" id="email" name="email"
+                                                            placeholder="Email"
+                                                            value="<%= (userData.provider == 'google' )? userData.email:''; %>">
+                                                        <input type="hidden" name="providerId"
+                                                            value="<%= userData.providerId; %>">
+                                                        <small id="email_warning" style="color:red"></small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label>Profile photo</label>
+                                                        <input type="file" name="profile" id="file-1"
+                                                            class="inputfile inputfile-1" multiple="">
+                                                        <label class="inputfile-label" for="file-1">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                                                height="17" fill="#2c2f8c" viewBox="0 0 20 17">
+                                                                <path
+                                                                    d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z">
+                                                                </path>
+                                                            </svg>
+                                                            <span>Select photo</span>
+                                                        </label>
+                                                        <small id="imageError" class="text text-danger"></small>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <input type="submit" id="submit_id" class="btn"
+                                                            value="Submit" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <%- include('../footer') %>
+
+            <script src="js/index.js" type="text/jscript"></script>
+            <!---------slider Js------------>
+    </body>
+    <script>
+
+        // let emailFormat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        $('#addInformation').submit((e) => {
+
+            console.log('execuet')
+
+            // check Radio button is selected or not
+
+            let type = document.querySelector('input[type="radio"][name="type"]:checked');
+            if (type == "" || type == null) {
+                document.querySelector('small[id="typeError"]').innerHTML = "Please select your Role";
+                return false;
+            } else {
+                document.querySelector('small[id="typeError"]').innerHTML = "";
+            }
+
+            // check firstname is valid or not
+
+            let firstName = document.getElementById('firstName').value;
+            if (firstName == '') {
+                document.getElementById('firstName_warning').innerHTML = "This field is required";
+                return false;
+            } else if (firstName.match(/^\s+$/) !== null || /^[a-zA-Z]+$/.test(firstName) == false) {
+                document.getElementById('firstName_warning').innerHTML = 'This field not contain any blank space or number';
+                return false;
+            }
+            else {
+                document.getElementById('firstName_warning').innerHTML = '';
+            }
+
+            // check Lastname is valid or not
+
+            let lastName = document.getElementById('lastName').value;
+            if (lastName == '') {
+                document.getElementById('lastName_warning').innerHTML = "This field is required";
+                return false;
+            } else if (lastName.match(/^\s+$/) !== null || /^[a-zA-Z]+$/.test(lastName) == false) {
+                document.getElementById('lastName_warning').innerHTML = 'This field not contain any blank space or number';
+                return false;
+            }
+            else {
+                document.getElementById('lastName_warning').innerHTML = '';
+            }
+            // check Phone No is valid or not
+
+            let phone = $('#phone').val();
+            var phoneno = /^\d{10}$/;
+            if (phone == '') {
+                $('#phoneError').html('This field is required');
+                return false;
+            } else if (phone.match(phoneno)) {
+                $('#phoneError').html('');
+                return true;
+            } else {
+                $('#phoneError').html('Enter valid mobile number');
+                return false;
+            }
+
+            // check Email is valid or not
+
+            let email = document.getElementById("email").value;
+            if (email == '') {
+                document.getElementById('email_warning').innerHTML = "This field is required";
+                return false;
+            } else if (emailFormat.test(email)) {
+                document.getElementById('email_warning').innerHTML = "";
+            }
+            else {
+                document.getElementById('email_warning').innerHTML = "Please enter a valid Email";
+                return false;
+            }
+
+            // Check image is valid or not
+
+            var fileUpload = document.getElementById("file-1").value;
+            console.log('fileUpload', fileUpload);
+            var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+            if (fileUpload == '') {
+                document.getElementById("imageError").innerHTML = 'Please select an image';
+                return false;
+            }
+            else if (allowedExtensions.exec(fileUpload)) {
+                document.getElementById("imageError").innerHTML = "";
+            }
+            else {
+                document.getElementById("imageError").innerHTML = "Please upload files having extensions: .jpg  .jpeg  .png  .gif  only.";
+                return false;
+            }
+        });
+
+            // check Email is valid or not
+
+        function checkEmailIsExist() {
+            console.log('function is executed');
+            let email = $('#email').val();
+            if (emailFormat.test(email)) {
+                $.ajax({
+                    type: 'POST',
+                    url: "/email_verify",
+                    data: { email: email },
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.success) {
+                            document.getElementById('email_warning').innerHTML = data.message;
+                            document.getElementById("submit_id").disabled = true;
+                        }
+                        else {
+                            document.getElementById('email_warning').innerHTML = '';
+                            document.getElementById("submit_id").disabled = false;
+                        }
+                    }
+                });
+            }
+        }
+
+    </script>

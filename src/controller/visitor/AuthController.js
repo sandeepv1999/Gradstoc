@@ -86,45 +86,149 @@ class AuthController {
         }
     }
 
-    //***************** Email Verification ***********************
+    //***************** LOGIN WITH GOOGLE  ***********************
 
-    socialLogin = async (req, res) => {
+    googleLogin = async (req, res) => {
         try {
-            let data1 = req.user;
-            let user = await User.findOne({ email: data1.email });
-            console.log('user',user);
+            let data = {};
+            let socialDetails = req.user;
+            let user = await User.findOne({ email: socialDetails.email });
             if (user) {
-                if (user.is_social == 1) {
+                if (user.is_social == 1 && user.type) {
                     req.session.status = 'success';
                     req.session.message = 'You have successfully logged in';
                     req.session.isCustomerLoggedIn = user;
-                    console.log('0')
                     res.redirect('/');
+                } else if (user.is_social == 1) {
+                    req.session.status = 'success';
+                    req.session.message = 'You have successfully logged in ,please fill the form otherwise you can not access all this functionality';
+                    if (req.session.status && req.session.message) {
+                        data.status = req.session.status;
+                        data.message = req.session.message;
+                        delete req.session.status, req.session.message;
+                    }
+                    data.userData = user;
+                    data.isUserLoggedIn = false;
+                    res.render('visitor/addInfo', data);
                 } else {
-                    console.log('1');
                     req.session.status = 'error';
                     req.session.message = 'This email is already registerd';
                     res.redirect('/');
                 }
             } else {
-                let userData1 = {
-                    firstName: data1.given_name,
-                    lastName: data1.family_name,
-                    email: data1.email,
-                    profile: data1.picture,
-                    provider: data1.provider,
+                let userDetails = {
+                    firstName: socialDetails.given_name,
+                    lastName: socialDetails.family_name,
+                    email: socialDetails.email,
+                    profile: socialDetails.picture,
+                    provider: socialDetails.provider,
+                    providerId: socialDetails.id,
                     is_social: 1,
-                    isEmailVerify: 1
+                    isEmailVerify: 1,
                 }
-                let response = await User.create(userData1);
-                console.log('response',response);
+                let response = await User.create(userDetails);
                 req.session.status = 'success';
-                req.session.message = 'You have successfully logged in';
-                req.session.isCustomerLoggedIn = response;
+                req.session.message = 'You have successfully logged in ,please fill the form otherwise you can not access all this functionality';
+                if (req.session.status && req.session.message) {
+                    data.status = req.session.status;
+                    data.message = req.session.message;
+                    delete req.session.status, req.session.message;
+                }
+                data.userData = response;
+                data.isUserLoggedIn = false;
+                res.render('visitor/addInfo', data);
+            }
+        } catch (error) {
+            res.json({ message: error.message });
+        }
+    }
+
+    //***************** ADDITIONAL INFORMATION ***********************
+
+    add_additional_data = async (req, res) => {
+        try {
+            let body = req.body;
+            console.log("body",body);
+            let image = req.files.profile;
+            let profileImage = await this.saveImageDirectorys(image);
+            let userData = {
+                firstName: body.firstName,
+                lastName: body.lastName,
+                type: body.type,
+                profile: profileImage,
+                email: body.email
+            }
+            let user = await User.findOne({ providerId: body.providerId });
+            if (user) {
+                let response = await User.updateOne({ _id: user._id }, userData);
+                if (response.acknowledged) {
+                    req.session.status = 'Success'
+                    req.session.message = 'Successfully logged in'
+                    req.session.isCustomerLoggedIn = user;
+                    res.redirect('/');
+                }
+            } else {
+                req.session.status = 'Success'
+                req.session.message = 'Failed to login , try again';
                 res.redirect('/');
             }
         } catch (error) {
-            console.log('email verification error', error);
+            console.log('add additional data error', error);
+        }
+    }
+
+    //***************** LOGIN WITH GOOGLE  ***********************
+
+    facebookLogin = async (req, res) => {
+        try {
+            let data = {};
+            let socialDetails = req.user;
+            let user = await User.findOne({ providerId: socialDetails.id });
+            if (user) {
+                if (user.is_social == 1 && user.type) {
+                    req.session.status = 'success';
+                    req.session.message = 'You have successfully logged in';
+                    req.session.isCustomerLoggedIn = user;
+                    res.redirect('/');
+                } else if (user.is_social == 1) {
+                    req.session.status = 'success';
+                    req.session.message = 'You have successfully logged in ,please fill the form otherwise you can not access all this functionality';
+                    if (req.session.status && req.session.message) {
+                        data.status = req.session.status;
+                        data.message = req.session.message;
+                        delete req.session.status, req.session.message;
+                    }
+                    data.userData = user;
+                    data.isUserLoggedIn = false;
+                    res.render('visitor/addInfo', data);
+                } else {
+                    req.session.status = 'error';
+                    req.session.message = 'This email is already registerd';
+                    res.redirect('/');
+                }
+            } else {
+                let fullName = socialDetails.displayName.split(' ');
+                let userDetails = {
+                    firstName: fullName[0],
+                    lastName: fullName[1],
+                    provider: socialDetails.provider,
+                    providerId: socialDetails.id,
+                    is_social: 1,
+                    isEmailVerify: 1
+                }
+                let response = await User.create(userDetails);
+                req.session.status = 'success';
+                req.session.message = 'You have successfully logged in ,please fill the form otherwise you can not access all this functionality';
+                if (req.session.status && req.session.message) {
+                    data.status = req.session.status;
+                    data.message = req.session.message;
+                    delete req.session.status, req.session.message;
+                }
+                data.userData = response;
+                data.isUserLoggedIn = false;
+                res.render('visitor/addInfo', data);
+            }
+        } catch (error) {
             res.json({ message: error.message });
         }
     }

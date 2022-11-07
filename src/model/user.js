@@ -1,21 +1,19 @@
+const { string } = require('joi');
 const mongoose = require('mongoose')
 const { Schema } = mongoose;
 
 const UserSchema = new Schema({
     firstName: {
         type: String,
-        required: true
     },
     lastName: {
         type: String,
-        required: true
     },
     email: {
         type: String,
-        required: true,
         unique: true
     },
-    
+
     password: {
         type: String,
     },
@@ -29,8 +27,7 @@ const UserSchema = new Schema({
         default: 0
     },
     profile: {
-        type:String,
-        required:true
+        type: String,
     },
     isEmailVerify: {
         type: String,
@@ -40,8 +37,14 @@ const UserSchema = new Schema({
     token: {
         type: String,
     },
-    provider:{
-        type:String
+    phone: {
+        type: String
+    },
+    provider: {
+        type: String
+    },
+    providerId: {
+        type: String
     },
     expiry_time: {
     },

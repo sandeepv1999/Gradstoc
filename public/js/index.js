@@ -103,6 +103,7 @@ function checkFormValidation() {
 // Check mail is valid or not
 
 function checkMailIsExist() {
+    console.log('execute');
     let userSignupEmail = document.getElementById("email").value;
     if (emailFormat.test(userSignupEmail)) {
         $.ajax({
@@ -134,13 +135,11 @@ $('#password, #confirm_password').on('keyup', function () {
         $('#message').html('password should be match ').css('color', 'red');
 });
 
-
 // ************ User Login form ****************
 
 $("#submitLoginForm").submit(function (event) {
     var loginEmail = document.getElementById("userEmail").value;
     var loginPass = document.getElementById("userPass").value;
-    console.log(loginEmail, loginPass);
     if (loginEmail == '') {
         document.getElementById("userEmailError").innerHTML = '';
         document.getElementById('userEmailError').innerHTML = "This field is required";
@@ -152,6 +151,7 @@ $("#submitLoginForm").submit(function (event) {
     else {
         if (loginPass == '') {
             document.getElementById("userPassError").innerHTML = 'This field is required';
+            document.getElementById('userEmailError').innerHTML = "";
             return false;
         } else {
             loginAjaxCalling(loginEmail, loginPass);
@@ -216,7 +216,6 @@ $('#forgetPassword').submit((e) => {
     e.preventDefault();
 });
 
-
 // ResendMail using ajax method
 
 $('#resendMail').submit((e) => {
@@ -248,7 +247,6 @@ $('#resendMail').submit((e) => {
     e.preventDefault();
 });
 
-
 // Toogle Password
 
 const togglePassword = document.querySelector("#togglePassword");
@@ -263,19 +261,6 @@ togglePassword.addEventListener("click", function () {
     this.classList.toggle("bi-eye");
 });
 
-// Submit google form
-
-$('#google_login').submit(()=>{
-    console.log('function execute');
-    let type = document.querySelector('input[type="radio"][name="role"]:checked');
-    if (type == "" || type == null) {
-        console.log('Please select your Role');
-        document.querySelector('small[id="typeError1"]').innerHTML = "Please select your Role";
-        return false;
-    } else {
-        document.querySelector('small[id="typeError1"]').innerHTML = "";
-    }
-})
 
 
 

@@ -81,8 +81,6 @@ class AdminController {
     // ************ GET BOOK LIST **************
 
     book = async (req, res) => {
-        console.log('req.user',req.user);
-        console.log('re.role',req.body.role);
         let isUserLoggedIn = false;
         let userData = ""
         if (req.session.isCustomerLoggedIn) {
@@ -124,6 +122,29 @@ class AdminController {
             delete req.session.status, req.session.message;
         }
         res.render('visitor/blog', data);
+    }
+
+    // ************ GET BLOGS **************
+
+    addInformation = async (req, res) => {
+        let isUserLoggedIn = false;
+        let userData = ""
+        if (req.session.isCustomerLoggedIn) {
+            isUserLoggedIn = true;
+            userData = req.session.isCustomerLoggedIn;
+        }
+        let data = {
+            status: "",
+            message: "",
+            isUserLoggedIn,
+            userData
+        }
+        if (req.session.status && req.session.message) {
+            data.status = req.session.status;
+            data.message = req.session.message;
+            delete req.session.status, req.session.message;
+        }
+        res.render('visitor/addInfo', data);
     }
 
     // ************ EMAIL VERIFICATION BY URL **************
