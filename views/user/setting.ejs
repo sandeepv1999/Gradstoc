@@ -1,0 +1,42 @@
+<body class="home">
+  <div class="main-wrapper">
+
+<%- include('../header'); %>
+
+    <section class="section-middle">
+      <div class="page-title">
+        <div class="container">
+          <div class="page-title-in">
+            <h2>Tutor Setting</h2> 
+          </div>
+        </div>
+      </div><!-- page-title -->
+
+      <div class="dashboard-content">
+        <div class="container">
+          <div class="row">
+          <%- include('sidebar') %>
+            <div class="col-md-9">
+              <div class="dashboard-right-area">
+                 <div class="notifications-area">
+                     <div class="sec-head"><h2>Notifications</h2></div>
+                     <div class="notifications-div box-sh card card-body">
+                         <h3>Enable Notifications </h3>
+                         <p>
+                             <label><input type="radio" name="notification" /> <span>Yes</span></label>
+                             <label><input type="radio" name="notification" /> <span>No</span></label>
+                         </p>
+                     </div>
+                 </div>
+              </div>
+            </div><!--col-md-9-->
+          </div><!--row-->
+        </div><!--container-->
+      </div><!--dashboard-content-->
+    </section>
+  </div>
+
+  <%- include('../footer'); %>
+
+  <!---------Js------------>
+</body>

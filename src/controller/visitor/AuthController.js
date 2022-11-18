@@ -58,6 +58,7 @@ class AuthController {
             res.redirect('/')
         } catch (error) {
             console.log('registration Error', error);
+            res.send({ message: error.message })
         }
     }
 
@@ -97,7 +98,7 @@ class AuthController {
                 if (user.is_social == 1 && user.type) {
                     req.session.status = 'success';
                     req.session.message = 'You have successfully logged in';
-                    req.session.isCustomerLoggedIn = user;
+                    req.session.isCustomerLoggedIn = user._id;
                     res.redirect('/');
                 } else if (user.is_social == 1) {
                     req.session.status = 'success';
@@ -148,7 +149,6 @@ class AuthController {
     add_additional_data = async (req, res) => {
         try {
             let body = req.body;
-            console.log("body",body);
             let image = req.files.profile;
             let profileImage = await this.saveImageDirectorys(image);
             let userData = {
@@ -164,7 +164,7 @@ class AuthController {
                 if (response.acknowledged) {
                     req.session.status = 'Success'
                     req.session.message = 'Successfully logged in'
-                    req.session.isCustomerLoggedIn = user;
+                    req.session.isCustomerLoggedIn = user._id;
                     res.redirect('/');
                 }
             } else {
@@ -173,7 +173,8 @@ class AuthController {
                 res.redirect('/');
             }
         } catch (error) {
-            console.log('add additional data error', error);
+            console.log('Additional data error', error);
+            res.send({ message: error.message });
         }
     }
 
@@ -188,7 +189,7 @@ class AuthController {
                 if (user.is_social == 1 && user.type) {
                     req.session.status = 'success';
                     req.session.message = 'You have successfully logged in';
-                    req.session.isCustomerLoggedIn = user;
+                    req.session.isCustomerLoggedIn = user._id;
                     res.redirect('/');
                 } else if (user.is_social == 1) {
                     req.session.status = 'success';
@@ -258,13 +259,13 @@ class AuthController {
                             } else {
                                 req.session.status = 'Success';
                                 req.session.message = 'Logged In Successfully ';
-                                req.session.isCustomerLoggedIn = user;
+                                req.session.isCustomerLoggedIn = user._id;
                                 data.success = true;
                                 res.json(data);
                             }
                         } else {
                             data.success = false;
-                            data.message = 'Password is invalid';
+                            data.message = 'Invalid password';
                             res.json(data);
                         }
                     }
@@ -292,7 +293,6 @@ class AuthController {
             let data = {}
             if (user) {
                 let token = jwt.sign(user.email, 'gradstoctoken');
-                console.log('token', token);
                 let now = new Date();
                 let expiryTime = this.AddMinutesToDate(now, 10);
                 let template = ` <div>
@@ -326,7 +326,9 @@ class AuthController {
             let userData = ''
             if (req.session.isCustomerLoggedIn) {
                 isUserLoggedIn = true;
-                userData = req.session.isCustomerLoggedIn;
+                let loginId = req.session.isCustomerLoggedIn;
+                loginId = mongoose.Types.ObjectId(loginId);
+                userData = await User.findOne({ _id: loginId });
             }
             let data = {
                 status: "",
@@ -360,8 +362,11 @@ class AuthController {
             }
         } catch (error) {
             console.log('recoverAccount', error);
+            res.send({ message: error.message });
         }
     }
+
+    //************* POST RESET PASSWORD PAGE ***************
 
     reset_user_password = async (req, res) => {
         let email = req.body.email;
@@ -381,6 +386,8 @@ class AuthController {
         }
     }
 
+    //*************** LOGOUT ******************
+
     logout = async (req, res) => {
         if (req.session.isCustomerLoggedIn) {
             delete req.session.isCustomerLoggedIn;
@@ -390,9 +397,7 @@ class AuthController {
         }
     }
 
-
     //***************** Save Image In Directory ***********************
-
 
     saveImageDirectorys = async (profileImage) => {
         return new Promise(function (resolve, reject) {

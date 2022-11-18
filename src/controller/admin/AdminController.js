@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 const User = require('../../model/user');
 const jwt = require('jsonwebtoken');
-const verification = require('../../../mail')
+const verification = require('../../../mail');
+const mongoose = require('mongoose');
 
 
 class AdminController {
@@ -16,7 +17,9 @@ class AdminController {
         let userData = ""
         if (req.session.isCustomerLoggedIn) {
             isUserLoggedIn = true;
-            userData = req.session.isCustomerLoggedIn;
+            let loginId = req.session.isCustomerLoggedIn;
+            loginId = mongoose.Types.ObjectId(loginId);
+            userData = await User.findOne({_id:loginId});
         }
         let data = {
             status: "",
@@ -39,7 +42,9 @@ class AdminController {
         let userData = ""
         if (req.session.isCustomerLoggedIn) {
             isUserLoggedIn = true;
-            userData = req.session.isCustomerLoggedIn;
+            let loginId = req.session.isCustomerLoggedIn;
+            loginId = mongoose.Types.ObjectId(loginId);
+            userData = await User.findOne({_id:loginId});
         }
         let data = {
             status: "",
@@ -62,7 +67,9 @@ class AdminController {
         let userData = ""
         if (req.session.isCustomerLoggedIn) {
             isUserLoggedIn = true;
-            userData = req.session.isCustomerLoggedIn;
+            let loginId = req.session.isCustomerLoggedIn;
+            loginId = mongoose.Types.ObjectId(loginId);
+            userData = await User.findOne({_id:loginId});
         }
         let data = {
             status: "",
@@ -85,7 +92,9 @@ class AdminController {
         let userData = ""
         if (req.session.isCustomerLoggedIn) {
             isUserLoggedIn = true;
-            userData = req.session.isCustomerLoggedIn;
+            let loginId = req.session.isCustomerLoggedIn;
+            loginId = mongoose.Types.ObjectId(loginId);
+            userData = await User.findOne({_id:loginId});
         }
         let data = {
             status: "",
@@ -108,7 +117,9 @@ class AdminController {
         let userData = ""
         if (req.session.isCustomerLoggedIn) {
             isUserLoggedIn = true;
-            userData = req.session.isCustomerLoggedIn;
+            let loginId = req.session.isCustomerLoggedIn;
+            loginId = mongoose.Types.ObjectId(loginId);
+            userData = await User.findOne({_id:loginId});
         }
         let data = {
             status: "",
@@ -131,7 +142,9 @@ class AdminController {
         let userData = ""
         if (req.session.isCustomerLoggedIn) {
             isUserLoggedIn = true;
-            userData = req.session.isCustomerLoggedIn;
+            let loginId = req.session.isCustomerLoggedIn;
+            loginId = mongoose.Types.ObjectId(loginId);
+            userData = await User.findOne({_id:loginId});
         }
         let data = {
             status: "",
@@ -152,7 +165,6 @@ class AdminController {
     mailVerification = async (req, res) => {
         let token = req.query.token;
         let user = await User.findOne({ token });
-        console.log('user', user);
         if (user) {
             var now = new Date();
             var exp = user.expiry_time;

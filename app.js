@@ -27,16 +27,18 @@ const sessionConfig = {
     }
 }
 
+
 app.use(session(sessionConfig));
 
 app.set('view engine' , 'ejs');
 app.use(express.static(__dirname + '/public'));
 
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(fileupload());
-require('./config/passport-setup');
-require('./config/passport-facebook');
+require('./config/passport-setup'); 
+require('./config/passport-facebook');  
 
 
 // calling other router

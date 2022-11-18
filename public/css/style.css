@@ -3115,5 +3115,58 @@ span.chatbox-profile-img {
 .commonButton{
     text-align: center;
 }
+.uploads-right-top {
+    padding: 0 0 10px;
+    margin: 0 0 10px;
+    /* border-bottom: 1px solid rgba(0, 0, 0, .125); */
+}
+.reviews-section .sec-head {
+    color: #1f1a17;
+    font-size: 25px;
+    margin: 0 0 15px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 600;
+}
+
+.upload-dock-top {
+    text-align: center;
+    font-size: 25px;
+    font-weight: 300;
+    background: #ebebff;
+    transition: all 0.3s ease-in;
+    cursor: pointer;
+    border: 2px dashed rgba(32, 34, 135, 0.4);
+}
+
+.Drag-file-text img {
+    width: 50px;
+    opacity: 0.5;
+}
+
+.click-input input.select_document {
+    opacity: 0;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    width: 100%;
+}
+
+.click-input span strong {
+    font-weight: 700;
+    font-size: 19px;
+    padding: 2px 3px 0 0;
+    display: inline-block;
+    border-radius: 6px;
+    color: #202286;
+}
+
+.click-input span {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.click-input input.select_document:hover {
+    cursor: pointer;
+}
 
 /* chatBox css */

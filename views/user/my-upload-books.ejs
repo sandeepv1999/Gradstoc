@@ -1,0 +1,293 @@
+<%- include('../header'); %>
+
+    <body class="home">
+        <div class="main-wrapper">
+            <section class="section-middle">
+                <div class="page-title">
+                    <div class="container">
+                        <div class="page-title-in">
+                            <h2>Tutor My Uploads</h2>
+                        </div>
+                    </div>
+                </div><!-- page-title -->
+
+                <div class="dashboard-content">
+                    <div class="container">
+                        <div class="row">
+                            <%- include('sidebar'); %>
+
+                                <div class="col-md-9">
+                                    <div class="uploads-right-area">
+                                        <div class="uploads-right-top">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <form method="get" action="tutor-my-upload"
+                                                        onsubmit="return dateValidate()">
+                                                        <div class="uploads-top-left">
+                                                            <span class="date-picker">
+                                                                <input type="date" class="form-control" id="start_date1"
+                                                                    name="start_date1" value="" />
+                                                            </span>
+                                                            <span class="date-picker">
+                                                                <input type="date" class="form-control" id="end_date1"
+                                                                    name="end_date1" value="" />
+                                                            </span>
+                                                            <span class="select-picker">
+                                                                <select class="form-control" id="search_element1"
+                                                                    name="search_element1">
+                                                                    <option value="" selected="">Select school</option>
+                                                                    <% for(let key of schoolData) { %>
+                                                                        <option value="<%- key._id%>">
+                                                                            <%- key.name %>
+                                                                        </option>
+                                                                        <% } %>
+                                                                </select>
+                                                            </span>
+                                                            <span>
+                                                                <button type="submit" class="btn"
+                                                                    style="display:inline;">Search</button>
+                                                            </span>
+                                                        </div>
+
+                                                        <span id="date_error" name="date_error"
+                                                            style="color:red ;"></span>
+                                                        <span id="start_date_error" name="start_date_error"
+                                                            style="color:red ;"></span>
+                                                        <span id="end_date_error" name="end_date_error"
+                                                            style="color:red ;"></span>
+                                                    </form>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button onclick="resetSearchBox()" style="margin-left:-15px"
+                                                        class="btn btn-default" type="button">
+                                                        <i class="fas fa-redo"></i>
+                                                    </button>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <div class="uploads-top-right">
+                                                        <a href="/add-new-book" class="btn"><i
+                                                                class="fas fa-plus-circle"></i> Add new book</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="uploads-right-main">
+                                            <div class="uploads-right-main-top">
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <div class="up-ct">Uploads : 1-3 of 15</div>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <div class="earnings-right">
+                                                            <div class="earnings">Toral Earnings : <span>$240.00</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="uploads-right-main-items">
+                                                <div class="uploads-right-main-item box-sh card card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <div class="uploads-item-img">
+                                                                <img src="images/businessTextbook.jpg" alt="" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="uploads-item-cont">
+                                                                <div class="uploads-item-title">NR 507 FINAL EXAM(3
+                                                                    DIFFERENT VERSIONS) PLUS STUDY GUIDES</div>
+                                                                <div class="uploads-item-dtls">
+                                                                    <div class="uploads-item-dtls-left">
+                                                                        <div class="uploads-item-price">$
+                                                                            <span>149.00</span>
+                                                                        </div>
+                                                                        <div class="reviews-stars">
+                                                                            <i class="fas fa-star"></i>
+                                                                            <i class="fas fa-star"></i>
+                                                                            <i class="fas fa-star"></i>
+                                                                            <i class="fas fa-star"></i>
+                                                                            <i class="fas fa-star"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="uploads-item-dtls-right">
+                                                                        <p>10 Sales<br />
+                                                                            Date uploaded : 30 Oct 19</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="uploads-item-tags">
+                                                                    <label>Tags -</label>
+                                                                    <p>
+                                                                        <span>Englist</span>
+                                                                        <span>Maths</span>
+                                                                        <span>Biology</span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="uploads-item-right">
+                                                                <div class="uploads-item-edit">
+                                                                    <a href="#" data-toggle="tooltip" title="Edit"><i
+                                                                            class="far fa-edit"></i></a>
+                                                                </div>
+                                                                <div class="uploads-item-active-inactive">
+                                                                    <label>
+                                                                        <input type="checkbox" />
+                                                                        <span><small></small></span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="uploads-item-btn">
+                                                                    <a href="product_detail_page.html"
+                                                                        class="btn">More...</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="uploads-right-main-item box-sh card card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <div class="uploads-item-img">
+                                                                <img src="images/businessTextbook.jpg" alt="" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="uploads-item-cont">
+                                                                <div class="uploads-item-title">NR 507 FINAL EXAM(3
+                                                                    DIFFERENT VERSIONS) PLUS STUDY GUIDES</div>
+                                                                <div class="uploads-item-dtls">
+                                                                    <div class="uploads-item-dtls-left">
+                                                                        <div class="uploads-item-price">$
+                                                                            <span>149.00</span>
+                                                                        </div>
+                                                                        <div class="reviews-stars">
+                                                                            <i class="fas fa-star"></i>
+                                                                            <i class="fas fa-star"></i>
+                                                                            <i class="fas fa-star"></i>
+                                                                            <i class="fas fa-star"></i>
+                                                                            <i class="fas fa-star"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="uploads-item-dtls-right">
+                                                                        <p>10 Sales<br />
+                                                                            Date uploaded : 30 Oct 19</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="uploads-item-tags">
+                                                                    <label>Tags -</label>
+                                                                    <p>
+                                                                        <span>Englist</span>
+                                                                        <span>Maths</span>
+                                                                        <span>Biology</span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="uploads-item-right">
+                                                                <div class="uploads-item-edit">
+                                                                    <a href="#" data-toggle="tooltip" title="Edit"><i
+                                                                            class="far fa-edit"></i></a>
+                                                                </div>
+                                                                <div class="uploads-item-active-inactive">
+                                                                    <label>
+                                                                        <input type="checkbox" checked="" />
+                                                                        <span><small></small></span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="uploads-item-btn">
+                                                                    <a href="product_detail_page.html"
+                                                                        class="btn">More...</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="uploads-right-main-item box-sh card card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <div class="uploads-item-img">
+                                                                <img src="images/businessTextbook.jpg" alt="" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="uploads-item-cont">
+                                                                <div class="uploads-item-title">NR 507 FINAL EXAM(3
+                                                                    DIFFERENT VERSIONS) PLUS STUDY GUIDES</div>
+                                                                <div class="uploads-item-dtls">
+                                                                    <div class="uploads-item-dtls-left">
+                                                                        <div class="uploads-item-price">$
+                                                                            <span>149.00</span>
+                                                                        </div>
+                                                                        <div class="reviews-stars">
+                                                                            <i class="fas fa-star"></i>
+                                                                            <i class="fas fa-star"></i>
+                                                                            <i class="fas fa-star"></i>
+                                                                            <i class="fas fa-star"></i>
+                                                                            <i class="fas fa-star"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="uploads-item-dtls-right">
+                                                                        <p>10 Sales<br />
+                                                                            Date uploaded : 30 Oct 19</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="uploads-item-tags">
+                                                                    <label>Tags -</label>
+                                                                    <p>
+                                                                        <span>Englist</span>
+                                                                        <span>Maths</span>
+                                                                        <span>Biology</span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="uploads-item-right">
+                                                                <div class="uploads-item-edit">
+                                                                    <a href="#" data-toggle="tooltip" title="Edit"><i
+                                                                            class="far fa-edit"></i></a>
+                                                                </div>
+                                                                <div class="uploads-item-active-inactive">
+                                                                    <label>
+                                                                        <input type="checkbox" />
+                                                                        <span><small></small></span>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="uploads-item-btn">
+                                                                    <a href="product_detail_page.html"
+                                                                        class="btn">More...</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="item-pagination">
+                                                <ul class="pagination">
+                                                    <li class="page-item"><a class="page-link" href="#"><i
+                                                                class="fas fa-chevron-left"></i></a></li>
+                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                                    <li class="page-item"><a class="page-link" href="#"><i
+                                                                class="fas fa-chevron-right"></i></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--col-md-9-->
+
+                        </div>
+                        <!--row-->
+                    </div>
+                    <!--container-->
+                </div>
+                <!--dashboard-content-->
+            </section>
+        </div>
+        <%- include('../footer'); %>
+    </body>
