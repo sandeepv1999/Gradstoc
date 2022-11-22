@@ -18,23 +18,27 @@
                             <!--col-md-3-->
 
                             <div class="col-md-9">
-                                <div class="uploads-right-top">
-                                    <div class="sec-head">
-                                        <h2>Add new Book</h2>
-                                    </div>
-                                    <div class="upload-dock-top card card-body box-sh file_drag_area">
-                                        <div class="Drag-file-text">
-                                            <img
-                                                src="/images/pngtree-download-arrow-vector-icon-white-transparent-background-png-image_1978018.jpg">
+                                <form method="post" action="/book-upload" id="uploadBook" class="uploads-document-form"
+                                    enctype="multipart/form-data">
+                                    <div class="uploads-right-top">
+                                        <div class="sec-head">
+                                            <h2>Add new Book</h2>
                                         </div>
-                                        <div class="click-input">
-                                            <input type="main_file" name="main_file" class="select_document">
-                                            <span><strong>Choose a file</strong> or drag it here</span>
+                                        <div class="upload-dock-top card card-body box-sh file_drag_area">
+                                            <div class="Drag-file-text">
+                                                <img
+                                                    src="/images/pngtree-download-arrow-vector-icon-white-transparent-background-png-image_1978018.jpg">
+                                            </div>
+                                            <div class="click-input">
+                                                <input type="file" id="main_file" name="main_file"
+                                                    class="select_document">
+                                                <span><strong>Choose a file</strong> or drag it here</span>
+                                            </div>
+                                        </div>
+                                        <div id="main_file_err" name="main_file_err" style="color:red ;">
                                         </div>
                                     </div>
-                                </div>
-                                <form method="post" action="javascript:void(0)" id="uploadBook"
-                                    class="uploads-document-form" enctype="multipart/form-data">
+
                                     <div class="uploads-right-main">
                                         <div class="uploads-right-main-items">
                                             <div class="uploads-document-box box-sh card card-body">
@@ -84,7 +88,7 @@
                                                                                         data-target="#myModal_add_school"
                                                                                         value="Add school">
                                                                                     <div id="school_error"
-                                                                                        style="color:red ;margin-left: 175px;">
+                                                                                        style="color:red ;">
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -95,8 +99,8 @@
                                                                         <div class="form-group">
                                                                             <div class="add-New">
                                                                                 <label>Subject name</label>
-                                                                                <div class="dropdown bootstrap-select show-tick"
-                                                                                    >
+                                                                                <div
+                                                                                    class="dropdown bootstrap-select show-tick">
                                                                                     <select class="form-control"
                                                                                         id="subject" name="subject">
                                                                                         <option value="">Select subject
@@ -108,7 +112,7 @@
                                                                                         data-target="#myModal_add_subject"
                                                                                         value="Add subject">
                                                                                     <div id="subject_error"
-                                                                                        style="color:red ;margin-left: 175px;">
+                                                                                        style="color:red ;">
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -133,7 +137,7 @@
                                                                                         data-target="#myModal_add_course"
                                                                                         value="Add course">
                                                                                     <div id="course_error"
-                                                                                        style="color:red ;margin-left: 175px;">
+                                                                                        style="color:red ;">
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -150,7 +154,7 @@
                                                                                     data-multiple-caption="{count} files selected"
                                                                                     multiple="">
                                                                             </div>
-                                                                            <div id="book_image" name="book_image"
+                                                                            <div id="book_image_error"
                                                                                 style="color:red ;margin-left: 175px;">
                                                                             </div>
                                                                         </div>
@@ -167,8 +171,8 @@
                                                                                     data-multiple-caption="{count} files selected"
                                                                                     multiple="">
                                                                             </div>
-                                                                            <div id="sample_file_error"
-                                                                                name="sample_file_error"
+                                                                            <div id="sample_file_err"
+                                                                                name="sample_file_err"
                                                                                 style="color:red ;margin-left: 175px;">
                                                                             </div>
                                                                         </div>
@@ -176,8 +180,7 @@
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <label>Price</label>
-                                                                            <input type="text" min="0"
-                                                                                onkeyup="price_validate()" id="price"
+                                                                            <input type="text" id="price" maxlength="6"
                                                                                 name="price" class="form-control"
                                                                                 placeholder="INR" value="">
                                                                             <div id="price_error" name="price_error"
@@ -196,7 +199,7 @@
                                                                                     data-live-search="true"
                                                                                     style="width: 250px;">
                                                                                     <% for (let tag of tags) { %>
-                                                                                        <option value="<%- tag._id%>">
+                                                                                        <option value="<%- tag.name %>">
                                                                                             <%- tag.name %>
                                                                                         </option>
                                                                                         <% } %>
@@ -208,7 +211,7 @@
                                                                                     data-target="#myModal_add_tag"
                                                                                     value="Add Tag">
                                                                                 <div id="tags_error" name="tags_error"
-                                                                                    style="color:red ;">
+                                                                                    style="color:red;margin-left: 175px;">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -217,13 +220,12 @@
                                                                         <div class="form-group">
                                                                             <label>Short Description
                                                                                 <span>*</span></label>
-                                                                            <textarea id="full_description"
+                                                                            <textarea id="short_description"
                                                                                 class="form-control"
                                                                                 placeholder="Enter Short Description"
                                                                                 name="short_description">
                                                                             </textarea>
                                                                             <div id="short_description_error"
-                                                                                name="course_error"
                                                                                 style="color:red ;margin-left: 175px;">
                                                                             </div>
                                                                         </div>
@@ -235,7 +237,11 @@
                                                                             <textarea id="full_description"
                                                                                 class="form-control"
                                                                                 placeholder="Enter full Description"
-                                                                                name="full_description"></textarea>
+                                                                                name="full_description">
+                                                                            </textarea>
+                                                                            <div id="full_description_error"
+                                                                                style="color:red ;margin-left: 175px;">
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -244,7 +250,6 @@
                                                                 <input type="submit" class="btn btn-primary"
                                                                     value="Upload">
                                                             </div>
-
                                                             <!-- New form ends -->
                                                         </div>
                                                     </div>
@@ -657,7 +662,7 @@
                     console.log('dta', data);
                     let html = ''
                     if (data.success) {
-                        html += `<option value="" selected="">
+                        html += `<option value="">
                             Select
                             Subject</option>`
                         $('#subject').html(html);
@@ -682,7 +687,6 @@
                 url: `/subject/?scl_id=${school_id}`,
                 dataType: "json",
                 success: function (data) {
-                    console.log('dta', data);
                     let html = ''
                     if (data.success) {
                         for (let sub of data.scl_sub) {
@@ -808,9 +812,10 @@
                     let html = ''
                     if (data.success) {
                         for (let key of data.tag) {
-                            html += `<option value="${key._id}" >${key.name}</option>`;
+                            html += `<option value="${key.name}" >${key.name}</option>`;
                             $('#tags').html(html);
                         }
+                        $('#myModal_add_tag').modal('hide');
                     } else {
 
                     }
@@ -818,11 +823,26 @@
             });
         });
 
-
-
         // <!------------------------------- Book form validation start---------------------------->
 
         $('#uploadBook').submit((e) => {
+
+            // Main file validation
+
+            let mainFile = $("#main_file").val();
+            let fileType = /(\.pdf|\.doc|\.odt|\.xls|\.xlsx)$/i;
+            if (mainFile == '') {
+                $("#main_file_err").html("Please select a file")
+                return false;
+            }
+            else {
+                if (!fileType.exec(mainFile)) {
+                    $("#main_file_err").html("Upload a file that having an extension pdf/doc/odt");
+                    return false;
+                } else {
+                    $("#main_file_err").html('');
+                }
+            }
 
             // Check title is valid or not
 
@@ -847,189 +867,128 @@
             }
             else {
                 $("#school_error").html('');
-                return true;
             }
 
-            // Check school is valid or not
+            // Check subject is valid or not
 
             let subject = $("#subject").val();
-            console.log('subject',subject);
+            console.log('subject', subject);
             if (subject == '') {
                 $("#subject_error").html('This field is required');
                 return false;
             }
             else {
                 $("#subject_error").html('');
-                return true;
             }
 
-            let short_description_value = $("#short_description").val().trim();
+            // Check subject is valid or not
 
-            if (short_description_value == "") {
-                document.getElementById("short_description_error").innerHTML = "Please enter short description";
+            let course = $("#course").val();
+            if (course == '') {
+                $("#course_error").html('This field is required');
                 return false;
             }
             else {
-                if (short_description_value.length > 300) {
-                    document.getElementById("short_description_error").innerHTML = "Maximum 300 character allowed";
-                    return flase;
+                $("#course_error").html('');
+            }
+
+            // Book image validation
+
+            let book_image = $("#book_image").val();
+            var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+            if (book_image == '') {
+                $("#book_image_error").html('Please select an image');
+                return false;
+            }
+            else if (allowedExtensions.exec(book_image)) {
+                $("#book_image_error").html('');
+            }
+            else {
+                $("#book_image_error").html("Please upload files having extensions: .jpg  .jpeg  .png  .gif  only.")
+                return false;
+            }
+
+
+            // Sample file validation
+
+            let sampleFile = $("#sample_file").val();
+            console.log('sample file', sampleFile);
+            if (sampleFile == '') {
+                $("#sample_file_err").html("Please select a file")
+                return false;
+            }
+            else {
+                if (!fileType.exec(sampleFile)) {
+                    $("#sample_file_err").html("Upload a file that having an extension pdf/doc/odt");
+                    return false;
                 } else {
-                    document.getElementById("short_description_error").innerHTML = "";
-                    return true;
+                    $("#sample_file_err").html('');
                 }
             }
-            e.preventDefault();
+
+            // Check price  is valid or not
+
+            let price = $("#price").val();
+            console.log('price', price);
+            var numbers = /^[0-9]+$/
+            if (price == "") {
+                $("#price_error").html("Please enter an amount");
+                return false;
+            } else if (!price.match(numbers) || price == '0') {
+                $("#price_error").html("Please enter valid amount");
+                return false;
+            } else {
+                $("#price_error").html("");
+            }
+
+            // Check subject is valid or not
+
+            let tags = $("#tags").val();
+            console.log('tags', tags);
+            if (tags == '') {
+                $("#tags_error").html('This field is required');
+                return false;
+            }
+            else {
+                $("#tags_error").html('');
+            }
+
+            // Check short_description is valid or not
+
+            let short_description = $("#short_description").val();
+            short_description = $.trim(short_description);
+            if (short_description == "") {
+                $("#short_description_error").html("Please enter short description");
+                return false;
+            }
+            else {
+                if (short_description.length > 300) {
+                    $("#short_description_error").html("Maximum 300 character allowed");
+                    return false;
+                } else {
+                    $("#short_description_error").html("");
+                }
+            }
+
+            // Full short_description is valid or not
+
+            let full_description = $("#full_description").val();
+            full_description = $.trim(full_description);
+            console.log('full_description', full_description);
+            if (full_description == "") {
+                $("#full_description_error").html("Please enter full description");
+                return false;
+            }
+            else {
+                if (full_description.length > 1000) {
+                    $("#full_description_error").html("Maximum 1000 character allowed");
+                    return false;
+                } else {
+                    $("#full_description_error").html("");
+                }
+            }
+
         });
 
 
     </script>
-
-
-    // function title_validate() {
-    // var title_value = document.getElementById("title").value;
-    // if (title_value == "") {
-    // document.getElementById("title_error").innerHTML = "This field required";
-    // return false;
-    // } else {
-    // if (title_value.length > 70) {
-    // document.getElementById("title_error").innerHTML = "Maximim 70 character allowed";
-    // return false;
-    // } else {
-    // document.getElementById("title_error").innerHTML = "";
-    // return true;
-    // }
-    // }
-    // }
-
-    // function course_validate() {
-    // var course = document.getElementById("course");
-    // if (course.selectedIndex == 0) {
-    // document.getElementById("course_error").innerHTML = "This field required";
-    // return false;
-    // }
-    // else {
-    // document.getElementById("course_error").innerHTML = "";
-    // return true;
-    // }
-    // }
-
-
-    // function subject_validate() {
-    // var subject = document.getElementById("subject");
-    // if (subject.selectedIndex == 0) {
-    // document.getElementById("subject_error").innerHTML = "This field required";
-    // return false;
-    // }
-    // else {
-    // document.getElementById("subject_error").innerHTML = "";
-    // return true;
-    // }
-    // }
-
-    // function price_validate() {
-    // let price_value = document.getElementById("price").value;
-    // let pattern = /^\d{1,}(?:\.\d{1,})?$/;
-    // if (price_value == "") {
-    // document.getElementById("price_error").innerHTML = "This field required";
-    // return false;
-    // }
-    // if (price_value == 0) {
-    // document.getElementById("price_error").innerHTML = "Zero value not allowed";
-    // return false;
-    // }
-    // if (pattern.test(price_value)) {
-    // document.getElementById("price_error").innerHTML = "";
-    // return true;
-    // } else {
-    // document.getElementById("price_error").innerHTML = "Only numbers allowed (Decimal allowed between numbers only)";
-    // return false;
-    // }
-    // }
-
-    // function tags_validate() {
-    // var tags_value = document.getElementById("tags").value;
-    // if (tags_value == '') {
-    // document.getElementById("tags_error").innerHTML = "This field required";
-    // return false;
-    // }
-    // else {
-    // document.getElementById("tags_error").innerHTML = "";
-    // return true;
-    // }
-    // }
-
-    // function document_image_validate() {
-    // let image_value = document.getElementById("file").value;
-    // let fileType = /(\.jpg|\.jpeg|\.png|.gif)$/i;
-    // if (image_value == '') {
-    // document.getElementById("file_error").innerHTML = "This field required";
-    // return false;
-    // }
-    // else {
-    // if (!fileType.exec(image_value)) {
-    // document.getElementById("file_error").innerHTML = "jpg,jpeg and png formate allowed";
-    // return false;
-    // } else {
-    // document.getElementById("file_error").innerHTML = "";
-    // return true;
-    // }
-    // };
-
-    // }
-
-    // function sample_document_validate() {
-    // let sample_document_value = document.getElementById("sample_file").value;
-    // let fileType = /(\.pdf|\.doc|\.odt|\.xls|\.xlsx)$/i;
-
-    // if (sample_document_value == '') {
-    // document.getElementById("sample_file_error").innerHTML = "This field required";
-    // return false;
-    // }
-    // else {
-    // if (!fileType.exec(sample_document_value)) {
-    // document.getElementById("sample_file_error").innerHTML = "pdf file formate allowed only";
-    // return false;
-    // } else {
-    // document.getElementById("sample_file_error").innerHTML = "";
-    // return true;
-    // }
-    // }
-    // }
-
-    // function main_document_validate() {
-    // let main_document_value = document.getElementById("main_file").value;
-    // let fileType = /(\.pdf|\.doc|\.odt|\.xls|\.xlsx)$/i;
-
-    // if (main_document_value == '') {
-    // document.getElementById("main_file_error").innerHTML = "This field required";
-    // return false;
-    // }
-    // else {
-    // if (!fileType.exec(main_document_value)) {
-    // document.getElementById("main_file_error").innerHTML = "pdf file formate allowed only";
-    // return false;
-    // } else {
-    // document.getElementById("main_file_error").innerHTML = "";
-    // return true;
-    // }
-    // }
-    // }
-
-    // function short_description_validate() {
-
-
-    // function full_description_validate() {
-    // let full_description_value = document.getElementById("full_description").value;
-    // if (full_description_value == "") {
-    // document.getElementById("full_description_error").innerHTML = "This field required";
-    // return false;
-    // } else {
-    // if (full_description_value.length > 1000) {
-    // document.getElementById("full_description_error").innerHTML = "Maximum 1000 character allowed";
-    // return false;
-    // } else {
-    // document.getElementById("full_description_error").innerHTML = "";
-    // return true;
-    // }
-    // }
-    // };

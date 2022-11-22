@@ -250,7 +250,7 @@ class AuthController {
                 await bcrypt.compare(
                     password,
                     user.password,
-                    async function (err, isMatch) {
+                    async function (err , isMatch) {
                         if (isMatch) {
                             if (user.isEmailVerify == '0') {
                                 data.success = false;
