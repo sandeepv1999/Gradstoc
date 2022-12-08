@@ -1,0 +1,288 @@
+<%- include('../header'); %>
+
+    <body class="home">
+        <div class="main-wrapper">
+            <section class="section-middle">
+                <div class="page-title">
+                    <div class="container">
+                        <div class="page-title-in">
+                            <h2>Book Details</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="social-main-section">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="social-main-left">
+                                    <div class="social-pro-left">
+                                        <div class="text-container">
+                                            <div class="social-pro-top-head">
+                                                <h1 style="font-weight:600;">
+                                                    <%- bookData.title %>
+                                                </h1>
+                                            </div>
+                                            <div class="content hideContent">
+                                                <%- bookData.short_description %>
+                                                    <%- bookData.full_description %>
+                                                        <%- bookData.full_description %>
+                                            </div>
+                                            <div class="show-more">
+                                                <a href="#">Show more</a>
+                                            </div>
+                                        </div>
+                                        <div class="social-pro-dtls">
+                                            <div class="social-pro-img">
+                                                <!-- <embed src='uploads/<%- bookData.sample_file %>' width='100%' height='650px' frameborder='0'></embed> -->
+                                                <img src="uploads/<%- bookData.image %>" width="500px" alt="">
+                                            </div>
+                                            <% if (userData.id != bookData.user_id ) { %>
+                                                <div class="social-pro-cont">
+                                                    <h4>Purchase the document to get full access instantly</h4>
+                                                    <div class="social-pro-ct">
+                                                        <span><i class="fas fa-check-circle"></i> Conquer Your
+                                                            Course</span>
+                                                        <span>
+                                                            <% if(isUserLoggedIn) { %>
+                                                            <% if(isBookmark == 0 ){ %>
+                                                            <a href="#" onclick="addItem('<%- bookData._id %>')" class="btn"><i class="fas fa-bookmark"></i>
+                                                                <span id="bookmark">Add
+                                                                to bookmark</span></a>
+                                                             <% } else { %>
+                                                                <a href="#" onclick="removeItem('<%- bookData._id %>')" class="btn"><i class="fas fa-bookmark"></i>
+                                                                    <span id="bookmarkRemove">Remove
+                                                                     bookmark</span></a>
+                                                             <% } %>   
+                                                            <% } %>
+                                                        </span>
+                                                    </div>1669210144649.pdf
+                                                </div>
+                                                <% } %>
+                                        </div>
+
+                                    </div>
+                                    <div class="reviews-section">
+                                        <div class="sec-head">Reviews</div>
+                                        <div class="reviews-sec-divs">
+                                            <div class="reviews-sec-div box-sh card card-body">
+                                                <div class="reviews-ur-img">
+                                                    <span><i class="fas fa-user"></i></span>
+                                                </div>
+                                                <div class="reviews-ur-cont">
+                                                    <div class="reviews-stars">
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                    </div>
+                                                    <div class="reviews-ur-nm">
+                                                        <p>By: <a href="#">John doe</a> • 2 months ago</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="reviews-sec-div box-sh card card-body">
+                                                <div class="reviews-ur-img">
+                                                    <span><i class="fas fa-user"></i></span>
+                                                </div>
+                                                <div class="reviews-ur-cont">
+                                                    <div class="reviews-stars">
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                    </div>
+                                                    <div class="reviews-ur-nm">
+                                                        <p>By: <a href="#">John doe</a> • 2 months ago</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="more-review-btn"><a href="#" class="btn">Show more reviews
+                                                    <i class="fas fa-chevron-down"></i><i></i></a></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="social-main-aside">
+                                    <div class="study-area aside-card box-sh card card-body">
+                                        <div class="study-area-top">
+                                            <div class="study-title">Study guide</div>
+                                            <div class="study-review">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                            <div class="study-price">$ <%- bookData.price %>
+                                            </div>
+                                            <div class="study-addtocart ">
+                                                <a href="uploads/<%- bookData.sample_file %>" class="btn sample-file"
+                                                    download="sample file">Download file<i
+                                                        class="fa fa-download"></i></a>
+                                            </div>
+                                            <% if (userData.id !=bookData.user_id ) { %>
+                                                <div class="study-addtocart">
+                                                    <% if(cartItems.length > 0) { %>
+                                                        <% if(cartItems.includes(bookData._id.toString())) { %>
+                                                            <a href="/my-cart"><i class="fas fa-eye my-2"></i><span>View Cart</span></a>
+                                                            <% } else { %>
+                                                                <a href="#" class="btn"
+                                                                    onclick="addToCart('<%- bookData._id %>')"><i
+                                                                        id="cart" class="fas fa-shopping-cart"></i><span
+                                                                        id="cartText">Add to cart</span></a>
+                                                                <% } %>
+                                                    <% } else { %>
+                                                        <a href="#" class="btn"
+                                                        onclick="addToCart('<%- bookData._id %>')"><i
+                                                            id="cart"
+                                                            class="fas fa-shopping-cart"></i><span
+                                                            id="cartText">Add to
+                                                            cart</span></a>
+                                                    <% } %>
+                                                </div>
+                                                <% } %>
+                                        </div>
+                                        <div class="study-area-btm">
+                                            <div class="study-area-btm-left">
+                                                <ul>
+                                                    <li><i class="fas fa-check-circle"></i> Instant Download</li>
+                                                    <li><i class="fas fa-check-circle"></i> Conquer Your Course</li>
+                                                </ul>
+                                            </div>
+                                            <div class="study-area-btm-right">
+                                                <ul>
+                                                    <li><span><i class="fas fa-eye"></i>
+                                                            <%- viewCount %>
+                                                        </span></li>
+                                                    <li><span><i class="fas fa-cloud-download-alt"></i> 05</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="seller-area aside-card box-sh card card-body">
+                                        <div class="seller-area-indivs">
+                                            <h3>Seller</h3>
+                                            <div class="seller-area-indiv">
+                                                <div class="seller-ur-img">
+                                                    <span><img style="border-radius: 10%;"
+                                                            src="uploads/<%- bookData.user[0].profile %>" /></span>
+                                                </div>
+                                                <div class="seller-ur-cont">
+                                                    <div class="seller-ur-name">
+                                                        <%- bookData.user[0].firstName +' '+ bookData.user[0].lastName %></div>
+                                                    <div class="seller-ur-dis">Member since <%- bookData.createdAt %>
+                                                        491 documents sold</div>
+                                                    <div class="seller-stars">
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                        <i class="fas fa-star"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tags-area aside-card box-sh card card-body">
+                                        <div class="tags-area-indivs">
+                                            <h3>Tags</h3>
+                                            <div class="tags-area-tags">
+                                                <ul>
+                                                    <% for (let key of tags ) { %>
+                                                    <li><a href="#"><%- key.name %></a></li>
+                                                    <% } %>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+            <%- include('../popup'); %>
+        </div>
+        <%- include('../footer'); %>                                            
+    </body>
+
+    <script>
+
+        // SHOW SHORT OR LONG DESCRIPTION
+
+        $(".show-more a").on("click", function () {
+            var $this = $(this);
+            var $content = $this.parent().prev("div.content");
+            var linkText = $this.text().toUpperCase();
+
+            if (linkText === "SHOW MORE") {
+                linkText = "Show less";
+                $content.switchClass("hideContent", "showContent", 400);
+            } else {
+                linkText = "Show more";
+                $content.switchClass("showContent", "hideContent", 400);
+            };
+
+            $this.text(linkText);
+        });
+
+        // ADD TO CART FUNCTIONALITY 
+
+        function addToCart(productId) {
+            $.ajax({
+                type: 'GET',
+                url: `/cart/${productId}`,
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        $('#cart').addClass("fa-eye");
+                        $('#cartText').html("");
+                        $('#cartText').html("View cart");
+                        $('#cart').removeClass("fa-shopping-cart");
+                        location.replace('http://localhost:3300/product-detail?productId=<%- bookData._id %>')
+                    }
+                }
+            })
+        }
+
+        // ADD TO BOOKMARK FUNCTIONALITY 
+
+        function addItem(productId) {
+            $.ajax({
+                type: 'GET',
+                url: `/addBookmark/${productId}`,
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        $('#bookmark').html("");
+                        $('#bookmark').html("Remove Bookmark");
+                        location.replace('http://localhost:3300/product-detail?productId=<%- bookData._id %>')
+                    }
+                }
+            })
+        }
+
+         // ADD TO BOOKMARK FUNCTIONALITY 
+
+         function removeItem(productId) {
+            $.ajax({
+                type: 'GET',
+                url: `/removeBookmark/${productId}`,
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        $('#bookmarkRemove').html("");
+                        $('#bookmarkRemove').html("Add to Bookmark");
+                        location.replace('http://localhost:3300/product-detail?productId=<%- bookData._id %>')
+                    }
+                }
+            })
+        }
+
+    </script>

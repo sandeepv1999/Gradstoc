@@ -1,11 +1,13 @@
 <%- include('../header') %>
 
+    </script>
+
     <body class="home">
         <section class="section-middle">
             <div class="page-title">
                 <div class="container">
                     <div class="page-title-in">
-                        <h2>Uploads New Book</h2>
+                        <h2>Uploads New <%- type == 0 ? 'Book' : 'document ' %></h2>
                     </div>
                 </div>
             </div>
@@ -18,18 +20,21 @@
                             <!--col-md-3-->
 
                             <div class="col-md-9">
-                                <form method="post" action="/book-upload" id="uploadBook" class="uploads-document-form"
-                                    enctype="multipart/form-data">
+                                <form method="post" action="/product-upload" id="uploadBook"
+                                    class="uploads-document-form" enctype="multipart/form-data">
                                     <div class="uploads-right-top">
                                         <div class="sec-head">
-                                            <h2>Add new Book</h2>
+                                            <h2> Add New <%- type == 0 ? 'Book' : 'document ' %> <span
+                                                    class="text text-danger">*</span>
+                                            </h2>
                                         </div>
                                         <div class="upload-dock-top card card-body box-sh file_drag_area">
-                                            <div class="Drag-file-text">
-                                                <img
-                                                    src="/images/pngtree-download-arrow-vector-icon-white-transparent-background-png-image_1978018.jpg">
-                                            </div>
+
                                             <div class="click-input">
+                                                <div class="Drag-file-text">
+                                                    <img
+                                                        src="/images/pngtree-download-arrow-vector-icon-white-transparent-background-png-image_1978018.jpg">
+                                                </div>
                                                 <input type="file" id="main_file" name="main_file"
                                                     class="select_document">
                                                 <span><strong>Choose a file</strong> or drag it here</span>
@@ -55,10 +60,14 @@
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
-                                                                            <label>Title</label>
-                                                                            <input type="text" id="title" name="title"
-                                                                                class="form-control"
+                                                                            <label>Title
+                                                                                <span>*</span>
+                                                                            </label>
+                                                                            <input type="text" id="title" maxlength="50"
+                                                                                name="title" class="form-control"
                                                                                 placeholder="Enter title" value="">
+                                                                            <input type="hidden" id="type" name="type"
+                                                                                value="<%- type %>" />
                                                                             <div id="title_error" name="course_error"
                                                                                 style="color:red ;margin-left: 175px;">
                                                                             </div>
@@ -67,9 +76,11 @@
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <div class="add-New">
-                                                                                <label>School name</label>
+                                                                                <label>School name
+                                                                                    <span>*</span>
+                                                                                </label>
                                                                                 <div
-                                                                                    class="dropdown bootstrap-select show-tick">
+                                                                                    class="dropdown bootstrap-select show-tick form-control">
                                                                                     <select class="form-control"
                                                                                         id="school" name="school">
                                                                                         <option value="" selected="">
@@ -82,31 +93,36 @@
                                                                                             </option>
                                                                                             <% } %>
                                                                                     </select>
-                                                                                    <input type="button"
-                                                                                        class="btn btn-primary"
-                                                                                        data-toggle="modal"
-                                                                                        data-target="#myModal_add_school"
-                                                                                        value="Add school">
-                                                                                    <div id="school_error"
-                                                                                        style="color:red ;">
-                                                                                    </div>
+                                                                                </div>
+                                                                                <input type="button"
+                                                                                    style=" margin: 10px 0px 0px 10px;"
+                                                                                    class="btn btn-primary"
+                                                                                    data-toggle="modal"
+                                                                                    data-target="#myModal_add_school"
+                                                                                    value="Add school">
+                                                                                <div id="school_error"
+                                                                                    style="color:red ;">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
 
+
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <div class="add-New">
-                                                                                <label>Subject name</label>
+                                                                                <label>Subject name
+                                                                                    <span>*</span>
+                                                                                </label>
                                                                                 <div
-                                                                                    class="dropdown bootstrap-select show-tick">
+                                                                                    class="dropdown bootstrap-select show-tick  form-control">
                                                                                     <select class="form-control"
                                                                                         id="subject" name="subject">
                                                                                         <option value="">Select subject
                                                                                         </option>
                                                                                     </select>
                                                                                     <input type="button"
+                                                                                        style="position:absolute; margin-left: 10px;"
                                                                                         class="btn btn-primary"
                                                                                         data-toggle="modal"
                                                                                         data-target="#myModal_add_subject"
@@ -119,19 +135,22 @@
                                                                         </div>
                                                                     </div>
 
-                                                                    <div class="col-md-12">
+                                                                    <div class="col-md-12 mb-2">
                                                                         <div class="form-group">
-                                                                            <div class="add-New">
-                                                                                <label>Course</label>
+                                                                            <div class="add-New ">
+                                                                                <label>Course
+                                                                                    <span>*</span>
+                                                                                </label>
                                                                                 <div
-                                                                                    class="dropdown bootstrap-select show-tick">
-                                                                                    <select class="form-control"
+                                                                                    class="dropdown bootstrap-select show-tick form-control ">
+                                                                                    <select class="form-control "
                                                                                         id="course" name="course">
                                                                                         <option value="" selected="">
                                                                                             Select
                                                                                             Course</option>
                                                                                     </select>
                                                                                     <input type="button"
+                                                                                        style="position:absolute; margin-left: 12px;"
                                                                                         class="btn btn-primary"
                                                                                         data-toggle="modal"
                                                                                         data-target="#myModal_add_course"
@@ -147,12 +166,12 @@
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <div class="add-New">
-                                                                                <label>Book Image</label>
+                                                                                <label> Image
+                                                                                    <span>*</span>
+                                                                                </label>
                                                                                 <input type="file" name="book_image"
                                                                                     id="book_image" class="form-control"
-                                                                                    class="inputfile inputfile"
-                                                                                    data-multiple-caption="{count} files selected"
-                                                                                    multiple="">
+                                                                                    class="inputfile inputfile">
                                                                             </div>
                                                                             <div id="book_image_error"
                                                                                 style="color:red ;margin-left: 175px;">
@@ -163,7 +182,9 @@
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
                                                                             <div class="add-New">
-                                                                                <label>Sample File</label>
+                                                                                <label>Sample File
+                                                                                    <span>*</span>
+                                                                                </label>
                                                                                 <input type="file" name="sample_file"
                                                                                     id="sample_file"
                                                                                     class="form-control"
@@ -179,7 +200,9 @@
                                                                     </div>
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
-                                                                            <label>Price</label>
+                                                                            <label>Price
+                                                                                <span>*</span>
+                                                                            </label>
                                                                             <input type="text" id="price" maxlength="6"
                                                                                 name="price" class="form-control"
                                                                                 placeholder="INR" value="">
@@ -190,28 +213,35 @@
                                                                     </div>
 
                                                                     <div class="col-md-12">
-                                                                        <div class="form-group">
-                                                                            <div class="add-New">
-                                                                                <label>Tags</label>
-                                                                                <select class="form-control"
-                                                                                    class="selectpicker" id="tags"
-                                                                                    name="tags" multiple
-                                                                                    data-live-search="true"
-                                                                                    style="width: 250px;">
-                                                                                    <% for (let tag of tags) { %>
-                                                                                        <option value="<%- tag.name %>">
-                                                                                            <%- tag.name %>
-                                                                                        </option>
-                                                                                        <% } %>
-                                                                                </select>
+                                                                        <div class="form-group ">
+                                                                            <div class="">
+                                                                                <label>Tags
+                                                                                    <span>*</span>
+                                                                                </label>
+                                                                                <div
+                                                                                    class="bootstrap-select form-control ">
+                                                                                    <select class="form-control"
+                                                                                        class="selectpicker" id="tags"
+                                                                                        name="tags" multiple
+                                                                                        data-live-search="true">
+                                                                                        <% for (let tag of tags) { %>
+                                                                                            <option
+                                                                                                value="<%- tag._id %>">
+                                                                                                <%- tag.name %>
+                                                                                            </option>
+                                                                                            <% } %>
+                                                                                    </select>
 
-                                                                                <input type="button" size="50px"
-                                                                                    class="btn btn-primary"
-                                                                                    data-toggle="modal"
-                                                                                    data-target="#myModal_add_tag"
-                                                                                    value="Add Tag">
-                                                                                <div id="tags_error" name="tags_error"
-                                                                                    style="color:red;margin-left: 175px;">
+                                                                                    <input type="button" size="50px"
+                                                                                        style="position:absolute; margin-left: 12px; "
+                                                                                        class="btn btn-primary"
+                                                                                        data-toggle="modal"
+                                                                                        data-target="#myModal_add_tag"
+                                                                                        value="Add Tag">
+                                                                                    <div id="tags_error"
+                                                                                        name="tags_error"
+                                                                                        style="color:red;margin-left: 175px;">
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -221,7 +251,7 @@
                                                                             <label>Short Description
                                                                                 <span>*</span></label>
                                                                             <textarea id="short_description"
-                                                                                class="form-control"
+                                                                                maxlength="300" class="form-control"
                                                                                 placeholder="Enter Short Description"
                                                                                 name="short_description">
                                                                             </textarea>
@@ -235,7 +265,7 @@
                                                                             <label>Full Description
                                                                                 <span>*</span></label>
                                                                             <textarea id="full_description"
-                                                                                class="form-control"
+                                                                                maxlength="1000" class="form-control"
                                                                                 placeholder="Enter full Description"
                                                                                 name="full_description">
                                                                             </textarea>
@@ -246,7 +276,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div>
+                                                            <div class="text text-center">
                                                                 <input type="submit" class="btn btn-primary"
                                                                     value="Upload">
                                                             </div>
@@ -444,8 +474,10 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label> Course Description</label>
-                                                    <textarea class="form-control" style="text-align: justify;"
-                                                        name="course_description" id="course_description"></textarea>
+                                                    <textarea class="form-control" style="text-align: justify; padding-top: 0;
+                                                    padding-left: 0;
+                                                    line-height: 1em; " name="course_description"
+                                                        id="course_description"></textarea>
                                                     <small id="course_description_error" style="color:red ;">
                                                     </small>
                                                 </div>
@@ -812,12 +844,10 @@
                     let html = ''
                     if (data.success) {
                         for (let key of data.tag) {
-                            html += `<option value="${key.name}" >${key.name}</option>`;
+                            html += `<option value="${key._id}" >${key.name}</option>`;
                             $('#tags').html(html);
                         }
                         $('#myModal_add_tag').modal('hide');
-                    } else {
-
                     }
                 }
             });
@@ -830,14 +860,14 @@
             // Main file validation
 
             let mainFile = $("#main_file").val();
-            let fileType = /(\.pdf|\.doc|\.odt|\.xls|\.xlsx)$/i;
+            let fileType = /(\.pdf|\.doc|\.odt|\.xls|\.xlsx|\.docx)$/i;
             if (mainFile == '') {
                 $("#main_file_err").html("Please select a file")
                 return false;
             }
             else {
                 if (!fileType.exec(mainFile)) {
-                    $("#main_file_err").html("Upload a file that having an extension pdf/doc/odt");
+                    $("#main_file_err").html("Upload a file that having an extension pdf/doc/odt/docx/xls");
                     return false;
                 } else {
                     $("#main_file_err").html('');
@@ -850,8 +880,8 @@
             if (title == '') {
                 $('#title_error').html("This field is required");
                 return false;
-            } else if (title.match(/^\s+$/) !== null || /^[a-zA-Z]+$/.test(title) == false) {
-                $('#title_error').html('This field does not contain any blank space or number');
+            } else if (title.length > 50) {
+                $('#title_error').html('Title shoud be less than 50 charecter');
                 return false;
             }
             else {
@@ -861,6 +891,7 @@
             // Check school is valid or not
 
             let school = $("#school").val();
+            console.log('school', school);
             if (school == '') {
                 $("#school_error").html('This field is required');
                 return false;
@@ -884,6 +915,7 @@
             // Check subject is valid or not
 
             let course = $("#course").val();
+            console.log('school', course);
             if (course == '') {
                 $("#course_error").html('This field is required');
                 return false;
@@ -908,7 +940,6 @@
                 return false;
             }
 
-
             // Sample file validation
 
             let sampleFile = $("#sample_file").val();
@@ -930,11 +961,11 @@
 
             let price = $("#price").val();
             console.log('price', price);
-            var numbers = /^[0-9]+$/
+            var numbers = /^(?!^0\.00$)(([1-9][\d]{0,6})|([0]))\.[\d]{2}$/gm
             if (price == "") {
                 $("#price_error").html("Please enter an amount");
                 return false;
-            } else if (!price.match(numbers) || price == '0') {
+            } else if (!price.match(numbers)) {
                 $("#price_error").html("Please enter valid amount");
                 return false;
             } else {
@@ -987,7 +1018,6 @@
                     $("#full_description_error").html("");
                 }
             }
-
         });
 
 

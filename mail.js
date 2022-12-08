@@ -14,7 +14,8 @@ module.exports.send_mail = async (email, subject,template) => {
         secure: true,
         auth: {
             user: 'sandeep.infowind@gmail.com',
-            pass: 'irtjifmqustewjrm'
+            // pass: 'irtjifmqustewjrm'
+            pass:'iqmwjtntfyexieoh'
         }
     });
 

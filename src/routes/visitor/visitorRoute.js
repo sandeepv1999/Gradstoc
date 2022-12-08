@@ -1,13 +1,13 @@
 require('dotenv').config()
 const express = require('express');
 const app = express();
-const AdminController = require('../../controller/admin/AdminController');
+const visitorController = require('../../controller/visitor/VisitorController');
 const AuthController = require('../../controller/visitor/AuthController');
 const CheckUser = require('../../../middleware/CheckUser');
 const passport = require('passport');
 
 
-app.get('/',AdminController.homePage);
+app.get('/',visitorController.homePage);
 
 app.post('/register',AuthController.registration);
 
@@ -15,9 +15,9 @@ app.post('/login' , AuthController.login);
 
 app.post('/email_verify',AuthController.emailVerification);
 
-app.get('/verify',AdminController.mailVerification);
+app.get('/verify',visitorController.mailVerification);
 
-app.post('/resendMail',AdminController.resendMail);
+app.post('/resendMail',visitorController.resendMail);
 
 app.post('/forget_pasword',AuthController.forget_password);
 
@@ -27,13 +27,13 @@ app.post('/reset_password',AuthController.reset_user_password);
 
 app.get('/logout',CheckUser.isValidUser,AuthController.logout);
 
-app.get('/school',AdminController.school);
+app.get('/school',visitorController.school);
 
-app.get('/document',AdminController.document);
+// app.get('/document',visitorController.document);
 
-app.get('/book',AdminController.book);
+app.get('/product',visitorController.product);
 
-app.get('/blog',AdminController.blog);
+app.get('/blog',visitorController.blog);
 
 app.get('/google',passport.authenticate('google', { scope: ['profile', 'email'] }));
 
@@ -43,9 +43,12 @@ app.get('/auth/facebook', passport.authenticate('facebook',   { scope: 'email' }
 
 app.get('/addInfo_fb',passport.authenticate('facebook'), AuthController.facebookLogin);
 
-app.get('/add_Information', AdminController.addInformation);
+app.get('/add_Information', visitorController.addInformation);
 
 app.post('/add_Information', AuthController.add_additional_data);
+
+app.get('/terms-service', visitorController.termsAndService);
+
 
 
 module.exports = app

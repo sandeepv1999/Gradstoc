@@ -4,7 +4,7 @@
       <div class="modal-sign-div">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
 
-        <div class="modal-sign-in">
+        <div class="modal-sign-in" id="myModal123">
           <div class="modal-sign-head">
             <h2>Log In to Your Account</h2>
           </div>
@@ -18,7 +18,7 @@
               </ul>
             </div>
             <div class="sign-or"><span>OR</span></div>
-            <div class="sign-form">
+            <div class="sign-form"> 
               <form method="post" action="javascript:void(0)" id="submitLoginForm" class="signin-form">
                 <div class="row">
                   <div class="col-md-12">
@@ -144,6 +144,7 @@
                       <label>Password <span>*</span></label>
                       <input type="password" class="form-control" id="password" maxlength="16" name="password"
                         placeholder="Password" value="" />
+                      <i class="bi bi-eye-slash ip" id="toggleSignPassword"></i>
                       <small id="passwordError" style="color:red;"></small>
                     </div>
                   </div>
@@ -152,6 +153,7 @@
                       <label>Confirm password <span>*</span></label>
                       <input type="password" class="form-control" id="confirm_password" maxlength="16"
                         name="confirm_password" placeholder="Confirm password" value="" />
+                        <i class="bi bi-eye-slash ip" id="toggleSignCPassword"></i>
                       <small id='message'></small>
                     </div>
                   </div>
@@ -163,7 +165,7 @@
                           <span></span>
                         </label>
                       </span>
-                      <label>I have read and accept the <a href="#">Terms & Conditions</a></label>
+                      <label>I have read and accept the <a href="/terms-service">Terms & Conditions</a></label>
                       <br>
                       <small id="checkBoxError" style="color:red;"></small>
                     </div>
@@ -242,6 +244,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>

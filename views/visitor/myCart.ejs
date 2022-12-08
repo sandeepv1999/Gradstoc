@@ -1,0 +1,437 @@
+<%- include('../header') %>
+
+  <body class="home">
+
+    <div class="main-wrapper">
+      <section class="section-middle">
+        <div class="page-title">
+          <div class="container">
+            <div class="page-title-in">
+              <h2>My Cart</h2>
+            </div>
+          </div>
+        </div><!-- page-title -->
+
+        <div class="my-cart-content">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-8">
+                <div class="my-cart-left">
+                  <div class="my-cart-header">
+                    <div class="continue-shop">
+                      <a href="/product">Continue Shopping</a>
+                    </div>
+                    <!--continue-shop-->
+
+                    <div class="Total-item">
+                      You have <%- success==1 ? productCounts: '0' %> items in your cart
+                    </div>
+                    <!--Total-item-->
+                    <div class="Empty-Cart">
+                      <% if(success==1) { %>
+                        <a href="/empty-cart">Empty Cart</a>
+                        <% } %>
+                    </div>
+                    <!--continue-shop-->
+                  </div>
+                  <!--my-cart-header-->
+                  <% if (success==1 ) { %>
+                    <div class="cart-prodcut-list">
+                      <div class="uploads-right-main-items">
+                        <% for (let product of products ) { %>
+                          <div class="uploads-right-main-item box-sh card card-body">
+                            <div class="row">
+                              <div class="col-md-2">
+                                <div class="uploads-item-img">
+                                  <img src="uploads/<%- product.image %>" alt="">
+                                </div>
+                              </div>
+                              <div class="col-md-8">
+                                <div class="uploads-item-cont">
+                                  <div class="uploads-item-title"><a href="/product-detail?productId=<%- product._id%>">
+                                      <%- product.title %>
+                                    </a></div>
+                                  <div class="uploads-item-dtls">
+                                    <div class="uploads-item-dtls-left">
+                                      <div class="uploads-item-price">$ <span>
+                                          <%- product.price %>
+                                        </span></div>
+                                      <div class="uploads-item-author">
+                                        <p><a href="/author?userId=<%- product.user_id %>">Author Name</a></p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-2">
+                                <div class="uploads-item-right">
+                                  <div class="subject-delete">
+                                    <a href="/remove-item/<%- product._id  %>" class="btn"><i
+                                        class="far fa-trash-alt"></i></a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <% } %>
+                      </div>
+                    </div>
+                    <!--cart-prodcut-list-->
+                </div>
+                <!--my-cart-left-->
+
+                <!--continue-shop-->
+              </div>
+              <!--col-md-9-->
+
+              <div class="col-md-4">
+                <div class="my-cart-right">
+                  <div class="choose-your-payment aside-card card card-body">
+                    <div class="cart-head">
+                      Choose your payment method
+                    </div>
+                    <!--cart-head-->
+                    <form>
+                      <div class="currently-div payment">
+                        <ul>
+                          <li>
+                            <label>
+                              <input type="radio" name="currently" id="stripe" value="stripe">
+                              <span><img src="images/stripe.webp" alt=""></span>
+                            </label>
+                          </li>
+                          <li>
+                            <label>
+                              <input type="radio" name="currently" id="paypal" value="paypal">
+                              <span><img src="images/payment_07.png" alt=""></span>
+                            </label>
+                          </li>
+                        </ul>
+                      </div>
+                      <% if(isUserLoggedIn) { %>
+                        <label>
+                          <input type="checkbox" name="use_wallet" id="use_wallet" value=""> Pay Using Your Current
+                          Balance $
+                          <span id="wallet_amount">30.00</span>
+                        </label>
+                        <% } %>
+                    </form>
+                  </div>
+
+                  <!--choose-your-payment-->
+
+                  <div class="choose-your-payment text-center aside-card card card-body">
+                    <div class="cart-head">
+                      Your Cart Total
+                    </div>
+                    <!--cart-head-->
+
+                    <div class="">
+                      <table class="table">
+                        <tr>
+                          <td>Total Item : </td>
+                          <td>
+                            <%- productCounts %>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Amount : </td>
+                          <td>$ <%- totalAmount %>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Service charge : </td>
+                          <td>$ <%- serviceCharge %>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td> Total Amount : </td>
+                          <td><span class="fourth-td">
+                              <%- grandTotal %>
+                            </span>
+                          </td>
+                        </tr>
+                        <% if(isUserLoggedIn) { %>
+                          <tr class="wallet-discount">
+                            <td>Wallet</td>
+                            <td>-$<span class="wallet-discount-amt-cart">0</span></td>
+                          </tr>
+                          <tr class="wallet-discount">
+                            <td>Now Total Pay</td>
+                            <td>$<span class="after-discount-amt-cart">0</span></td>
+                          </tr>
+                          <% } %>
+                      </table>
+                    </div>
+                    <div class="Proceed-with-checkout">
+                      <% if(!isUserLoggedIn) { %>
+                        <a href="#" class="btn" data-toggle="modal" data-target="#myModal"><i
+                            class="fas fa-shopping-cart"></i> &nbsp;Proceed with checkout</a>
+                        <% } else { %>
+                          <a href="#" class="login-btn btn  checkout-btn" id="checkout-form">Proceed with
+                            checkout</a>
+                          <% } %>
+                    </div>
+
+                  </div>
+                </div>
+                <!--choose-your-payment-->
+
+              </div>
+              <% } else { %>
+                <div class="col-md-8">
+                  <div class="uploads-item-cont">
+                    <p>No items in your cart</p>
+                  </div>
+                </div>
+                <% } %>
+                  <!--my-cart-right-->
+            </div>
+            <!--col-md-3-->
+          </div>
+          <!--row-->
+        </div>
+        <!--container-->
+    </div>
+    <!--my-cart-content-->
+    </section>
+
+
+    <div class="modal fade" id="myModal4">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-sign-div">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            <div class="modal-sign-in">
+              <div class="modal-sign-head">
+                <h2>Payment</h2>
+              </div>
+              <div class="modal-sign-body">
+                <div class="payment-popup-form">
+
+                  <div class="payment-popup-table">
+                    <table class="table">
+                      <tr>
+                        <td>Amount</td>
+                        <td>$177.95</td>
+                      </tr>
+                      <tr>
+                        <td><input type="checkbox" /> Pay Using Your Current Balance</td>
+                        <td>$20.00</td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="py-hd">Save cards</div>
+                  <form action="" class="payment-form">
+                    <div class="payment-pop-items">
+                      <div class="payment-pop-item box-sh card card-body">
+                        <div class="row">
+                          <div class="col-md-1">
+                            <div class="payment-add-left">
+                              <span></span>
+                            </div>
+                          </div>
+                          <div class="col-md-11">
+                            <div class="payment-card-middle">
+                              <div class="card-img">
+                                <img src="images/card-01.png" alt="">
+                              </div>
+                              <div class="payment-card-dtl">
+                                <h4>Master Cart</h4>
+                                <h2>xxxx-xxxx-xxxx-2352</h2>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="payment-pop-item-cvv">
+                        <div class="row">
+                          <div class="col-md-3">
+                            <div class="form-group">
+                              <input maxlength="3" type="password" class="form-control" placeholder="CVV" value="">
+                            </div>
+                          </div>
+                          <div class="co-md-3">
+                            <div class="cart-group-img">
+                              <img src="images/card-demo-img.png" alt="">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-sign-footer">
+                <div class="payment-form-btn">
+                  <div class="form-group">
+                    <input type="submit" value="Make Payment ">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div class="modal fade" id="stripe_modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-sign-div">
+            <button type="button" class="close" id="closePopup" data-dismiss="modal">&times;</button>
+            <div class="modal-sign-in">
+              <div class="modal-sign-body modal-post-body">
+                <table class="table">
+                  <tr>
+                    <td> Total Amount : </td>
+                    <td><span class="fourth-td">
+                        <%- grandTotal %>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr class="wallet-discount">
+                    <td>Wallet</td>
+                    <td>-$<span class="wallet-discount-amt-cart">0</span></td>
+                  </tr>
+                  <tr class="wallet-discount">
+                    <td>Now Total Pay</td>
+                    <td>$<span class="after-discount-amt-cart">0</span></td>
+                  </tr>
+                </table>
+                <form method="post" action="/payment/save-order">
+                  <input type="hidden" name="final_pay" id="final_pay" value="" />
+                  <input type="hidden" name="subtotal" id="subtotal" value="<%- totalAmount %>" />
+                  <input type="hidden" name="isUseWallet" id="isUseWallet" value="" />
+                  <input type="hidden" name="wallet_amt" id="wallet_amt" value="" />
+                  <div class="text text-center">
+                    <script src="//checkout.stripe.com/v2/checkout.js" class="stripe-button "
+                      data-key="pk_test_51LckTfSJDATToRSRZ5F0G1XIaOIs0ISClv7VN4ki5wMWttUE1edmKfNbTSJm27FUhU40FjZQoYUFOSXqTz6ZE4mX00NMsrRRRc"
+                      data-currency="inr" data-name="<%- userData.firstName + ' '+userData.lastName  %>"
+                      data-description="Tbd later" data-locale="auto">
+                      </script>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="method_warning_modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-sign-div">
+            <button type="button" class="close" id="closePopup" data-dismiss="modal">&times;</button>
+            <div class="modal-sign-in">
+              <div class="modal-sign-body modal-post-body">
+                <div class="aalert alert-success" style="padding: 12px;" align="center" id="alertmsg">
+                  <strong>Please select payment method</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('../popup') %>
+      <!---------Js------------>
+  </body>
+  <%- include('../footer') %>
+    <script src="js/index.js" type="text/jscript"></script>
+
+
+
+    <script>
+
+      var use_wallet = false;
+      var wallet_amt = parseFloat($('#wallet_amount').text()).toFixed(2);
+      var wallet_discount = 0;
+      var total_pay = parseFloat($('.fourth-td').text()).toFixed(2);
+      $('.wallet-discount').hide();
+      $(document).on('change', '#use_wallet', function () {
+        if ($('input[name="use_wallet"]').is(':checked')) {
+          use_wallet = true;
+          if (parseFloat(wallet_amt) >= parseFloat(total_pay)) {
+            wallet_discount = parseFloat(total_pay);
+            wallet_amt = parseFloat(wallet_amt) - parseFloat(total_pay);
+            total_pay = 0;
+          } else {
+            wallet_discount = parseFloat(wallet_amt);
+            wallet_amt = parseFloat(wallet_amt) - parseFloat(wallet_discount);
+            total_pay = parseFloat(total_pay) - parseFloat(wallet_discount);
+          }
+          wallet_discount = parseFloat(wallet_discount).toFixed(2);
+          total_pay = total_pay.toFixed(2);
+          $('.wallet-discount-amt-cart').text(wallet_discount);
+          $('.after-discount-amt-cart').text(total_pay);
+          $('.wallet-discount').show();
+        } else {
+          use_wallet = false;
+          wallet_amt = parseFloat($('#wallet_amount').text()).toFixed(2);
+          wallet_discount = 0;
+          total_pay = parseFloat($('.fourth-td').text()).toFixed(2);
+          $('.wallet-discount-amt-cart').text(wallet_discount);
+          $('.after-discount-amt-cart').text(total_pay);
+          $('.wallet-discount').hide();
+        }
+      });
+
+      $(document).ready(function () {
+        $(document).on('click', '#checkout-form', function (e) {
+          var selected_method = $('input[name="currently"]:checked');
+          use_wallet = (use_wallet) ? 1 : 0;
+          if (use_wallet && parseFloat(total_pay) <= 0) {
+            console.log('direct payment from wallet');
+          } else {
+            if (selected_method.length > 0) {
+              let payment_method = selected_method.val();
+              if (payment_method == 'stripe') {
+                $('#final_pay').val(total_pay);
+                $('#wallet_amt').val(wallet_amt);
+                $('#isUseWallet').val(use_wallet);
+                $('#stripe_modal').modal('show');
+                // let paymentInfo = {
+                //   subtotal, tax,
+                //   grandTotal, use_wallet: use_wallet,
+                //   wallet_amt: wallet_amt, final_pay: total_pay
+                // }
+                // console.log('paymentInfo', paymentInfo);
+                // $.ajax({
+                //   type: "POST",
+                //   url: '/payment/save-order',
+                //   dataType: 'json',
+                //   data: paymentInfo,
+                //   success: function (data) {
+                //     console.log('data', data);
+                //     if (data.success) {
+                //     } else {
+                //       $('.checkout-btn').attr('disabled', false);
+                //     }
+                //   },
+                //   error: function (jqXHR, exception) {
+                //     $('.checkout-btn').attr('disabled', false);
+                //     alert('Something went wrong. Please try again !!');
+                //   }
+                // });
+              }
+            } else {
+              $('#method_warning_modal').modal('show');
+              e.preventDefault();
+              return false;
+            }
+          }
+        })
+      })
+
+
+
+
+
+
+    </script>

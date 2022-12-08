@@ -20,21 +20,22 @@
                                     <div class="uploads-right-area">
                                         <div class="uploads-right-top">
                                             <div class="row">
-                                                <div class="col-md-8">
-                                                    <form method="get" action="tutor-my-upload"
-                                                        onsubmit="return dateValidate()">
+                                                <div class="col-md-9">
+                                                    <form method="get" action="/my-uploaded-products" id="search_book">
                                                         <div class="uploads-top-left">
                                                             <span class="date-picker">
-                                                                <input type="date" class="form-control" id="start_date1"
-                                                                    name="start_date1" value="" />
+                                                                <input type="date" class="form-control" id="start_date"
+                                                                    name="start_date" value="" />
                                                             </span>
                                                             <span class="date-picker">
-                                                                <input type="date" class="form-control" id="end_date1"
-                                                                    name="end_date1" value="" />
+                                                                <input type="date" class="form-control" id="end_date"
+                                                                    name="end_date" value="" />
+                                                                <input type="hidden" class="form-control" id="type"
+                                                                    name="type" value="<%- productType %>" />
                                                             </span>
                                                             <span class="select-picker">
-                                                                <select class="form-control" id="search_element1"
-                                                                    name="search_element1">
+                                                                <select class="form-control" id="search_school"
+                                                                    name="search_school">
                                                                     <option value="" selected="">Select school</option>
                                                                     <% for(let key of schoolData) { %>
                                                                         <option value="<%- key._id%>">
@@ -44,30 +45,26 @@
                                                                 </select>
                                                             </span>
                                                             <span>
-                                                                <button type="submit" class="btn"
-                                                                    style="display:inline;">Search</button>
+                                                                <button type="submit" class="btn">Search</button>
                                                             </span>
                                                         </div>
 
-                                                        <span id="date_error" name="date_error"
-                                                            style="color:red ;"></span>
-                                                        <span id="start_date_error" name="start_date_error"
-                                                            style="color:red ;"></span>
-                                                        <span id="end_date_error" name="end_date_error"
-                                                            style="color:red ;"></span>
+                                                        <span id="search_school_err" style="color:red ;"></span>
+                                                        <span id="start_date_err" style="color:red ;"></span>
+                                                        <span id="end_date_err" style="color:red ;"></span>
                                                     </form>
                                                 </div>
-                                                <div class="col-md-2">
-                                                    <button onclick="resetSearchBox()" style="margin-left:-15px"
-                                                        class="btn btn-default" type="button">
+                                                <div class="col-md-1">
+                                                    <button id="reset_form" class="btn btn-default" type="button">
                                                         <i class="fas fa-redo"></i>
                                                     </button>
                                                 </div>
 
                                                 <div class="col-md-2">
                                                     <div class="uploads-top-right">
-                                                        <a href="/add-new-book" class="btn"><i
-                                                                class="fas fa-plus-circle"></i> Add new book</a>
+                                                        <a href="/add-new-product?type=<%- productType %>"
+                                                            class="btn"><i class="fas fa-plus-circle"></i> Add New <%-
+                                                                productType==0 ? 'Book' : 'document ' %></a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -76,206 +73,156 @@
                                             <div class="uploads-right-main-top">
                                                 <div class="row">
                                                     <div class="col-md-5">
-                                                        <div class="up-ct">Uploads : 1-3 of 15</div>
+                                                        <% if(bookData.length> 0 ) {%>
+                                                            <div class="up-ct">Uploads : <%- skip+1 %> - <%-
+                                                                        bookCount%limit !==0 && currentPage==totalPages
+                                                                        ? remaining : limit * currentPage%> of <%-
+                                                                            bookCount %>
+                                                            </div>
+                                                            <% } %>
                                                     </div>
                                                     <div class="col-md-7">
                                                         <div class="earnings-right">
-                                                            <div class="earnings">Toral Earnings : <span>$240.00</span>
-                                                            </div>
+                                                            <% if(bookData.length> 0 ) {%>
+                                                                <div class="earnings">Toral Earnings :
+                                                                    <span>$240.00</span>
+                                                                </div>
+                                                                <% } %>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="uploads-right-main-items">
-                                                <div class="uploads-right-main-item box-sh card card-body">
-                                                    <div class="row">
-                                                        <div class="col-md-2">
-                                                            <div class="uploads-item-img">
-                                                                <img src="images/businessTextbook.jpg" alt="" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-8">
-                                                            <div class="uploads-item-cont">
-                                                                <div class="uploads-item-title">NR 507 FINAL EXAM(3
-                                                                    DIFFERENT VERSIONS) PLUS STUDY GUIDES</div>
-                                                                <div class="uploads-item-dtls">
-                                                                    <div class="uploads-item-dtls-left">
-                                                                        <div class="uploads-item-price">$
-                                                                            <span>149.00</span>
-                                                                        </div>
-                                                                        <div class="reviews-stars">
-                                                                            <i class="fas fa-star"></i>
-                                                                            <i class="fas fa-star"></i>
-                                                                            <i class="fas fa-star"></i>
-                                                                            <i class="fas fa-star"></i>
-                                                                            <i class="fas fa-star"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="uploads-item-dtls-right">
-                                                                        <p>10 Sales<br />
-                                                                            Date uploaded : 30 Oct 19</p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="uploads-item-tags">
-                                                                    <label>Tags -</label>
-                                                                    <p>
-                                                                        <span>Englist</span>
-                                                                        <span>Maths</span>
-                                                                        <span>Biology</span>
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <div class="uploads-item-right">
-                                                                <div class="uploads-item-edit">
-                                                                    <a href="#" data-toggle="tooltip" title="Edit"><i
-                                                                            class="far fa-edit"></i></a>
-                                                                </div>
-                                                                <div class="uploads-item-active-inactive">
-                                                                    <label>
-                                                                        <input type="checkbox" />
-                                                                        <span><small></small></span>
-                                                                    </label>
-                                                                </div>
-                                                                <div class="uploads-item-btn">
-                                                                    <a href="product_detail_page.html"
-                                                                        class="btn">More...</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                            <% if(bookData.length==0 ) {%>
+                                                <div class="aalert alert-success" style="padding: 12px;" align="center"
+                                                    id="alertmsg">
+                                                    <strong>No Record Found</strong>
                                                 </div>
-                                                <div class="uploads-right-main-item box-sh card card-body">
-                                                    <div class="row">
-                                                        <div class="col-md-2">
-                                                            <div class="uploads-item-img">
-                                                                <img src="images/businessTextbook.jpg" alt="" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-8">
-                                                            <div class="uploads-item-cont">
-                                                                <div class="uploads-item-title">NR 507 FINAL EXAM(3
-                                                                    DIFFERENT VERSIONS) PLUS STUDY GUIDES</div>
-                                                                <div class="uploads-item-dtls">
-                                                                    <div class="uploads-item-dtls-left">
-                                                                        <div class="uploads-item-price">$
-                                                                            <span>149.00</span>
-                                                                        </div>
-                                                                        <div class="reviews-stars">
-                                                                            <i class="fas fa-star"></i>
-                                                                            <i class="fas fa-star"></i>
-                                                                            <i class="fas fa-star"></i>
-                                                                            <i class="fas fa-star"></i>
-                                                                            <i class="fas fa-star"></i>
+                                                <% } %>
+                                                    <div class="uploads-right-main-items">
+                                                        <% for (let book of bookData) { %>
+                                                            <div class="uploads-right-main-item box-sh card card-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-2">
+                                                                        <div class="uploads-item-img">
+                                                                            <img src="/uploads/<%- book.image %>"
+                                                                                alt="" />
                                                                         </div>
                                                                     </div>
-                                                                    <div class="uploads-item-dtls-right">
-                                                                        <p>10 Sales<br />
-                                                                            Date uploaded : 30 Oct 19</p>
+                                                                    <div class="col-md-8">
+                                                                        <div class="uploads-item-cont">
+                                                                            <div class="uploads-item-title">
+                                                                                <%- book.title; %>
+                                                                            </div>
+                                                                            <div class="uploads-item-dtls">
+                                                                                <div class="uploads-item-dtls-left">
+                                                                                    <div class="uploads-item-price">$
+                                                                                        <span>
+                                                                                            <%- book.price %>
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <div class="reviews-stars">
+                                                                                        <i class="fas fa-star"></i>
+                                                                                        <i class="fas fa-star"></i>
+                                                                                        <i class="fas fa-star"></i>
+                                                                                        <i class="fas fa-star"></i>
+                                                                                        <i class="fas fa-star"></i>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="uploads-item-dtls-right">
+                                                                                    <p>10 Sales<br />
+                                                                                        Date uploaded : <%-
+                                                                                            JSON.stringify(book.createdAt).slice(1
+                                                                                            ,
+                                                                                            11).split('-').reverse().join('-');
+                                                                                            %>
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="uploads-item-tags">
+                                                                                <label>Tags -</label>
+                                                                                <p>
+                                                                                    <% for(let tag of tags) { %>
+                                                                                        <span>
+                                                                                            <%- tag.name %>
+                                                                                        </span>
+                                                                                        <% } %>
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <div class="uploads-item-right">
+
+                                                                            <div class="uploads-item-edit">
+                                                                                <a href="#"
+                                                                                    onclick="deleteProduct('<%- book._id %>')"
+                                                                                    data-toggle="tooltip"><i
+                                                                                        class="fas fa-trash-alt text text-danger"></i>
+                                                                                </a>
+                                                                                <a href="/edit-product?productId=<%- book._id%>"
+                                                                                    data-toggle="tooltip"><i
+                                                                                        class="far fa-edit"></i>
+                                                                                </a>
+                                                                            </div>
+
+                                                                            <div class="uploads-item-active-inactive">
+                                                                                <label>
+                                                                                    <% if(book.visiblity==1) { %>
+                                                                                        <input type="checkbox"
+                                                                                            id="<%- book._id %>"
+                                                                                            onclick="changeVisiblity('<%- book._id%>')"
+                                                                                            name="checkbox" value=""
+                                                                                            checked />
+                                                                                        <span><small></small></span>
+                                                                                        <% } else { %>
+                                                                                            <input type="checkbox"
+                                                                                                id="<%- book._id %>"
+                                                                                                onclick="changeVisiblity('<%- book._id%>')"
+                                                                                                name="checkbox"
+                                                                                                value="" />
+                                                                                            <span><small></small></span>
+                                                                                            <% } %>
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="uploads-item-btn">
+                                                                                <a href="/product-detail?productId=<%- book._id %>"
+                                                                                    class="btn">More...</a>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="uploads-item-tags">
-                                                                    <label>Tags -</label>
-                                                                    <p>
-                                                                        <span>Englist</span>
-                                                                        <span>Maths</span>
-                                                                        <span>Biology</span>
-                                                                    </p>
-                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <div class="uploads-item-right">
-                                                                <div class="uploads-item-edit">
-                                                                    <a href="#" data-toggle="tooltip" title="Edit"><i
-                                                                            class="far fa-edit"></i></a>
-                                                                </div>
-                                                                <div class="uploads-item-active-inactive">
-                                                                    <label>
-                                                                        <input type="checkbox" checked="" />
-                                                                        <span><small></small></span>
-                                                                    </label>
-                                                                </div>
-                                                                <div class="uploads-item-btn">
-                                                                    <a href="product_detail_page.html"
-                                                                        class="btn">More...</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+
+                                                            <% } %>
+
                                                     </div>
-                                                </div>
-                                                <div class="uploads-right-main-item box-sh card card-body">
-                                                    <div class="row">
-                                                        <div class="col-md-2">
-                                                            <div class="uploads-item-img">
-                                                                <img src="images/businessTextbook.jpg" alt="" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-8">
-                                                            <div class="uploads-item-cont">
-                                                                <div class="uploads-item-title">NR 507 FINAL EXAM(3
-                                                                    DIFFERENT VERSIONS) PLUS STUDY GUIDES</div>
-                                                                <div class="uploads-item-dtls">
-                                                                    <div class="uploads-item-dtls-left">
-                                                                        <div class="uploads-item-price">$
-                                                                            <span>149.00</span>
-                                                                        </div>
-                                                                        <div class="reviews-stars">
-                                                                            <i class="fas fa-star"></i>
-                                                                            <i class="fas fa-star"></i>
-                                                                            <i class="fas fa-star"></i>
-                                                                            <i class="fas fa-star"></i>
-                                                                            <i class="fas fa-star"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="uploads-item-dtls-right">
-                                                                        <p>10 Sales<br />
-                                                                            Date uploaded : 30 Oct 19</p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="uploads-item-tags">
-                                                                    <label>Tags -</label>
-                                                                    <p>
-                                                                        <span>Englist</span>
-                                                                        <span>Maths</span>
-                                                                        <span>Biology</span>
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <div class="uploads-item-right">
-                                                                <div class="uploads-item-edit">
-                                                                    <a href="#" data-toggle="tooltip" title="Edit"><i
-                                                                            class="far fa-edit"></i></a>
-                                                                </div>
-                                                                <div class="uploads-item-active-inactive">
-                                                                    <label>
-                                                                        <input type="checkbox" />
-                                                                        <span><small></small></span>
-                                                                    </label>
-                                                                </div>
-                                                                <div class="uploads-item-btn">
-                                                                    <a href="product_detail_page.html"
-                                                                        class="btn">More...</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                    <div class="item-pagination">
+                                                        <ul class="pagination">
+                                                            <% for(let i=1; i <=totalPages; i++) { %>
+                                                                <% if(i==1) { %>
+                                                                    <li class="page-item"><a class="page-link"
+                                                                            href="?page=<%- i %>&start_date=<%- start_date %>&end_date=<%- end_date %>&search_school=<%- search_school %>&type=<%- productType %>"><i
+                                                                                class="fas fa-chevron-left"></i></a>
+                                                                    </li>
+                                                                    <% } %>
+                                                                        <li
+                                                                            class="page-item <%= (currentPage==i)? 'active': ''; %>">
+                                                                            <a class="page-link "
+                                                                                href="?page=<%- i %>&start_date=<%- start_date %>&end_date=<%- end_date %>&search_school=<%- search_school %>&type=<%- productType %>">
+                                                                                <%- i %>
+                                                                            </a>
+                                                                        </li>
+                                                                        <% if(i==totalPages) { %>
+
+                                                                            <li class="page-item"><a class="page-link"
+                                                                                    href="?page=<%- totalPages %>&start_date=<%- start_date %>&end_date=<%- end_date %>&search_school=<%- search_school %>&type=<%- productType %>">
+                                                                                    <i
+                                                                                        class="fas fa-chevron-right"></i></a>
+                                                                            </li>
+                                                                            <% } %>
+                                                                                <% } %>
+                                                        </ul>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="item-pagination">
-                                                <ul class="pagination">
-                                                    <li class="page-item"><a class="page-link" href="#"><i
-                                                                class="fas fa-chevron-left"></i></a></li>
-                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                    <li class="page-item"><a class="page-link" href="#"><i
-                                                                class="fas fa-chevron-right"></i></a></li>
-                                                </ul>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -291,3 +238,65 @@
         </div>
         <%- include('../footer'); %>
     </body>
+
+    <script>
+
+        $('#search_book').submit((e) => {
+            let start_date = $('#start_date').val();
+            let end_date = $('#end_date').val();
+            if (start_date !== '' && end_date == '') {
+                $('#end_date_err').html('Please select end date');
+                return false;
+            }
+            if (end_date !== '' && start_date == '' ) {
+                $('#end_date_err').html('');
+                $('#start_date_err').html('Please select end date');
+                return false;
+            }
+        });
+
+        $('#reset_form').click(() => {
+            $('#start_date').val('');
+            $('#end_date').val('');
+            $('#search_school').val('');
+            location.replace('http://localhost:3300/my-uploaded-products?type=<%- productType%>')
+        });
+
+        // window.onload = () => {
+        //     history.pushState(null, "", location.href.split("?")[0]);
+        // };
+
+        function changeVisiblity(bookId) {
+            let show = document.getElementById(`${bookId}`).checked;
+            let checkValue = document.getElementById(`${bookId}`).value;
+            checkValue = show ? '1' : '0';
+            $.ajax({
+                type: 'POST',
+                url: "/show-product",
+                data: { checkValue, bookId },
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        console.log('Book status updated');
+                    }
+                }
+            });
+        }
+
+        function deleteProduct(product_id) {
+            $.ajax({
+                type: 'POST',
+                url: "/delete-product",
+                data: { product_id },
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        location.reload(true);
+                    }
+                }
+            });
+        }
+
+
+
+    </script>

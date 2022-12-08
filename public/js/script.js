@@ -34,6 +34,7 @@ jQuery(document).ready(function ($) {
         $(".modal-forgot-in").hide();
         $(".modal-sign-in").show();
     });
+
     $(".header-sign .signup-btn, .footer-sign-up").click(function () {
         $(".modal-sign-in").hide();
         $(".modal-forgot-in").hide();

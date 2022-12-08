@@ -1,13 +1,13 @@
 const express = require('express');
 const app = express();
 const visitorRoute = require('./visitor/visitorRoute');
-const tutorRoute = require('./visitor/tutorRoute');
-const bookRoute = require('./visitor/bookRoute');
+const userRoute = require('./visitor/userRoute');
+const productRoute = require('./visitor/productRoute');
 
 app.use('/' , visitorRoute);
 
-app.use('/' , tutorRoute);
+app.use('/' , userRoute);
 
-app.use('/' , bookRoute);
+app.use('/' , productRoute);
 
 module.exports = app

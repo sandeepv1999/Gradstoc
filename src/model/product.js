@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose;
 
-const bookSchema = new Schema({
+const ProductSchema = new Schema({
 
     title: {
         type: String,
@@ -22,8 +22,9 @@ const bookSchema = new Schema({
     price: {
         type: String,
     },
-    tag: {
-        type: Array, "default": []
+    tag_id: {
+        type: Array ,
+        ref: 'tag'
     },
     scl_id: {
         type: Schema.Types.ObjectId,
@@ -37,21 +38,34 @@ const bookSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'course'
     },
+    type:{
+        type:String,
+        enum:['0','1']
+    },
     short_description: {
         type: String
     },
     full_description: {
         type: String
     },
+    visiblity:{
+        type: String,
+        enum: [0, 1],
+        default:'1'
+    },
+    isDeleted:{
+        type: String,
+        enum: [0, 1],
+        default:'0'
+    },
     createdAt: {
         type: Date,
-        default: Date.now()
     },
     updatedAt: {
         type: Date,
-        default: Date.now()
+        // default:Date.now
     },
 });
-const book = mongoose.model('book', bookSchema);
+const product = mongoose.model('product', ProductSchema);
 
-module.exports = book
+module.exports = product

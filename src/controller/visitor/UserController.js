@@ -1,0 +1,198 @@
+const express = require('express');
+const app = express();
+const User = require('../../model/user');
+const School = require('../../model/school');
+const Subject = require('../../model/subject');
+const Course = require('../../model/course');
+const Tag = require('../../model/tag');
+const bcrypt = require('bcryptjs');
+const salt = bcrypt.genSaltSync(10);
+const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const AuthController = require('./AuthController');
+
+class UserController {
+
+    constructor() { }
+
+    //***************** DASHBOARD *******************
+
+    dashboard = async (req, res) => {
+        try {
+            let isUserLoggedIn = false;
+            let userData = ''
+            if (req.session.isCustomerLoggedIn) {
+                isUserLoggedIn = true;
+                let loginId = req.session.isCustomerLoggedIn;
+                loginId = mongoose.Types.ObjectId(loginId);
+                userData = await User.findOne({ _id: loginId });
+            }
+            let data = {
+                status: "",
+                message: "",
+                isUserLoggedIn,
+                userData
+            }
+            if (req.session.status && req.session.message) {
+                data.status = req.session.status;
+                data.message = req.session.message;
+                delete req.session.status, req.session.message;
+            }
+            res.render('user/dashboard', data);
+        } catch (error) {
+            console.log('dashboard error', error);
+        }
+    }
+
+    //***************** GET CHANGE PASSWORD ***********************
+
+    getChangePassword = async (req, res) => {
+        try {
+            let isUserLoggedIn = false;
+            let userData = ''
+            if (req.session.isCustomerLoggedIn) {
+                isUserLoggedIn = true;
+                let loginId = req.session.isCustomerLoggedIn;
+                loginId = mongoose.Types.ObjectId(loginId);
+                userData = await User.findOne({ _id: loginId });
+            }
+            let data = {
+                status: "",
+                message: "",
+                isUserLoggedIn,
+                userData
+            }
+            if (req.session.status && req.session.message) {
+                data.status = req.session.status;
+                data.message = req.session.message;
+                delete req.session.status, req.session.message;
+            }
+            res.render('user/change-password', data);
+        } catch (error) {
+            console.log('get change password page error', error)
+        }
+    }
+
+    //***************** POST CHANGE PASSWORD ***********************
+
+    changePassword = async (req, res) => {
+        try {
+            let currentPass = req.body.currentPassword;
+            let newPassword = req.body.newPassword;
+            var hashPassword = bcrypt.hashSync(newPassword, salt);
+            let user_id = req.session.isCustomerLoggedIn;
+            user_id = mongoose.Types.ObjectId(user_id);
+            let user = await User.findById({ _id: user_id });
+            await bcrypt.compare(currentPass
+                , user.password, async (err, isMatch) => {
+                    console.log('isMatch', isMatch);
+                    if (isMatch) {
+                        let resp = await User.updateOne({ _id: user_id }, { password: hashPassword });
+                        req.session.status = 'success';
+                        req.session.message = 'Your password has been changed successFully';
+                        res.redirect('/change-password');
+                    } else {
+                        req.session.status = 'error';
+                        req.session.message = 'Please enter correct currrent password';
+                        res.redirect('/change-password');
+                    }
+                });
+        } catch (error) {
+            console.log('change passsword error ss', error);
+        }
+    }
+
+    //*************** GET UPDATE PROFILE PAGE ****************
+
+    update_profile = async (req, res) => {
+        try {
+            let isUserLoggedIn = false;
+            let userData = ''
+            if (req.session.isCustomerLoggedIn) {
+                isUserLoggedIn = true;
+                let loginId = req.session.isCustomerLoggedIn;
+                loginId = mongoose.Types.ObjectId(loginId);
+                userData = await User.findOne({ _id: loginId });
+            }
+            let data = {
+                status: "",
+                message: "",
+                isUserLoggedIn,
+                userData
+            }
+            if (req.session.status && req.session.message) {
+                data.status = req.session.status;
+                data.message = req.session.message;
+                delete req.session.status, req.session.message;
+            }
+            res.render('user/update-profile', data);
+        } catch (error) {
+            console.log('get update profile error', error)
+        }
+    }
+
+    //***************  UPDATE PROFILE  ****************
+
+    updateUserProfile = async (req, res) => {
+        try {
+            let userId = req.session.isCustomerLoggedIn;
+            userId = mongoose.Types.ObjectId(userId);
+            let body = req.body;
+            let userData = {
+                firstName: body.firstName,
+                lastName: body.lastName,
+                phone: body.phone
+            }
+            if (req.files && req.files.profile) {
+                let image = req.files.profile;
+                userData.profile = await AuthController.saveImageDirectorys(image);
+            }
+            let resp = await User.updateOne({ _id: userId }, userData);
+            if (resp.acknowledged) {
+                req.session.status = 'success';
+                req.session.message = 'Your profile successfully updated'
+                res.redirect('/update-profile');
+            } else {
+                req.session.status = 'Error';
+                req.session.message = 'Something went wrong'
+                res.redirect('/update-profile');
+            }
+        } catch (error) {
+            console.log('update profile error', error);
+            res.send({ message: error.message });
+        }
+    }
+
+    //*************** GET SETTING PAGE ****************
+
+    setting = async (req, res) => {
+        try {
+            let isUserLoggedIn = false;
+            let userData = ''
+            if (req.session.isCustomerLoggedIn) {
+                isUserLoggedIn = true;
+                let loginId = req.session.isCustomerLoggedIn;
+                loginId = mongoose.Types.ObjectId(loginId);
+                userData = await User.findOne({ _id: loginId });
+            }
+            let data = {
+                status: "",
+                message: "",
+                isUserLoggedIn,
+                userData
+            }
+            if (req.session.status && req.session.message) {
+                data.status = req.session.status;
+                data.message = req.session.message;
+                delete req.session.status, req.session.message;
+            }
+            res.render('user/setting', data);
+        } catch (error) {
+            console.log('Setting page error', error);
+            res.send({ messsage: error.message })
+        }
+    }
+
+}
+
+module.exports = new UserController();

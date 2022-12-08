@@ -91,7 +91,6 @@ function checkFormValidation() {
     // checkbox is checked or not
 
     let chekbox = isChecked.checked
-    console.log('chekbox', chekbox);
     if (!chekbox) {
         document.getElementById('checkBoxError').innerHTML = 'Please accept all terms and condition';
         return false;
@@ -171,7 +170,7 @@ function loginAjaxCalling(email, password) {
         async: false,
         success: function (data) {
             console.log('data', data);
-            if (data.success) {
+            if (data.success) { 
                 location.href = 'http://localhost:3300'
             } else if (data.isEmailVerify == '0') {
                 document.getElementById('userPassError').innerHTML = data.message;
@@ -261,6 +260,26 @@ togglePassword.addEventListener("click", function () {
     this.classList.toggle("bi-eye");
 });
 
+const toggleSignPassword = document.querySelector("#toggleSignPassword");
+const pass = document.querySelector("#password");
 
+toggleSignPassword.addEventListener("click", function () {
+    // toggle the type attribute
+    const type = pass.getAttribute("type") === "password" ? "text" : "password";
+    pass.setAttribute("type", type);
 
+    // toggle the icon
+    this.classList.toggle("bi-eye");
+});
 
+const toggleSignCPassword = document.querySelector("#toggleSignCPassword");
+const cPass = document.querySelector("#confirm_password");
+
+toggleSignCPassword.addEventListener("click", function () {
+    // toggle the type attribute
+    const type = cPass.getAttribute("type") === "password" ? "text" : "password";
+    cPass.setAttribute("type", type);
+
+    // toggle the icon
+    this.classList.toggle("bi-eye");
+});

@@ -1,0 +1,997 @@
+<%- include('../header') %>
+
+    <body class="home">
+        <section class="section-middle">
+            <div class="page-title">
+                <div class="container">
+                    <div class="page-title-in">
+                        <h2>Edit New <%- product.type == 0 ? 'Book':'Document' %></h2>
+                    </div>
+                </div>
+            </div>
+            <!-- page-title -->
+
+            <div class="dashboard-content">
+                <div class="container">
+                    <div class="row">
+                        <%- include('sidebar') %>
+                            <!--col-md-3-->
+
+                            <div class="col-md-9">
+                                <form method="post" action="/update-product" id="updateProduct"
+                                    class="uploads-document-form" enctype="multipart/form-data">
+                                    <div class="uploads-right-top">
+                                        <div class="sec-head">
+                                            <h2>Update New <%- product.type == 0 ? 'Book':'Document' %></h2>
+                                        </div>
+                                        <div class="upload-dock-top card card-body box-sh file_drag_area">
+                                            <div class="Drag-file-text">
+                                                <img
+                                                    src="/images/pngtree-download-arrow-vector-icon-white-transparent-background-png-image_1978018.jpg">
+                                            </div>
+                                            <div class="click-input">
+                                                <input type="file" id="main_file" name="main_file"
+                                                    class="select_document">
+                                                <span><strong>Choose a file</strong> or drag it here</span>
+                                            </div>
+                                        </div>
+                                        <div id="main_file_err" name="main_file_err" style="color:red ;">
+                                        </div>
+                                    </div>
+
+                                    <div class="uploads-right-main">
+                                        <div class="uploads-right-main-items">
+                                            <div class="uploads-document-box box-sh card card-body">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="uploads-document-lft">
+                                                            <span><i class="fa fa-file-pdf"
+                                                                    style="font-size:100px; color: lightseagreen"></i></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="uploads-document-area">
+                                                            <div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <label>Title</label>
+                                                                            <input type="text" id="title" name="title"
+                                                                                class="form-control"
+                                                                                placeholder="Enter title"
+                                                                                value="<%- product.title; %>">
+                                                                            <input type="hidden" id="type" name="type"
+                                                                                value="<%- product.type; %>" />
+                                                                            <input type="hidden" id="productId"
+                                                                                name="productId"
+                                                                                value="<%- product._id; %>" />
+                                                                            <div id="title_error" name="course_error"
+                                                                                style="color:red ;margin-left: 175px;">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <div class="add-New">
+                                                                                <label>School name</label>
+                                                                                <div
+                                                                                    class="dropdown bootstrap-select show-tick form-control">
+
+                                                                                    <select class="form-control"
+                                                                                        id="school" name="school">
+                                                                                        <option value="">
+                                                                                            Select school</option>
+                                                                                        <% for(let key of school) { %>
+                                                                                            <% if
+                                                                                                (product.scl_id==key.id
+                                                                                                ) { %>
+                                                                                                <option selected
+                                                                                                    value="<%-product.scl_id %>">
+                                                                                                    <%- key.name %>
+                                                                                                </option>
+                                                                                                <% } else { %>
+                                                                                                    <option
+                                                                                                        value="<%-key._id %>">
+                                                                                                        <%- key.name %>
+                                                                                                    </option>
+                                                                                                    <% } %>
+                                                                                                        <% } %>
+                                                                                    </select>
+                                                                                    <input type="button"
+                                                                                        style="position:absolute; margin-left: 12px;"
+                                                                                        class="btn btn-primary"
+                                                                                        data-toggle="modal"
+                                                                                        data-target="#myModal_add_school"
+                                                                                        value="Add school">
+
+                                                                                </div>
+                                                                                <div id="school_error"
+                                                                                    style="color:red;margin-left: 30%;margin-top: 10px;">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <div class="add-New">
+                                                                                <label>Subject name</label>
+                                                                                <div
+                                                                                    class="dropdown bootstrap-select show-tick form-control">
+                                                                                    <select class="form-control"
+                                                                                        id="subject" name="subject">
+                                                                                        <option
+                                                                                            value="<%- product.sub_id %>">
+                                                                                            <%- product.subject[0].name
+                                                                                                %>
+                                                                                        </option>
+                                                                                    </select>
+                                                                                    <input type="button"
+                                                                                        style="position:absolute; margin-left: 12px;"
+                                                                                        class="btn btn-primary"
+                                                                                        data-toggle="modal"
+                                                                                        data-target="#myModal_add_subject"
+                                                                                        value="Add subject">
+                                                                                </div>
+                                                                                <div id="subject_error"
+                                                                                style="color:red;margin-left: 30%;margin-top: 10px;"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-12 mb-2">
+                                                                        <div class="form-group">
+                                                                            <div class="add-New">
+                                                                                <label>Course</label>
+                                                                                <div
+                                                                                    class="dropdown bootstrap-select show-tick form-control">
+                                                                                    <select class="form-control"
+                                                                                        id="course" name="course">
+                                                                                        <option
+                                                                                            value="<%- product.course_id %>">
+                                                                                            <%- product.course[0].name
+                                                                                                %>
+                                                                                    </select>
+                                                                                    <input type="button"
+                                                                                        style="position:absolute; margin-left: 12px; "
+                                                                                        class="btn btn-primary"
+                                                                                        data-toggle="modal"
+                                                                                        data-target="#myModal_add_course"
+                                                                                        value="Add course">
+                                                                                    
+                                                                                </div>
+                                                                                <div id="course_error"
+                                                                                style="color:red;margin-left: 30%;margin-top: 10px;"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <div class="add-New">
+                                                                                <label>Image</label>
+                                                                                <input type="file" name="product_image"
+                                                                                    id="product_image"
+                                                                                    class="form-control"
+                                                                                    class="inputfile inputfile"
+                                                                                    >
+                                                                            </div>
+                                                                            <div id="product_image_error"
+                                                                                style="color:red ;margin-left: 175px;">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <div class="add-New">
+                                                                                <label>Sample File</label>
+                                                                                <input type="file" name="sample_file"
+                                                                                    id="sample_file"
+                                                                                    class="form-control"
+                                                                                    class="inputfile inputfile"
+                                                                                    data-multiple-caption="{count} files selected"
+                                                                                    multiple="">
+                                                                            </div>
+                                                                            <div id="sample_file_err"
+                                                                                name="sample_file_err"
+                                                                                style="color:red ;margin-left: 175px;">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <label>Price</label>
+                                                                            <input type="text" id="price" maxlength="6"
+                                                                                name="price" class="form-control"
+                                                                                placeholder="INR"
+                                                                                value="<%- product.price %>">
+                                                                            <div id="price_error" name="price_error"
+                                                                                style="color:red ; margin-left: 175px;">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group ">
+
+                                                                            <label>Tags</label>
+                                                                            <div class="bootstrap-select  form-control">
+                                                                                <select class="form-control"
+                                                                                    class="selectpicker" id="tags"
+                                                                                    name="tags" multiple
+                                                                                    data-live-search="true"
+                                                                                    style="width: 250px;">
+                                                                                    <% for (let tag of tags) { %>
+                                                                                        <option value="<%- tag._id %>">
+                                                                                            <%- tag.name %>
+                                                                                        </option>
+                                                                                        <% } %>
+                                                                                </select>
+
+                                                                                <input type="button" size="50px"
+                                                                                    style="position:absolute; margin-left: 12px; "
+                                                                                    class="btn btn-primary"
+                                                                                    data-toggle="modal"
+                                                                                    data-target="#myModal_add_tag"
+                                                                                    value="Add Tag">
+                                                                                <div id="tags_error" name="tags_error"
+                                                                                    style="color:red;margin-left: 175px;">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <label>Short Description
+                                                                            </label>
+                                                                            <textarea id="short_description" maxlength="300"
+                                                                                class="form-control"
+                                                                                placeholder="Enter Short Description"
+                                                                                name="short_description"><%- product.short_description %>
+                                                                            </textarea>
+                                                                            <div id="short_description_error"
+                                                                                style="color:red ;margin-left: 175px;">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">    
+                                                                            <label>Full Description
+                                                                            </label>
+                                                                            <textarea id="full_description" maxlength="1000"
+                                                                                class="form-control"
+                                                                                placeholder="Enter full Description"
+                                                                                name="full_description"><%- product.full_description %>
+                                                                            </textarea>
+                                                                            <div id="full_description_error"
+                                                                                style="color:red ;margin-left: 175px;">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="text text-center">
+                                                                <input type="submit" class="btn btn-primary"
+                                                                    value="Upload">
+                                                            </div>
+                                                            <!-- New form ends -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!------------------------- SCHOOL MODAL ---------------------------->
+
+        <div class="modal fade" id="myModal_add_school">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-sign-div">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <div class="modal-sign-in">
+                            <div class="modal-sign-head">
+                                <h2>Add School</h2>
+                            </div>
+                            <div class="modal-sign-body modal-post-body">
+                                <form action="javascript:void(0)" method="post" id="add_school"
+                                    enctype="multipart/form-data">
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>School name</label>
+                                                    <input type="text" id="school_name" name="school_name"
+                                                        class="form-control" placeholder="Enter school name" value="">
+                                                    <small id="school_name_error" style="color:red ;">
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label> School Description</label>
+                                                    <textarea class="form-control" style="text-align: justify;"
+                                                        name="school_description" id="school_description">
+                                                    </textarea>
+                                                    <small id="school_description_error" style="color:red ;">
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Logo</label>
+                                                    <input type="file" name="school_logo" id="school_logo"
+                                                        class="form-control" class="inputfile inputfile">
+                                                    </label>
+                                                    <small id="school_logo_error" style="color:red ;">
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <input type="submit" class="btn btn-primary" value="Upload">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!------------------------- SUBJECT MODAL ---------------------------->
+        <div class="modal fade" id="myModal_add_subject">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-sign-div">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                        <div class="modal-sign-in">
+                            <div class="modal-sign-head">
+                                <h2>Add Subject</h2>
+                            </div>
+                            <div class="modal-sign-body modal-post-body">
+                                <form action="javascript:void(0)" method="post" id="add_subject">
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Subject name</label>
+                                                    <input type="text" id="subject_name" name="subject_name"
+                                                        class="form-control" placeholder="Enter subject name" value="">
+                                                    <small id="subject_name_error" style="color:red ;">
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>School name</label>
+                                                    <select
+                                                        class="form-control required[---some rule to check selectedIndex is not 0---]"
+                                                        id="school_for_subject" name="school_for_subject"
+                                                        style="width: 100%">
+                                                        <option value="" selected="">Select school</option>
+
+                                                        <% for(let key of school) { %>
+                                                            <option value="<%- key._id %>">
+                                                                <%- key.name %>
+                                                            </option>
+                                                            <% } %>
+
+                                                    </select>
+                                                    <small id="scl_for_sub_err" style="color:red ;">
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label> Subject Description</label>
+                                                    <textarea class="form-control" style="text-align: justify;"
+                                                        name="subject_description" id="subject_description">
+                                            </textarea>
+                                                    <small id="subject_description_error" style="color:red ;">
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <center>
+                                            <input type="submit" class="btn btn-primary" value="Upload">
+                                        </center>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!---------------------------COURSE MODAL ------------------------------->
+
+        <div class="modal fade" id="myModal_add_course">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-sign-div">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                        <div class="modal-sign-in">
+                            <div class="modal-sign-head">
+                                <h2>Add course</h2>
+                            </div>
+                            <div class="modal-sign-body modal-post-body">
+                                <form action="javascript:void(0)" method="post" id="add_course">
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Course name</label>
+                                                    <input type="text" id="course_name" name="course_name"
+                                                        class="form-control" placeholder="Enter course name" value="">
+                                                    <small id="course_name_error" style="color:red ;">
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>School name</label>
+                                                    <select class="form-control" id="school_for_course"
+                                                        name="school_for_course" style="width: 100%">
+                                                        <option value="" selected="">Select school</option>
+
+                                                        <% for(let key of school) { %>
+                                                            <option value="<%- key._id %>">
+                                                                <%- key.name %>
+                                                            </option>
+                                                            <% } %>
+                                                    </select>
+                                                    <small id="school_for_course_error" style="color:red ;">
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Subject name</label>
+                                                    <select class="form-control" style="width: 100%" id="sub_for_course"
+                                                        name="sub_for_course">
+                                                    </select>
+                                                    <small id="sub_for_course_error" style="color:red ;">
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label> Course Description</label>
+                                                    <textarea class="form-control" style="text-align: justify;"
+                                                        name="course_description" id="course_description"></textarea>
+                                                    <small id="course_description_error" style="color:red ;">
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <center>
+                                        <input type="submit" class="btn btn-primary" value="Upload">
+                                    </center>
+                                </form>
+                                <!-- </form> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!------------------------- TAG MODAL ---------------------------->
+
+        <div class="modal fade" id="myModal_add_tag">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-sign-div">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                        <div class="modal-sign-in">
+                            <div class="modal-sign-head">
+                                <h2>Add Tag</h2>
+                            </div>
+                            <div class="modal-sign-body modal-post-body">
+                                <form action="javascript:void(0)" method="post" id="add_tag">
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Tag Name</label>
+                                                    <input type="text" id="tag_name" name="tag_name"
+                                                        class="form-control" placeholder="Enter Tag" value="">
+                                                    <span id="tag_name_error" name="add_tag_error"
+                                                        style="color:red ;"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <center>
+                                        <input type="submit" class="btn btn-primary" value="Upload">
+                                    </center>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('../footer') %>
+    </body>
+    <script>
+        $(document).ready(function () {
+            // Initialize select2
+            $("#school").select2();
+            $("#subject").select2();
+            $("#course").select2();
+            $("#tags").select2();
+            $("#schoolForSubjectID").select2();
+            $("#schoolForCourseID").select2();
+            $("#subjectForCourseID").select2();
+        });
+    </script>
+    <script>
+
+        // ADD SCHOOL VALIDATION
+
+        $('#add_school').submit((e) => {
+
+            // School name validation
+
+            let school_name = document.getElementById('school_name').value;
+            if (school_name == '') {
+                document.getElementById('school_name_error').innerHTML = "This field is required";
+                return false;
+            }
+            else {
+                document.getElementById('school_name_error').innerHTML = '';
+            }
+
+            // School name validation
+
+            let school_description = document.getElementById('school_description').value.trim();
+            console.log('school_description', school_description);
+            if (school_description == '') {
+                document.getElementById('school_description_error').innerHTML = "This field is required";
+                return false;
+            }
+            else {
+                document.getElementById('school_description_error').innerHTML = '';
+            }
+            // Check image is valid or not
+
+            let school_logo = document.getElementById("school_logo").value;
+            var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+            if (school_logo == '') {
+                document.getElementById("school_logo_error").innerHTML = 'Please select an image';
+                return false;
+            }
+            else if (allowedExtensions.exec(school_logo)) {
+                document.getElementById("school_logo_error").innerHTML = "";
+
+            }
+            else {
+                document.getElementById("school_logo_error").innerHTML = "Please upload files having extensions: .jpg  .jpeg  .png  .gif  only.";
+                return false;
+            }
+
+            let formData = new FormData();
+
+
+            formData.append('school_logo', $('#school_logo')[0].files[0]);
+            formData.append('school_name', school_name);
+            formData.append('school_description', school_description);
+
+            $.ajax({
+                type: 'POST',
+                url: "/add-school",
+                data: formData,
+                dataType: "json",
+                processData: false,
+                cache: false,
+                contentType: false,
+                success: function (data) {
+                    let html = ''
+                    if (data.success) {
+                        $('#myModal_add_school').modal('hide');
+                        for (let key of data.school) {
+                            html += `<option value="${key._id}">${key.name}</option>`;
+                            $('#school').html(html);
+                            $('#school_for_subject').html(html);
+                            $('#school_for_course').html(html);
+                        }
+                    }
+                    else {
+                        document.getElementById('school_logo_error').innerHTML = 'Something went wrong';
+                    }
+                }
+            });
+        });
+
+        // ADD SUBJECT VALIDATION
+
+        $('#add_subject').submit((e) => {
+
+            // School name validation
+
+            let subject_name = document.getElementById('subject_name').value;
+            if (subject_name == '') {
+                document.getElementById('subject_name_error').innerHTML = "This field is required";
+                return false;
+            }
+            else {
+                document.getElementById('subject_name_error').innerHTML = '';
+            }
+
+            let school_id = document.getElementById('school_for_subject').value;
+            if (school_id == '') {
+                document.getElementById('scl_for_sub_err').innerHTML = 'Please select an school';
+                return false;
+            }
+
+            // School description validation
+
+            let subject_description = document.getElementById('subject_description').value.trim();
+            console.log('subject_description', subject_description);
+            if (subject_description == '') {
+                document.getElementById('scl_for_sub_err').innerHTML = ''
+                document.getElementById('subject_description_error').innerHTML = "This field is required";
+                return false;
+            }
+            else {
+                document.getElementById('subject_description_error').innerHTML = '';
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: "/add-subject",
+                data: { subject_name, subject_description, school_id },
+                dataType: "json",
+                success: function (data) {
+                    let html = ''
+                    if (data.success) {
+                        $('#myModal_add_subject').modal('hide');
+                        for (let key of data.subject) {
+                            html += `<option value="${key._id}">${key.name}</option>`;
+                            $('#subject').html(html);
+                        }
+                    }
+                    else {
+                        document.getElementById('subject_description_error').innerHTML = 'Something went wrong try again';
+                    }
+                }
+            });
+
+        });
+
+        // GET SUBJECT BY SCHOOL FOR BOOKS
+
+        $('#school').change((e) => {
+            let school_id = document.getElementById('school').value;
+            $.ajax({
+                type: 'GET',
+                url: `/subject/?scl_id=${school_id}`,
+                dataType: "json",
+                success: function (data) {
+                    let html = ''
+                    if (data.success) {
+                        $('#subject').html(html);
+                        html += `<option value="">Select Subject</option>`;
+                        for (let sub of data.scl_sub) {
+                            html += `<option value="${sub._id}">${sub.name}</option>`;
+                            $('#subject').html(html);
+                            $('#course').html(`<option value="">Select Course</option>`);
+                        }
+                    } else {
+                        html += `<option value="">Select subject</option>`;
+                        $('#subject').html(html);
+                        // $('#course').html(html);
+                    }
+                }
+            });
+        });
+
+        // GET SUBJECT BY SCHOOLID FOR COURSE MODAL
+
+        $('#school_for_course').change((e) => {
+            let school_id = document.getElementById('school_for_course').value;
+            $.ajax({
+                type: 'GET',
+                url: `/subject/?scl_id=${school_id}`,
+                dataType: "json",
+                success: function (data) {
+                    let html = ''
+                    if (data.success) {
+                        for (let sub of data.scl_sub) {
+                            console.log('sub', sub);
+                            html += `<option value="${sub._id}" >${sub.name}</option>`;
+                            $('#sub_for_course').html(html);
+                        }
+                    } else {
+                        html += `<option value="" >Select subject</option>`;
+                        $('#sub_for_course').html(html);
+                    }
+                }
+            });
+        });
+
+        // ADD COURSE WITH SCL AND SUB ID
+
+        $('#add_course').submit((e) => {
+
+            // course name validation
+
+            let course_name = document.getElementById('course_name').value;
+            if (course_name == '') {
+                document.getElementById('course_name_error').innerHTML = "This field is required";
+                return false;
+            }
+            else {
+                document.getElementById('course_name_error').innerHTML = '';
+            }
+
+            // school name validation
+
+            let school_id = document.getElementById('school_for_course').value;
+            console.log('school_id', school_id);
+            if (school_id == '') {
+                document.getElementById('school_for_course_error').innerHTML = 'Please select an school';
+                return false;
+            }
+
+            // school name validation
+
+            let subject_id = document.getElementById('sub_for_course').value;
+            console.log('subjectID', subject_id);
+            if (subject_id == '') {
+                document.getElementById('sub_for_course_error').innerHTML = 'Please select an subject';
+                return false;
+            }
+
+            // School description validation
+
+            let course_description = document.getElementById('course_description').value.trim();
+            console.log('course_description', course_description);
+            if (course_description == '') {
+                document.getElementById('school_for_course_error').innerHTML = ''
+                document.getElementById('course_description_error').innerHTML = "Please enter course description";
+                return false;
+            }
+            else {
+                document.getElementById('course_description_error').innerHTML = '';
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: "/add-course",
+                data: { course_name, school_id, subject_id, course_description },
+                dataType: "json",
+                success: function (data) {
+                    let html = ''
+                    if (data.success) {
+                        $('#myModal_add_course').modal('hide');
+                    }
+                    else {
+                        document.getElementById('course_description_error').innerHTML = 'Something went wrong try again';
+                    }
+                }
+            });
+        });
+
+        // GET COURSE BY SCHOOL_ID AND SUB_ID
+
+        $('#subject').change((e) => {
+            let school_id = $('#school').val();
+            let subject_id = $('#subject').val();
+            $.ajax({
+                type: 'GET',
+                url: `/course/?scl_id=${school_id}&sub_id=${subject_id}`,
+                dataType: "json",
+                success: function (data) {
+                    let html = ''
+                    if (data.success) {
+                        console.log('dataa', data);
+                        html += `<option value="" selected="">
+                            Select
+                            Course</option>`
+                        $('#course').html(html);
+                        for (let key of data.courses) {
+                            html += `<option value="${key._id}" >${key.name}</option>`;
+                            $('#course').html(html);
+                        }
+                    } else {
+                        html += `<option value="" >Select course</option>`;
+                        $('#course').html(html);
+                    }
+                }
+            });
+        });
+
+
+        // ADD TAG NAME
+
+        $('#add_tag').submit((e) => {
+            console.log('function execute');
+            let tag = $('#tag_name').val();
+            if (tag == '') {
+                $('#tag_name_error').html('Please enter tag name');
+                return false;
+            }
+            $.ajax({
+                type: 'POST',
+                url: `/add-tag`,
+                data: { tag },
+                dataType: "json",
+                success: function (data) {
+                    let html = ''
+                    if (data.success) {
+                        for (let key of data.tag) {
+                            html += `<option value="${key._id}" >${key.name}</option>`;
+                            $('#tags').html(html);
+                        }
+                        $('#myModal_add_tag').modal('hide');
+                    }
+                }
+            });
+        });
+
+        // <!------------------------------- Book form validation start---------------------------->
+
+        $('#updateProduct').submit((e) => {
+
+            // Main file validation
+
+            let mainFile = $("#main_file").val();
+            console.log('mainFile',mainFile);
+            let fileType = /(\.pdf|\.doc|\.odt|\.xls|\.xlsx|\.docx)$/i;
+            // if(mainFile == ''){
+            //     $("#main_file_err").html('required');
+            //     return false;
+            // }
+            if (!fileType.exec(mainFile) && mainFile != '') {
+                $("#main_file_err").html("Upload a file that having an extension pdf/doc/odt/docx/xls");
+                return false;
+            } else {
+                $("#main_file_err").html('');
+            }
+
+            // Check title is valid or not
+
+            let title = $('#title').val();
+            if(title = ''){
+                $('#title_error').html('This field is required');
+            }
+            if (title.length > 45) {
+                $('#title_error').html('Title shoud be less than 30 charecter');
+                return false;
+            }
+            else {
+                $('#title_error').html('');
+            }
+
+            // Check school is valid or not
+
+            let school = $("#school").val();
+            console.log('school', school);
+            if (school == '') {
+                $("#school_error").html('This field is required');
+                return false;
+            }
+            else {
+                $("#school_error").html('');
+            }
+
+            // Check subject is valid or not
+
+            let subject = $("#subject").val();
+            console.log('subject', subject);
+            if (subject == '') {
+                $("#subject_error").html('This field is required');
+                return false;
+            }
+            else {
+                $("#subject_error").html('');
+            }
+
+            // Check subject is valid or not
+
+            let course = $("#course").val();
+            console.log('course', course);
+            if (course == '') {
+                $("#course_error").html('This field is required');
+                return false;
+            }
+            else {
+                $("#course_error").html('');
+            }
+
+            // Book image validation
+
+            let product_image = $("#product_image").val();
+            var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+            console.log('product_image',product_image);
+            if (!allowedExtensions.exec(product_image) && product_image != '') {
+                $("#product_image_error").html("Please upload files having extensions: /jpg/jpeg/png/gif only.")
+                return false;
+            }
+            else {
+                $("#product_image_error").html('');
+            }
+
+            // Sample file validation
+
+            let sampleFile = $("#sample_file").val();
+            console.log('sample file', sampleFile);
+
+            if (!fileType.exec(sampleFile) && sampleFile != '' ) {
+                $("#sample_file_err").html("Upload a file that having an extension pdf/doc/odt/docx/xsl");
+                return false;
+            } else {
+                $("#sample_file_err").html('');
+            }
+
+            // Check price  is valid or not
+
+            let price = $("#price").val();
+            console.log('price', price);
+            var numbers = /^(?!^0\.00$)(([1-9][\d]{0,6})|([0]))\.[\d]{2}$/gm
+            if(price == ''){
+                $("#price_error").html("This field is required");
+                return false;
+            }
+            if (!price.match(numbers)) {
+                $("#price_error").html("Please enter valid amount");
+                return false;
+            } else {
+                $("#price_error").html("");
+            }
+
+            // Check short_description is valid or not
+
+            let short_description = $("#short_description").val();
+            short_description = $.trim(short_description);
+            if(short_description == ''){
+                $("#short_description_error").html("This field is required");
+                return false;
+            }
+            if (short_description.length > 300) {
+                $("#short_description_error").html("Maximum 300 character allowed");
+                return false;
+            } else {
+                $("#short_description_error").html("");
+            }
+
+            // Full short_description is valid or not
+
+            let full_description = $("#full_description").val();
+            full_description = $.trim(full_description);
+            if(full_description == ''){
+                $("#Full_description_error").html("This field is required");
+                return false;
+            }
+            if (full_description.length > 1000) {
+                $("#full_description_error").html("Maximum 1000 character allowed");
+                return false;
+            } else {
+                $("#full_description_error").html("");
+            }
+         
+
+        });
+
+
+    </script>
