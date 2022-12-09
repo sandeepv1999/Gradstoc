@@ -10,8 +10,12 @@ const ProductView = require('../../model/product_view');
 const Cart = require('../../model/cart');
 const Bookmark = require('../../model/bookmark');
 const mongoose = require('mongoose');
+const Order = require('../../model/order')
+const OrderDetails = require('../../model/orderDetail');
+const Admin_earning = require('../../model/admin_earning');
 const stripe = require('stripe')(process.env.SECRET_KEY);
 const AuthController = require('./AuthController');
+const { product } = require('./VisitorController');
 
 class ProductController {
 
@@ -586,7 +590,7 @@ class ProductController {
                 status: "",
                 message: "",
                 isUserLoggedIn,
-                userData,totalAmount,
+                userData, totalAmount,
                 success,
                 grandTotal
             }
@@ -598,7 +602,6 @@ class ProductController {
             global.productCount = 0;
             if (req.cookies.cartItems && !req.session.isCustomerLoggedIn) {
                 let cartItem = req.cookies.cartItems;
-                console.log('cartItem', cartItem);
                 let productIds = cartItem.map((e) => {
                     return mongoose.Types.ObjectId(e);
                 });
@@ -824,8 +827,94 @@ class ProductController {
 
     createOrder = async (req, res) => {
         try {
-            console.log('req',req)
-            console.log('req',req.body)
+            let loginId = req.session.isCustomerLoggedIn;
+            loginId = mongoose.Types.ObjectId(loginId);
+            const body = req.body;
+            let product_ids = await Cart.aggregate([
+                {
+                    $match: { user_id: loginId }
+                },
+                {
+                    $lookup:
+                    {
+                        from: "products",
+                        let: { productId: "$product_id" },
+                        pipeline: [
+                            {
+                                $match:
+                                {
+                                    $expr:
+                                        { $eq: ["$$productId", "$_id"] }
+                                }
+                            },
+                            { $project: { "price": 1, "_id": 0 } }
+                        ],
+                        as: "product"
+                    }
+                }
+            ]);
+            let orderId = 'ORDER000' + Math.floor(Math.random() * 100) + Date.now();
+            let orderData = {
+                order_id: orderId,
+                user_id: loginId,
+                subtotal: parseFloat(body.subtotal),
+                total: parseFloat(body.total),
+                wallet_discount: parseFloat(body.wallet_discount),
+                final_pay: parseFloat(body.final_pay),
+                use_wallet: body.isUseWallet,
+                payment_type: 'stripe',
+                payment_status: 'incomplete',
+            }
+            let order = await Order.create(orderData);
+            if (order) {
+                for (let i = 0; i < product_ids.length; i++) {
+                    let obj = {
+                        order_id: order.order_id,
+                        user_id: order.user_id,
+                        product_id: mongoose.Types.ObjectId(product_ids[i].product_id),
+                        quantity: '1',
+                        price: parseFloat(product_ids[i].product[0].price)
+                    }
+                    let orderDetails = await OrderDetails.create(obj);
+                    console.log('orderDetails', orderDetails);
+                }
+                await Cart.deleteMany({ user_id: loginId })
+            }
+            const paymentResult = await stripe.paymentIntents.create({
+                amount: parseFloat(body.final_pay) * 100,
+                currency: "INR",
+                payment_method_types: ['card'],
+            });
+            let stripeDetails = await stripe.paymentIntents.confirm(
+                paymentResult.id,
+                { payment_method: "pm_card_visa" }
+            );
+            // const customer = await stripe.customers.create({
+            //     email: body.stripeEmail,
+            //     source:body.stripeToken,
+            // });
+            if (stripeDetails.status) {
+                stripeDetails.stripeEmail = body.stripeEmail;
+                await Order.updateOne({ _id: order._id }, {
+                    payment_status: stripeDetails.status,
+                    transaction_id: stripeDetails.id,
+                    payment_history: stripeDetails
+                })
+            }
+            if(stripeDetails.status = 'succeeded'){
+                let admin_earning = parseFloat(order.subtotal) * parseFloat(0.17);
+                console.log('admin_earning',admin_earning);
+                let adminData = {
+                    user_id : order.user_id,
+                    order_id : order.order_id,
+                    order_amount : order.total.toFixed(2),
+                    earning : admin_earning.toFixed(2) 
+                }
+                await Admin_earning.create(adminData);
+            }
+            req.session.status = 'success'
+            req.session.message = 'Hurray your order has been placed succefully'
+            res.redirect('/product')
         } catch (error) {
             console.log('Stripe payment error', error)
         }

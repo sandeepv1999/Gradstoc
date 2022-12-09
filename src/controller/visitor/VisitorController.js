@@ -52,6 +52,7 @@ class VisitorController {
     school = async (req, res) => {
         let isUserLoggedIn = false;
         let userData = ""
+        global.productCount = 0
         if (req.session.isCustomerLoggedIn) {
             isUserLoggedIn = true;
             let loginId = req.session.isCustomerLoggedIn;
@@ -86,6 +87,7 @@ class VisitorController {
         let limit = 10
         let page = 1;
         let whereClause = [];
+        global.productCount = 0;
         if (req.query && req.query.page) {
             page = req.query.page;
         }
@@ -166,6 +168,7 @@ class VisitorController {
     blog = async (req, res) => {
         let isUserLoggedIn = false;
         let userData = ""
+        global.productCount = 0
         if (req.session.isCustomerLoggedIn) {
             isUserLoggedIn = true;
             let loginId = req.session.isCustomerLoggedIn;

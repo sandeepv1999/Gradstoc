@@ -304,8 +304,10 @@
                 <form method="post" action="/payment/save-order">
                   <input type="hidden" name="final_pay" id="final_pay" value="" />
                   <input type="hidden" name="subtotal" id="subtotal" value="<%- totalAmount %>" />
+                  <input type="hidden" name="total" id="total" value="<%- grandTotal %>" />
                   <input type="hidden" name="isUseWallet" id="isUseWallet" value="" />
                   <input type="hidden" name="wallet_amt" id="wallet_amt" value="" />
+                  <input type="hidden" name="wallet_discount" id="wallet_dis" value="" />
                   <div class="text text-center">
                     <script src="//checkout.stripe.com/v2/checkout.js" class="stripe-button "
                       data-key="pk_test_51LckTfSJDATToRSRZ5F0G1XIaOIs0ISClv7VN4ki5wMWttUE1edmKfNbTSJm27FUhU40FjZQoYUFOSXqTz6ZE4mX00NMsrRRRc"
@@ -395,6 +397,7 @@
                 $('#final_pay').val(total_pay);
                 $('#wallet_amt').val(wallet_amt);
                 $('#isUseWallet').val(use_wallet);
+                $('#wallet_dis').val(wallet_discount);
                 $('#stripe_modal').modal('show');
                 // let paymentInfo = {
                 //   subtotal, tax,
