@@ -12,16 +12,16 @@ const orderSchema = new Schema({
         ref: 'user'
     },
     subtotal: {
-        type: Number,
+        type: mongoose.Decimal128,
     },
     total: {
-        type: Number
+        type: mongoose.Decimal128
     },
     wallet_discount: {
-        type: Number
+        type: mongoose.Decimal128
     },
     final_pay: {
-        type: Number
+        type: mongoose.Decimal128
     },
     use_wallet: {
         type: String,

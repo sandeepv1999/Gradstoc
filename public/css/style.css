@@ -3908,6 +3908,151 @@ p {
     bottom: 25px;
 }
 
+#preloader{
+    background: #ffffff url(/images/loader1.gif) no-repeat center center;
+    background-size: 10%;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    z-index: 100;
+}
+
+.page-title {
+    padding: 20px 0;
+    /* background: #545454; */
+    margin-bottom: 35px;
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#2c2f8c+0,4362d3+100 */
+    background: rgb(44, 47, 140);
+    /* Old browsers */
+    background: -moz-linear-gradient(left, rgba(44, 47, 140, 1) 0%, rgba(67, 98, 211, 1) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, rgba(44, 47, 140, 1) 0%, rgba(67, 98, 211, 1) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, rgba(44, 47, 140, 1) 0%, rgba(67, 98, 211, 1) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#2c2f8c', endColorstr='#4362d3', GradientType=1);
+    /* IE6-9 */
+}
+
+.page-title-in {
+    text-align: center;
+}
+
+.page-title-in h2 {
+    margin: 0;
+    color: #fff;
+    font-size: 25px;
+    text-transform: capitalize;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 600;
+}
+.thank-you {
+    text-align: center;
+    margin: 50px auto 0 auto;
+    background: #f7f7f7;
+    padding: 50px;
+    border-radius: 10px;
+    position: relative;
+}
+.order-success h2 {
+    margin-top: 30px;
+}
+
+.order-success h2 {
+    -webkit-animation: slide 0.5s forwards;
+    -webkit-animation-delay: 2s;
+    animation: slide 0.5s forwards;
+    animation-delay: 2s;
+}
+.success-right {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    color: green;
+    font-size: 53px;
+    transform: translateX(-50%);
+    background: #fff;
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+}
+.success-right i {
+    display: inline-block;
+    position: relative;
+    top: 5px
+}
+
+.order-success h2 {
+    margin-top: 30px;
+}
+span.thank-mess {
+    display: block;
+    font-size: 50px;
+    font-weight: 800;
+    color: #202286;
+    position: relative;
+    top: -10px;
+}
+.thank-you::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #ececec;
+    left: 0;
+    top: -8px;
+    z-index: -1;
+    border-radius: 10px;
+}
+span.th-orderid,
+span.th-transid {
+    color: #202286;
+}
+.order-success h2 {
+    -webkit-animation: slide 0.5s forwards;
+    -webkit-animation-delay: 2s;
+    animation: slide 0.5s forwards;
+    animation-delay: 2s;
+}
+.continue-shop a {
+    background: #2c2f8c;
+    color: #fff;
+    display: inline-block;
+    padding: 5px 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 15px;
+}
+.Proceed-with-checkout a:hover,
+
+.continue-shop a:hover {
+    background: #333;
+}
+
+.continue-shop {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 100px;
+}
+
+.my-cart-header .continue-shop {
+    width: auto;
+    text-align: left;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.transaction-id {
+    margin-bottom: 10px;
+    color: #2c2f8c;
+    font-size: 15px;
+}
+
+.transaction-id span {
+    font-weight: bold;
+    color: #333;
+}
 
 /* .text_area {
     display: flex;

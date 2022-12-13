@@ -1,0 +1,33 @@
+<%- include('../header') %>
+<section class="section-middle">
+    <div class="page-title">
+        <div class="container">
+            <div class="page-title-in">
+                <h2>Thank You</h2> 
+            </div>
+        </div>
+    </div><!--page-title-->
+
+    <div class="container">
+        <div class="row">
+            <div class="thank-you">
+                <% if(order && order.transaction_id) {  %>
+                <div class="order-success">
+                    <div class="success-right"><i class="far fa-check-circle"></i></div>
+                    <h2><span class="thank-mess">Thank you!</span> Your order <span class="th-orderid"><%- order.order_id %></span> has been placed successfully.</h2>
+                    <h6>Transaction id : <span class="th-transid"><%- order.transaction_id %></span></h6>
+                </div>
+                <% } else { %>
+                <div class="order-failed">
+                    <h2>Your Payment has Failed</h2>
+                </div>
+                <% } %>
+            </div>
+            <div class="continue-shop">
+                <a href="/product?type=0">Continue Shopping</a>
+            </div>
+            <!--continue-shop-->
+        </div>
+    </div><!--container-->
+</section><!--section-middle-->
+<%- include('../footer')%>

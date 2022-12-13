@@ -108,11 +108,13 @@
                           </li>
                         </ul>
                       </div>
-                      <% if(isUserLoggedIn) { %>
+                      <% if(isUserLoggedIn && walletamount> 0 ) { %>
                         <label>
                           <input type="checkbox" name="use_wallet" id="use_wallet" value=""> Pay Using Your Current
                           Balance $
-                          <span id="wallet_amount">30.00</span>
+                          <span id="wallet_amount">
+                            <%- walletamount %>
+                          </span>
                         </label>
                         <% } %>
                     </form>
@@ -146,7 +148,7 @@
                         </tr>
                         <tr>
                           <td> Total Amount : </td>
-                          <td><span class="fourth-td">
+                          <td> $ <span class="fourth-td">
                               <%- grandTotal %>
                             </span>
                           </td>
@@ -154,7 +156,7 @@
                         <% if(isUserLoggedIn) { %>
                           <tr class="wallet-discount">
                             <td>Wallet</td>
-                            <td>-$<span class="wallet-discount-amt-cart">0</span></td>
+                            <td>$<span class="wallet-discount-amt-cart">0</span></td>
                           </tr>
                           <tr class="wallet-discount">
                             <td>Now Total Pay</td>
@@ -388,8 +390,34 @@
         $(document).on('click', '#checkout-form', function (e) {
           var selected_method = $('input[name="currently"]:checked');
           use_wallet = (use_wallet) ? 1 : 0;
+          var paymentInfo = {
+            subtotal: '<%- totalAmount %>',
+            total: '<%- grandTotal %>',
+            use_wallet, wallet_discount,
+            final_pay: total_pay
+          }
           if (use_wallet && parseFloat(total_pay) <= 0) {
             console.log('direct payment from wallet');
+            $('.checkout-btn').attr('disabled', true);
+            $.ajax({
+              type: "POST",
+              url: '/payment/direct-checkout',
+              dataType: 'json',
+              data: paymentInfo,
+              beforeSend: function () {
+                $(".loader-overlay").css("display", "block");
+              },
+              success: function (res) {
+                console.log('res',res);
+                if (res.success) {
+                  location.href = `http://localhost:3300/thank-you?order_id=${res.order.order_id}`
+                } else {
+                  $('.checkout-btn').attr('disabled', false);
+                  $(".loader-overlay").css("display", "none");
+                }
+              },
+            });
+            return true;
           } else {
             if (selected_method.length > 0) {
               let payment_method = selected_method.val();
@@ -422,6 +450,33 @@
                 //     alert('Something went wrong. Please try again !!');
                 //   }
                 // });
+              } else {
+                $('.checkout-btn').attr('disabled', true);
+                $.ajax({
+                  type: "POST",
+                  url: '/payment/paypal-checkout',
+                  dataType: 'json',
+                  data: paymentInfo,
+                  beforeSend: function () {
+                    var loader = document.getElementById('preloader');
+                    window.addEventListener("load", function () {
+                      loader.style.display = "none"
+                    })
+                  },
+                  success: function (res) {
+                    console.log('res', res);
+                    if (res.success) {
+                      console.log('res11',res)
+                      $(".loader-overlay").css("display", "none");
+                      location.href = res.paypal_link;
+                    } else {
+                      $('.checkout-btn').attr('disabled', false);
+                      $(".loader-overlay").css("display", "none");
+                      alert(res.msg);
+                      location.reload();
+                    }
+                  },
+                });
               }
             } else {
               $('#method_warning_modal').modal('show');

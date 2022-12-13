@@ -13,9 +13,13 @@ const mongoose = require('mongoose');
 const Order = require('../../model/order')
 const OrderDetails = require('../../model/orderDetail');
 const Admin_earning = require('../../model/admin_earning');
+const Wallets = require('../../model/wallet');
+const Wallet_transaction = require('../../model/wallet_transaction');
 const stripe = require('stripe')(process.env.SECRET_KEY);
 const AuthController = require('./AuthController');
-const { product } = require('./VisitorController');
+const transaction = require('../../../utils/transaction');
+const createPaypal = require('../../../config/paypal');
+const { v4 } = require("uuid");
 
 class ProductController {
 
@@ -491,6 +495,8 @@ class ProductController {
             ]);
             if (bookData.length > 0) {
                 var tags = await Tag.find({ _id: { $in: bookData[0].tag_id } });
+            } else {
+                res.redirect('/my-cart')
             }
             if (req.session.isCustomerLoggedIn) {
                 isUserLoggedIn = true;
@@ -680,6 +686,9 @@ class ProductController {
                         data.success = 1;
                         grandTotal = parseFloat(amount) + parseFloat(serviceCharge)
                     }
+                    let walletamount = await Wallets.findOne({ user_id: loginId });
+                    console.log('walletamount ', walletamount);
+                    data.walletamount = walletamount.balance;
                     data.productCounts = productCount;
                     global.productCount = productCount;
                     data.products = newProducts;
@@ -777,7 +786,6 @@ class ProductController {
                 data.message = req.session.message;
                 delete req.session.status, req.session.message;
             }
-
             let user = await User.findOne({ _id: user_id });
             let uploadCount = await Product.count({ user_id: user_id });
             data.user = user;
@@ -847,12 +855,13 @@ class ProductController {
                                         { $eq: ["$$productId", "$_id"] }
                                 }
                             },
-                            { $project: { "price": 1, "_id": 0 } }
+                            { $project: { "price": 1, "_id": 0, "user_id": 1 } }
                         ],
                         as: "product"
                     }
                 }
             ]);
+            console.log('productIds', product_ids);
             let orderId = 'ORDER000' + Math.floor(Math.random() * 100) + Date.now();
             let orderData = {
                 order_id: orderId,
@@ -866,6 +875,7 @@ class ProductController {
                 payment_status: 'incomplete',
             }
             let order = await Order.create(orderData);
+            let seller_ids = [];
             if (order) {
                 for (let i = 0; i < product_ids.length; i++) {
                     let obj = {
@@ -875,9 +885,11 @@ class ProductController {
                         quantity: '1',
                         price: parseFloat(product_ids[i].product[0].price)
                     }
+                    seller_ids.push({ id: product_ids[i].product[0].user_id, price: product_ids[i].product[0].price });
                     let orderDetails = await OrderDetails.create(obj);
                     console.log('orderDetails', orderDetails);
                 }
+                console.log('seller_ids', seller_ids);
                 await Cart.deleteMany({ user_id: loginId })
             }
             const paymentResult = await stripe.paymentIntents.create({
@@ -901,25 +913,200 @@ class ProductController {
                     payment_history: stripeDetails
                 })
             }
-            if(stripeDetails.status = 'succeeded'){
+            if (stripeDetails.status = 'succeeded') {
                 let admin_earning = parseFloat(order.subtotal) * parseFloat(0.17);
-                console.log('admin_earning',admin_earning);
                 let adminData = {
-                    user_id : order.user_id,
-                    order_id : order.order_id,
-                    order_amount : order.total.toFixed(2),
-                    earning : admin_earning.toFixed(2) 
+                    user_id: order.user_id,
+                    order_id: order.order_id,
+                    order_amount: order.total,
+                    saving_amount: order.final_pay,
+                    earning: admin_earning.toFixed(2),
+                    type: 'stripe'
                 }
                 await Admin_earning.create(adminData);
+                for (let i = 0; i < seller_ids.length; i++) {
+                    let profit = parseFloat(seller_ids[i].price) * 0.9;
+
+                    await transaction.creditAccount(profit, seller_ids[i].id, loginId, stripeDetails.id)
+                }
+                if (body.isUseWallet == 1) {
+                    await transaction.debitAccount(body.wallet_discount, loginId, stripeDetails.id);
+                }
+            } else {
+                req.session.status = 'error';
+                req.session.message = 'something went wrong , please try again';
             }
             req.session.status = 'success'
             req.session.message = 'Hurray your order has been placed succefully'
-            res.redirect('/product')
+            res.redirect(`/thank-you?order_id=${orderId}`);
         } catch (error) {
             console.log('Stripe payment error', error)
         }
     }
 
+    paypalTransaction = async (req, res) => {
+        try {
+            let loginId = req.session.isCustomerLoggedIn;
+            loginId = mongoose.Types.ObjectId(loginId);
+            const body = req.body;
+            var payment = {
+                "intent": "authorize",
+                "payer": {
+                    "payment_method": "paypal"
+                },
+                "redirect_urls": {
+                    "return_url": "http://localhost:3300/product?type=0",
+                    "cancel_url": "http://localhost:3300"
+                },
+                "transactions": [{
+                    "amount": {
+                        "total": body.final_pay,
+                        "currency": "USD"     // paypal does not accept indian currency
+                    },
+                    "description": " a book on mean stack "
+                }]
+            }   
+
+            const transaction = await createPaypal.createPayment(payment);
+            if (transaction) {
+                var id = transaction.id;
+                var links = transaction.links;
+                var counter = links.length;
+                while (counter--) {
+                    if (links[counter].method == 'REDIRECT') {
+                        // redirect to paypal where user approves the transaction 
+                        res.json({ success: true, paypal_link: links[counter].href });
+                    }
+                }
+            } else {
+                res.json({ success: false });
+            }
+        } catch (error) {
+            console.log('paypal transaction error', error);
+            res.send({ message: error });
+        }
+    }
+
+    //*************** WALLET TRANSACTION  ****************
+
+    walletTransaction = async (req, res) => {
+        try {
+            let loginId = req.session.isCustomerLoggedIn;
+            loginId = mongoose.Types.ObjectId(loginId);
+            const body = req.body;
+            let product_ids = await Cart.aggregate([
+                {
+                    $match: { user_id: loginId }
+                },
+                {
+                    $lookup:
+                    {
+                        from: "products",
+                        let: { productId: "$product_id" },
+                        pipeline: [
+                            {
+                                $match:
+                                {
+                                    $expr:
+                                        { $eq: ["$$productId", "$_id"] }
+                                }
+                            },
+                            { $project: { "price": 1, "_id": 0, "user_id": 1 } }
+                        ],
+                        as: "product"
+                    }
+                }
+            ]);
+            let orderId = 'ORDER000' + Math.floor(Math.random() * 100) + Date.now();
+            let orderData = {
+                order_id: orderId,
+                user_id: loginId,
+                subtotal: parseFloat(body.subtotal),
+                total: parseFloat(body.total),
+                wallet_discount: parseFloat(body.wallet_discount),
+                final_pay: parseFloat(body.final_pay),
+                use_wallet: body.use_wallet,
+                payment_type: 'wallet',
+                payment_status: 'succeeded',
+                transaction_id: v4()
+            }
+            let order = await Order.create(orderData);
+            let seller_ids = [];
+            if (order) {
+                for (let i = 0; i < product_ids.length; i++) {
+                    let obj = {
+                        order_id: order.order_id,
+                        user_id: order.user_id,
+                        product_id: mongoose.Types.ObjectId(product_ids[i].product_id),
+                        quantity: '1',
+                        price: parseFloat(product_ids[i].product[0].price)
+                    }
+                    seller_ids.push({ id: product_ids[i].product[0].user_id, price: product_ids[i].product[0].price });
+                    let orderDetails = await OrderDetails.create(obj);
+                    console.log('orderDetails', orderDetails);
+                }
+                console.log('seller_ids', seller_ids);
+                await Cart.deleteMany({ user_id: loginId })
+            }
+            let admin_earning = parseFloat(order.subtotal) * parseFloat(0.17);
+            let adminData = {
+                user_id: order.user_id,
+                order_id: order.order_id,
+                order_amount: order.total,
+                saving_amount: order.final_pay,
+                earning: admin_earning.toFixed(2),
+                type: 'wallet'
+            }
+            await Admin_earning.create(adminData);
+            for (let i = 0; i < seller_ids.length; i++) {
+                let profit = parseFloat(seller_ids[i].price) * 0.9;
+                await transaction.creditAccount(profit, seller_ids[i].id, loginId, order.transaction_id)
+            }
+            if (body.use_wallet == 1) {
+                await transaction.debitAccount( body.wallet_discount, loginId, order.transaction_id);
+            }
+            req.session.status = 'success'
+            req.session.message = 'Hurray your order has been placed succefully'
+            res.json({success : true , order})
+        } catch (error) {
+            console.log('wallet payment error', error);
+            res.send({ message: error });
+        }
+    }
+
+
+    // ************ THANKS FOR SHOPPING **************
+
+    thankMessage = async (req, res) => {
+        let isUserLoggedIn = false;
+        let userData = ""
+        global.productCount = 0
+        let orderId = req.query.order_id;
+        if (req.session.isCustomerLoggedIn) {
+            isUserLoggedIn = true;
+            let loginId = req.session.isCustomerLoggedIn;
+            loginId = mongoose.Types.ObjectId(loginId);
+            userData = await User.findOne({ _id: loginId });
+            let count = await Cart.count({ user_id: loginId });
+            global.productCount = count;
+            var order = await Order.findOne({ order_id: orderId });
+        }
+        if (req.cookies.cartItems && !isUserLoggedIn) {
+            global.productCount = req.cookies.cartItems.length
+        }
+        let data = {
+            status: "",
+            message: "",
+            isUserLoggedIn,
+            userData, order
+        }
+        if (req.session.status && req.session.message) {
+            data.status = req.session.status;
+            data.message = req.session.message;
+            delete req.session.status, req.session.message;
+        }
+        res.render('user/thankyou', data);
+    }
 }
 
 module.exports = new ProductController();

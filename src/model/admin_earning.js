@@ -1,3 +1,4 @@
+const { string } = require('joi');
 const mongoose = require('mongoose')
 const { Schema } = mongoose;
 
@@ -13,11 +14,18 @@ const adminEarningSchema = new Schema({
     order_amount: {
         type: Number
     },
+    saving_amount : {
+        type : mongoose.Decimal128
+    },
     earning: {
         type: Number
     },
     transaction_id: {
         type: String
+    },
+    type:{
+        type : String,
+        enum : ['stripe','paypal','wallet']
     },
     createdAt: {
         type: Date,

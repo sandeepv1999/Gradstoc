@@ -1,15 +1,18 @@
 const express = require('express');
 const app = express();
 const User = require('../../model/user');
-const School = require('../../model/school');
-const Subject = require('../../model/subject');
-const Course = require('../../model/course');
+const Product = require('../../model/product');
+const Bookmark = require('../../model/bookmark');
 const Tag = require('../../model/tag');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const AuthController = require('./AuthController');
+const Wallet = require('../../model/wallet');
+const Wallet_transaction = require('../../model/wallet_transaction');
+const Order = require('../../model/order');
+
 
 class UserController {
 
@@ -23,15 +26,30 @@ class UserController {
             let userData = ''
             if (req.session.isCustomerLoggedIn) {
                 isUserLoggedIn = true;
-                let loginId = req.session.isCustomerLoggedIn;
+                var loginId = req.session.isCustomerLoggedIn;
                 loginId = mongoose.Types.ObjectId(loginId);
                 userData = await User.findOne({ _id: loginId });
             }
+            let myUploads = await Product.count({ user_id: loginId });
+            let myBookmark = await Bookmark.count({ user_id: loginId });
+            let remainingAmt = await Wallet.findOne({ user_id : loginId }).select('balance');
+            let myEarning = await Wallet_transaction.aggregate([
+                {
+                    $match: { $and :[{
+                        wallet_user_id: loginId , trnxType : 'CR' 
+                    }]  }
+                },
+                { $group: { _id: null, sum: { $sum: "$amount" } } }
+            ]);
+            remainingAmt = remainingAmt.balance;
+            myEarning = myEarning[0].sum;
+            let myOrder = await Order.count({user_id : loginId })
             let data = {
                 status: "",
                 message: "",
-                isUserLoggedIn,
-                userData
+                isUserLoggedIn,remainingAmt,
+                userData, myUploads,
+                myBookmark ,myEarning,myOrder
             }
             if (req.session.status && req.session.message) {
                 data.status = req.session.status;

@@ -1,12 +1,14 @@
 const express = require('express');
 const app = express();
 const User = require('../../model/user');
+const Wallets = require('../../model/wallet');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
 const verification = require('../../../mail')
 const jwt = require('jsonwebtoken');
 const joi = require('joi');
 const joiValidation = require('../../../middleware/joiValidation');
+const { default: mongoose } = require('mongoose');
 
 class AuthController {
 
@@ -41,6 +43,7 @@ class AuthController {
 
             await joiValidation.validateBodyRequest(userData, schema);
             let response = await User.create(userData);
+            // await this.createWallet(response._id);
             req.session.status = 'Success'
             req.session.message = 'Thank you for register .We have sent you a verification email please verify'
             let now = new Date();
@@ -96,6 +99,7 @@ class AuthController {
             let user = await User.findOne({ email: socialDetails.email });
             if (user) {
                 if (user.is_social == 1 && user.type) {
+                    await this.createWallet(user._id);
                     req.session.status = 'success';
                     req.session.message = 'You have successfully logged in';
                     req.session.isCustomerLoggedIn = user._id;
@@ -161,6 +165,7 @@ class AuthController {
             let user = await User.findOne({ providerId: body.providerId });
             if (user) {
                 let response = await User.updateOne({ _id: user._id }, userData);
+                await this.createWallet(user._id);
                 if (response.acknowledged) {
                     req.session.status = 'Success'
                     req.session.message = 'Successfully logged in'
@@ -187,6 +192,7 @@ class AuthController {
             let user = await User.findOne({ providerId: socialDetails.id });
             if (user) {
                 if (user.is_social == 1 && user.type) {
+                    await this.createWallet(user._id);
                     req.session.status = 'success';
                     req.session.message = 'You have successfully logged in';
                     req.session.isCustomerLoggedIn = user._id;
@@ -245,12 +251,13 @@ class AuthController {
             await joiValidation.validateBodyRequest(req.body, schema);
             let { email, password } = req.body;
             let user = await User.findOne({ email: email });
+            await this.createWallet(user._id);
             let data = {}
             if (user) {
                 await bcrypt.compare(
                     password,
                     user.password,
-                    async function (err , isMatch) {
+                    async function (err, isMatch) {
                         if (isMatch) {
                             if (user.isEmailVerify == '0') {
                                 data.success = false;
@@ -425,6 +432,31 @@ class AuthController {
         return new Date(date.getTime() + minutes * 60000);
     }
 
+
+    createWallet = async (user_id) => {
+        try {
+            user_id = mongoose.Types.ObjectId(user_id);
+            const walletExists = await Wallets.findOne({ user_id: user_id });
+            if (walletExists) {
+                return ({
+                    status: 409,
+                    message: `wallet already exist`
+                })
+            }
+            let walletId = 'WALLET000' + Math.floor(Math.random() * 100) + Date.now();
+            const result = await Wallets.create({ user_id, wallet_id: walletId });
+            console.log(result)
+            return ({
+                status: 201,
+                message: `wallet successFully created`
+            })
+        } catch (error) {
+            return ({
+                status: 409,
+                message: `Unable to create wallet. Please try again. \n Error: ${err}`
+            })
+        }
+    }
 }
 
 module.exports = new AuthController();

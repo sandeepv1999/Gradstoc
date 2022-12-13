@@ -3,11 +3,11 @@ const app = express();
 const productController = require('../../controller/visitor/ProductController');
 const CheckUser = require('../../../middleware/CheckUser');
 
-app.get('/my-uploaded-products' , productController.myUploadedProducts);
+app.get('/my-uploaded-products' ,CheckUser.isValidUser, productController.myUploadedProducts);
 
-app.get('/add-new-product' , productController.addNewProduct);
+app.get('/add-new-product' , CheckUser.isValidUser ,productController.addNewProduct);
 
-app.post('/add-school' , productController.addSchool);
+app.post('/add-school' ,CheckUser.isValidUser, productController.addSchool);
 
 app.post('/add-subject' , productController.addSubject);
 
@@ -47,11 +47,10 @@ app.get('/removeBookmark/:id', productController.removeBookmark);
 
 app.post('/payment/save-order' , productController.createOrder);
 
+app.post('/payment/paypal-checkout' , productController.paypalTransaction);
 
+app.post('/payment/direct-checkout' , productController.walletTransaction);
 
-
-
-
-
+app.get('/thank-you' , productController.thankMessage);
 
 module.exports = app

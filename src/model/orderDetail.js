@@ -19,7 +19,7 @@ const orderDetailsSchema = new Schema({
         default: 1
     },
     price: {
-        type: Number,
+        type: mongoose.Decimal128,
     },
     createdAt: {
         type: Date,
