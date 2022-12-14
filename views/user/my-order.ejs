@@ -1,0 +1,153 @@
+<%- include('../header')%>
+
+    <section class="section-middle">
+        <div class="page-title">
+            <div class="container">
+                <div class="page-title-in">
+                    <h2>My Orders</h2>
+                </div>
+            </div>
+        </div><!-- page-title -->
+
+        <div class="dashboard-content">
+            <div class="container">
+                <div class="row">
+                    <%- include('sidebar') %>
+                        <!--col-md-3-->
+                        <div class="col-lg-9 col-md-8">
+                            <div class="uploads-right-area">
+                                <div class="uploads-right-top">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <form action="" method="get">
+                                                <div class="uploads-top-left">
+                                                    <span class="date-picker">
+                                                        <input type="text" class="form-control filter_by_daterange"
+                                                            placeholder="Filter by Date range" name="document_daterange"
+                                                            value="" autocomplete="off" />
+                                                    </span>
+                                                    <span class="date-select-btn">
+                                                        <button onclick="refreshDocument()" class="btn btn-default"
+                                                            type="button">
+                                                            <i class="fas fa-redo"></i>
+                                                        </button>
+                                                        <button class="btn">Search</button>
+                                                    </span>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="uploads-right-main">
+                                    <div class="uploads-right-main-top">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="up-ct">Total Orders : <%- total_order %>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-7">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="uploads-right-main-items my-Orders">
+                                        <% if(myOrder.length> 0) { %>
+                                            <table class="table" style="width:100%">
+                                                <thead class="thead-dark">
+                                                    <tr>
+                                                        <th>S&nbsp;No.</th>
+                                                        <th>Order_Id</th>
+                                                        <th>Transaction Id</th>
+                                                        <th>Type</th>
+                                                        <th>Status</th>
+                                                        <th>Purchased_Date</th>
+                                                        <th>View</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% for(let i=0; i < myOrder.length;i++) { %>
+                                                        <tr>
+                                                            <td>
+                                                                <%- i+1 %>
+                                                            </td>
+                                                            <td><a href="#">#<%- myOrder[i].order_id %></a>
+                                                            </td>
+                                                            <td class="tr-ID">
+                                                                <%- myOrder[i].transaction_id %>
+                                                                    <!-- <div style="text-align:center"> -- </div> -->
+                                                            </td>
+                                                            <td>
+                                                                <% if(myOrder[i].payment_type=='stripe' ) { %>
+                                                                    <img style="max-width:80px;"
+                                                                        src="/images/payment_03.png" alt="" />
+                                                                    <% } else if(myOrder[i].payment_type=='paypal' ){ %>
+                                                                        <img style="max-width:110px;"
+                                                                            src="/images/payment_07.png" alt="" />
+                                                                        <% } else { %>
+                                                                            <img style="max-width:28px;" src=""
+                                                                                alt="" /><span>wallet</span>
+                                                                            <% } %>
+                                                                                <!-- <div style="text-align:center"> -- </div> -->
+                                                            </td>
+                                                            <td>
+                                                                <p>
+                                                                    <% if(myOrder[i].payment_status=='succeeded' ) { %>
+                                                                        <span class="btn btn-success">Completed</span>
+                                                                        <% } else
+                                                                            if(myOrder[i].payment_status=='incomplete'
+                                                                            ){ %>
+                                                                            <span class="btn btn-info">Pending</span>
+                                                                            <% } else { %>
+                                                                                <span
+                                                                                    class="btn btn-danger">Cancelled</span>
+                                                                                <% } %>
+                                                                </p>
+                                                            </td>
+                                                            <td style="font-weight:600;">
+                                                                <p>
+                                                                    <%-
+                                                                        JSON.stringify(myOrder[i].createdAt).slice(1,11).split('-').reverse().join('-');%>
+                                                                </p>
+                                                            </td>
+                                                            <td><a class="pro-View" href="#"><i
+                                                                        class="fa fa-eye"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                        <% } %>
+                                                </tbody>
+                                            </table>
+                                            <% } else { %>
+                                                <center>
+                                                    <div class="alert alert-danger mt-md-5 mt-3 w-90">No Order Found
+                                                    </div>
+                                                </center>
+                                                <% } %>
+                                    </div>
+                                    <div class="item-pagination">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--col-md-9-->
+                </div>
+                <!--row-->
+            </div>
+            <!--container-->
+        </div>
+        <!--dashboard-content-->
+    </section>
+
+    <%- include('../footer')%>
+        <script>
+
+            if ($(".school").val() == '' && $(".subject").val() == '') {
+                $('.refresh').hide();
+            } else {
+                $('.refresh').show();
+            }
+            function refreshDocument() {
+                $('.filter_by_daterange').val('');
+                $('.selectpicker').selectpicker('refresh');
+                window.location.href = "{{Request::url()}}";
+            }
+        </script>

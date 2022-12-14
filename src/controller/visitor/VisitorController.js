@@ -19,7 +19,7 @@ class VisitorController {
         let isUserLoggedIn = false;
         let userData = ""
         var productCount = '';
-        if(req.cookies.cartItems && !req.session.isCustomerLoggedIn ){
+        if (req.cookies.cartItems && !req.session.isCustomerLoggedIn) {
             var cartItem = req.cookies.cartItems;
             productCount = cartItem.length
         }
@@ -28,6 +28,33 @@ class VisitorController {
             let loginId = req.session.isCustomerLoggedIn;
             loginId = mongoose.Types.ObjectId(loginId);
             userData = await User.findOne({ _id: loginId });
+            if (req.cookies.cartItems) {                // Add cookies product in database 
+                let cartItem = req.cookies.cartItems;
+                let newItem = [];
+                let allProduct = await Product.find({ user_id: loginId }).select('_id');
+                let x = allProduct.map((e) => {
+                    return e._id.toString();
+                })
+                for (let i = 0; i < cartItem.length; i++) {
+                    if (!x.includes(cartItem[i])) {
+                        newItem.push(cartItem[i]);
+                    }
+                }
+                let productIds = newItem.map((e) => {
+                    return mongoose.Types.ObjectId(e);
+                });
+                for (let i = 0; i < productIds.length; i++) {   // Add cokkies 
+                    let obj = {
+                        user_id: loginId,
+                        product_id: productIds[i]
+                    }
+                    let product = await Cart.findOne({ user_id: loginId, product_id: productIds[i] })
+                    if (!product) {
+                        await Cart.create(obj);
+                    }
+                }
+                res.clearCookie("cartItems");   //  clear cookie after store data in db
+            }
             productCount = await Cart.count({
                 user_id: loginId,
             });
@@ -58,11 +85,11 @@ class VisitorController {
             let loginId = req.session.isCustomerLoggedIn;
             loginId = mongoose.Types.ObjectId(loginId);
             userData = await User.findOne({ _id: loginId });
-            let count = await Cart.count({user_id: loginId});
+            let count = await Cart.count({ user_id: loginId });
             global.productCount = count;
         }
-        if(req.cookies.cartItems && !isUserLoggedIn){
-            global.productCount = req.cookies.cartItems.length 
+        if (req.cookies.cartItems && !isUserLoggedIn) {
+            global.productCount = req.cookies.cartItems.length
         }
         let data = {
             status: "",
@@ -97,7 +124,7 @@ class VisitorController {
             var loginId = req.session.isCustomerLoggedIn;
             loginId = mongoose.Types.ObjectId(loginId);
             userData = await User.findOne({ _id: loginId });
-            whereClause.push({user_id: {$ne: loginId}});       // user can not see its own book  
+            whereClause.push({ user_id: { $ne: loginId } });       // user can not see its own book  
         }
         whereClause.push({ type: type }, { isDeleted: '0' }, { visiblity: '1' });
         let school = await School.find({});
@@ -147,8 +174,8 @@ class VisitorController {
                     cartItems.push(userProducts[i].product_id.toString());
                 }
             }
-            global.productCount = userProducts.length; 
-            data.cartItems = cartItems ;
+            global.productCount = userProducts.length;
+            data.cartItems = cartItems;
         }
         if (req.cookies.cartItems && req.cookies.cartItems.length > 0) {
             cartItems = req.cookies.cartItems;
@@ -174,11 +201,11 @@ class VisitorController {
             let loginId = req.session.isCustomerLoggedIn;
             loginId = mongoose.Types.ObjectId(loginId);
             userData = await User.findOne({ _id: loginId });
-            let count = await Cart.count({user_id: loginId});
+            let count = await Cart.count({ user_id: loginId });
             global.productCount = count;
         }
-        if(req.cookies.cartItems && !isUserLoggedIn){
-            global.productCount = req.cookies.cartItems.length 
+        if (req.cookies.cartItems && !isUserLoggedIn) {
+            global.productCount = req.cookies.cartItems.length
         }
         let data = {
             status: "",

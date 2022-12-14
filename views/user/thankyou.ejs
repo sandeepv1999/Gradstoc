@@ -11,7 +11,7 @@
     <div class="container">
         <div class="row">
             <div class="thank-you">
-                <% if(order && order.transaction_id) {  %>
+                <% if(order && order.payment_status == 'succeeded') {  %>
                 <div class="order-success">
                     <div class="success-right"><i class="far fa-check-circle"></i></div>
                     <h2><span class="thank-mess">Thank you!</span> Your order <span class="th-orderid"><%- order.order_id %></span> has been placed successfully.</h2>
@@ -19,7 +19,7 @@
                 </div>
                 <% } else { %>
                 <div class="order-failed">
-                    <h2>Your Payment has Failed</h2>
+                    <h1>Your Payment has Failed , Please try after some time</h1>
                 </div>
                 <% } %>
             </div>

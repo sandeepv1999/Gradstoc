@@ -20,6 +20,7 @@ const AuthController = require('./AuthController');
 const transaction = require('../../../utils/transaction');
 const createPaypal = require('../../../config/paypal');
 const { v4 } = require("uuid");
+const paypal = require('paypal-rest-sdk');
 
 class ProductController {
 
@@ -633,33 +634,7 @@ class ProductController {
                 data.grandTotal = grandTotal.toFixed(2);
             } else {
                 if (req.session.isCustomerLoggedIn) {
-                    if (req.cookies.cartItems) {                // Add cookies product in database 
-                        let cartItem = req.cookies.cartItems;
-                        let newItem = [];
-                        let v = await Product.find({ user_id: loginId }).select('_id');
-                        let x = v.map((e) => {
-                            return e._id.toString();
-                        })
-                        for (let i = 0; i < cartItem.length; i++) {
-                            if (!x.includes(cartItem[i])) {
-                                newItem.push(cartItem[i]);
-                            }
-                        }
-                        let productIds = newItem.map((e) => {
-                            return mongoose.Types.ObjectId(e);
-                        });
-                        for (let i = 0; i < productIds.length; i++) {   // Add cokkies 
-                            let obj = {
-                                user_id: loginId,
-                                product_id: productIds[i]
-                            }
-                            let product = await Cart.findOne({ user_id: loginId, product_id: productIds[i] })
-                            if (!product) {
-                                await Cart.create(obj);
-                            }
-                        }
-                        res.clearCookie("cartItems");   //  clear cookie after store data in db
-                    }
+
                     let productCount = await Cart.count({
                         user_id: loginId,
                     });
@@ -863,6 +838,7 @@ class ProductController {
             ]);
             console.log('productIds', product_ids);
             let orderId = 'ORDER000' + Math.floor(Math.random() * 100) + Date.now();
+            let currentDate = new Date().toLocaleDateString(`fr-CA`).split("/").join("-");
             let orderData = {
                 order_id: orderId,
                 user_id: loginId,
@@ -873,6 +849,7 @@ class ProductController {
                 use_wallet: body.isUseWallet,
                 payment_type: 'stripe',
                 payment_status: 'incomplete',
+                createdAt: new Date(`${currentDate}T00:00:00.00Z`)
             }
             let order = await Order.create(orderData);
             let seller_ids = [];
@@ -944,32 +921,89 @@ class ProductController {
         }
     }
 
+
+    //*************** CREATE ORDER BY  PAYPAL  ****************
+
+
     paypalTransaction = async (req, res) => {
         try {
             let loginId = req.session.isCustomerLoggedIn;
             loginId = mongoose.Types.ObjectId(loginId);
             const body = req.body;
+            let product_ids = await Cart.aggregate([
+                {
+                    $match: { user_id: loginId }
+                },
+                {
+                    $project: { "_id": 1, "product_id": 1 }
+                },
+                {
+                    $lookup:
+                    {
+                        from: "products",
+                        let: { productId: "$product_id" },
+                        pipeline: [
+                            {
+                                $match:
+                                {
+                                    $expr:
+                                        { $eq: ["$$productId", "$_id"] }
+                                }
+                            },
+                            { $project: { "price": 1, "_id": 0 } }
+                        ],
+                        as: "product"
+                    }
+                }
+            ]);
+            let orderId = 'ORDER000' + Math.floor(Math.random() * 100) + Date.now();
             var payment = {
                 "intent": "authorize",
                 "payer": {
                     "payment_method": "paypal"
                 },
                 "redirect_urls": {
-                    "return_url": "http://localhost:3300/product?type=0",
-                    "cancel_url": "http://localhost:3300"
+                    "return_url": `http://localhost:3300/paypal/success?amount=${body.final_pay}&order_id=${orderId}&use_wallet=${body.use_wallet}`,
+                    "cancel_url": `http://localhost:3300/paypal/cancel?order_id=${orderId}`
                 },
                 "transactions": [{
                     "amount": {
                         "total": body.final_pay,
                         "currency": "USD"     // paypal does not accept indian currency
                     },
-                    "description": " a book on mean stack "
+                    "description": "you purchase a book/document"
                 }]
-            }   
-
+            }
             const transaction = await createPaypal.createPayment(payment);
+            let currentDate = new Date().toLocaleDateString(`fr-CA`).split("/").join("-");
             if (transaction) {
-                var id = transaction.id;
+                let orderData = {
+                    order_id: orderId,
+                    user_id: loginId,
+                    subtotal: parseFloat(body.subtotal),
+                    total: parseFloat(body.total),
+                    wallet_discount: parseFloat(body.wallet_discount),
+                    final_pay: parseFloat(body.final_pay),
+                    use_wallet: body.use_wallet,
+                    payment_type: 'paypal',
+                    payment_status: 'incomplete',
+                    createdAt: new Date(`${currentDate}T00:00:00.00Z`)
+                }
+                let order = await Order.create(orderData);
+                if (order) {
+                    for (let i = 0; i < product_ids.length; i++) {
+                        let obj = {
+                            order_id: order.order_id,
+                            user_id: order.user_id,
+                            product_id: mongoose.Types.ObjectId(product_ids[i].product_id),
+                            quantity: '1',
+                            price: parseFloat(product_ids[i].product[0].price)
+                        }
+                        // seller_ids.push({ id: product_ids[i].product[0].user_id, price: product_ids[i].product[0].price });
+                        let orderDetails = await OrderDetails.create(obj);
+                    }
+                    await Cart.deleteMany({ user_id: loginId })
+                }
                 var links = transaction.links;
                 var counter = links.length;
                 while (counter--) {
@@ -985,6 +1019,100 @@ class ProductController {
             console.log('paypal transaction error', error);
             res.send({ message: error });
         }
+    }
+
+    //*************** PAYPAL SUCCESS TRANSACTION  ****************
+
+    paypalSuccess = async (req, res) => {
+        try {
+            const payerId = req.query.PayerID;
+            const paymentId = req.query.paymentId;
+            const amount = req.query.amount;
+            const order_id = req.query.order_id;
+            const use_wallet = req.query.use_wallet;
+            const execute_payment_json = {
+                "payer_id": payerId,
+                "transactions": [{
+                    "amount": {
+                        "currency": "USD",
+                        "total": amount
+                    }
+                }]
+            };
+            let payment = await createPaypal.paymentExecute(paymentId, execute_payment_json);
+            if (payment) {
+                let order = await Order.findOne({ order_id });
+                await Order.updateOne({ _id: order._id }, {
+                    payment_status: 'succeeded',
+                    transaction_id: payment.cart,
+                    payment_history: payment
+                })
+                let admin_earning = parseFloat(order.subtotal) * parseFloat(0.17);
+                let adminData = {
+                    user_id: order.user_id,
+                    order_id: order.order_id,
+                    order_amount: order.total,
+                    saving_amount: order.final_pay,
+                    earning: admin_earning.toFixed(2),
+                    type: 'paypal'
+                }
+                await Admin_earning.create(adminData);
+                let saller = await OrderDetails.aggregate([  // fetch selected data from both table
+                    {
+                        $match: { order_id: order_id }
+                    },
+                    {
+                        $project: { "_id": 1, "product_id": 1 }
+                    },
+                    {
+                        $lookup:
+                        {
+                            from: "products",
+                            let: { productId: "$product_id" },
+                            pipeline: [
+                                {
+                                    $match:
+                                    {
+                                        $expr:
+                                            { $eq: ["$$productId", "$_id"] }
+                                    }
+                                },
+                                { $project: { "price": 1, "_id": 0, "user_id": 1 } }
+                            ],
+                            as: "product"
+                        }
+                    },
+                ]);
+                let seller_ids = [];
+                for (let i = 0; i < saller.length; i++) {
+                    seller_ids.push({ id: saller[i].product[0].user_id, price: saller[i].product[0].price });
+                }
+                for (let i = 0; i < seller_ids.length; i++) {
+                    let profit = parseFloat(seller_ids[i].price) * 0.9;
+                    await transaction.creditAccount(profit, seller_ids[i].id, order.user_id, payment.cart)
+                }
+                if (use_wallet == 1) {
+                    await transaction.debitAccount(order.wallet_discount, order.user_id, payment.cart);
+                }
+                res.redirect(`/thank-you?order_id=${order_id}`)
+            }
+        } catch (error) {
+            console.log('pyapal success error', error);
+        }
+    }
+
+    paypalCancel = async (req, res) => {
+        try {
+            const order_id = req.query.order_id;
+        let order = Order.findOne({ order_id });
+        await Order.updateOne({ _id: order._id }, {
+            payment_status: 'incomplete',
+            transaction_id: '---',
+        });
+        res.redirect(`/thank-you?order_id=${order_id}`);
+        } catch (error) {
+          console.log('paypal cancel route',error);  
+        } 
     }
 
     //*************** WALLET TRANSACTION  ****************
@@ -1018,6 +1146,7 @@ class ProductController {
                 }
             ]);
             let orderId = 'ORDER000' + Math.floor(Math.random() * 100) + Date.now();
+            let currentDate = new Date().toLocaleDateString(`fr-CA`).split("/").join("-");
             let orderData = {
                 order_id: orderId,
                 user_id: loginId,
@@ -1028,7 +1157,8 @@ class ProductController {
                 use_wallet: body.use_wallet,
                 payment_type: 'wallet',
                 payment_status: 'succeeded',
-                transaction_id: v4()
+                transaction_id: v4(),
+                createdAt: new Date(`${currentDate}T00:00:00.00Z`)
             }
             let order = await Order.create(orderData);
             let seller_ids = [];
@@ -1063,11 +1193,11 @@ class ProductController {
                 await transaction.creditAccount(profit, seller_ids[i].id, loginId, order.transaction_id)
             }
             if (body.use_wallet == 1) {
-                await transaction.debitAccount( body.wallet_discount, loginId, order.transaction_id);
+                await transaction.debitAccount(body.wallet_discount, loginId, order.transaction_id);
             }
             req.session.status = 'success'
             req.session.message = 'Hurray your order has been placed succefully'
-            res.json({success : true , order})
+            res.json({ success: true, order })
         } catch (error) {
             console.log('wallet payment error', error);
             res.send({ message: error });

@@ -2400,6 +2400,7 @@ span.user-name i {
     border-bottom: 1px solid rgba(5, 27, 44, .2);
 }
 
+
 .dashboard-content {
     margin: 0 0 100px;
 }
@@ -4054,6 +4055,65 @@ span.th-transid {
     color: #333;
 }
 
+
+span.date-picker input.form-control {
+    box-shadow: 0px 3px 20px -13px #202286 !important;
+    background: #fff;
+}
+
+.my-Orders .table .thead-dark th {
+    color: #fff;
+    background-color: #2c2f8c;
+    border-color: #2c2f8c;
+}
+
+.my-Orders a {
+    color: #2c2f8c;
+}
+.my-Orders .pro-View {
+    background: none;
+    color: #2c2f8c !important;
+    display: inline-block;
+    padding: 0;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 13px;
+    width: 30px;
+    height: 30px;   
+    text-align: center;
+    line-height: 30px;
+    border: 1px solid #ccc;
+}
+.my-Orders td span,
+.payment-div span {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 5px;
+    font-weight: 600;
+}
+.my-Orders span.btn {
+    padding: 0px 5px;
+    font-size: 13px;
+}
+
+.my-Orders td {
+    vertical-align: middle;
+}
+
+.my-Orders {
+    font-size: 15px;
+}
+.my-cart-left .cart-prodcut-list .uploads-right-main-items {
+    position: relative;
+}
+
+.my-cart-left .cart-prodcut-list .uploads-right-main-items .ajax-loader {
+    background: rgba(255, 255, 255, 0.5);
+}
+td.tr-ID {
+    word-break: break-word;
+    width: 160px;
+}
 /* .text_area {
     display: flex;
     border: 1px solid rgba(32, 34, 134, 0.7) !important;

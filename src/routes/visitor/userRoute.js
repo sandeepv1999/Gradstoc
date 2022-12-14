@@ -9,12 +9,13 @@ app.get('/change-password' ,CheckUser.isValidUser, userController.getChangePassw
 
 app.post('/change-password' ,userController.changePassword);
 
-app.get('/update-profile' , userController.update_profile);
+app.get('/update-profile' ,CheckUser.isValidUser, userController.update_profile);
 
 app.post('/update-profile' , userController.updateUserProfile);
 
-app.get('/setting' , userController.setting);
+app.get('/my-order' ,CheckUser.isValidUser, userController.myOrder);
 
+app.get('/setting' ,CheckUser.isValidUser, userController.setting);
 
 
 module.exports = app

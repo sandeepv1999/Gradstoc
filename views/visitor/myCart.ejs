@@ -396,8 +396,7 @@
             use_wallet, wallet_discount,
             final_pay: total_pay
           }
-          if (use_wallet && parseFloat(total_pay) <= 0) {
-            console.log('direct payment from wallet');
+          if (use_wallet && parseFloat(total_pay) <= 0) {  // direct payment from wallet
             $('.checkout-btn').attr('disabled', true);
             $.ajax({
               type: "POST",
@@ -408,7 +407,7 @@
                 $(".loader-overlay").css("display", "block");
               },
               success: function (res) {
-                console.log('res',res);
+                console.log('res', res);
                 if (res.success) {
                   location.href = `http://localhost:3300/thank-you?order_id=${res.order.order_id}`
                 } else {
@@ -427,29 +426,6 @@
                 $('#isUseWallet').val(use_wallet);
                 $('#wallet_dis').val(wallet_discount);
                 $('#stripe_modal').modal('show');
-                // let paymentInfo = {
-                //   subtotal, tax,
-                //   grandTotal, use_wallet: use_wallet,
-                //   wallet_amt: wallet_amt, final_pay: total_pay
-                // }
-                // console.log('paymentInfo', paymentInfo);
-                // $.ajax({
-                //   type: "POST",
-                //   url: '/payment/save-order',
-                //   dataType: 'json',
-                //   data: paymentInfo,
-                //   success: function (data) {
-                //     console.log('data', data);
-                //     if (data.success) {
-                //     } else {
-                //       $('.checkout-btn').attr('disabled', false);
-                //     }
-                //   },
-                //   error: function (jqXHR, exception) {
-                //     $('.checkout-btn').attr('disabled', false);
-                //     alert('Something went wrong. Please try again !!');
-                //   }
-                // });
               } else {
                 $('.checkout-btn').attr('disabled', true);
                 $.ajax({
@@ -466,7 +442,7 @@
                   success: function (res) {
                     console.log('res', res);
                     if (res.success) {
-                      console.log('res11',res)
+                      console.log('res11', res)
                       $(".loader-overlay").css("display", "none");
                       location.href = res.paypal_link;
                     } else {

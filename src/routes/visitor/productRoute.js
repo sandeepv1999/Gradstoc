@@ -51,6 +51,10 @@ app.post('/payment/paypal-checkout' , productController.paypalTransaction);
 
 app.post('/payment/direct-checkout' , productController.walletTransaction);
 
+app.get('/paypal/success' , productController.paypalSuccess);
+
+app.get('/paypal/cancel' , productController.paypalCancel)
+
 app.get('/thank-you' , productController.thankMessage);
 
 module.exports = app

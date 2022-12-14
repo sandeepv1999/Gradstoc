@@ -32,24 +32,30 @@ class UserController {
             }
             let myUploads = await Product.count({ user_id: loginId });
             let myBookmark = await Bookmark.count({ user_id: loginId });
-            let remainingAmt = await Wallet.findOne({ user_id : loginId }).select('balance');
+            let remainingAmt = await Wallet.findOne({ user_id: loginId }).select('balance');
             let myEarning = await Wallet_transaction.aggregate([
                 {
-                    $match: { $and :[{
-                        wallet_user_id: loginId , trnxType : 'CR' 
-                    }]  }
+                    $match: {
+                        $and: [{
+                            wallet_user_id: loginId, trnxType: 'CR'
+                        }]
+                    }
                 },
                 { $group: { _id: null, sum: { $sum: "$amount" } } }
             ]);
+            if (myEarning.length > 0) {
+                myEarning = myEarning[0].sum;
+            } else {
+                myEarning = 0
+            }
             remainingAmt = remainingAmt.balance;
-            myEarning = myEarning[0].sum;
-            let myOrder = await Order.count({user_id : loginId })
+            let myOrder = await Order.count({ user_id: loginId })
             let data = {
                 status: "",
                 message: "",
-                isUserLoggedIn,remainingAmt,
+                isUserLoggedIn, remainingAmt,
                 userData, myUploads,
-                myBookmark ,myEarning,myOrder
+                myBookmark, myEarning, myOrder
             }
             if (req.session.status && req.session.message) {
                 data.status = req.session.status;
@@ -181,6 +187,40 @@ class UserController {
         }
     }
 
+    //*************** MY ORDER ****************
+
+    myOrder = async (req, res) => {
+        try {
+            let isUserLoggedIn = false;
+            let userData = ''
+            if (req.session.isCustomerLoggedIn) {
+                isUserLoggedIn = true;
+                let loginId = req.session.isCustomerLoggedIn;
+                loginId = mongoose.Types.ObjectId(loginId);
+                userData = await User.findOne({ _id: loginId });
+                var myOrder = await Order.find({user_id : loginId});
+                var total_order = await Order.count({user_id : loginId});
+            }
+            let data = {
+                status: "", 
+                message: "",
+                isUserLoggedIn,
+                userData,
+                myOrder,
+                total_order
+            }
+            if (req.session.status && req.session.message) {
+                data.status = req.session.status;
+                data.message = req.session.message;
+                delete req.session.status, req.session.message;
+            }
+            res.render('user/my-order', data);
+        } catch (error) {
+            console.log('Setting page error', error);
+            res.send({ messsage: error.message })
+        }
+    }
+
     //*************** GET SETTING PAGE ****************
 
     setting = async (req, res) => {
@@ -210,7 +250,6 @@ class UserController {
             res.send({ messsage: error.message })
         }
     }
-
 }
 
 module.exports = new UserController();
