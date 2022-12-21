@@ -8,6 +8,7 @@ const Product = require('../../model/product');
 const School = require('../../model/school');
 const Tag = require('../../model/tag');
 const Cart = require('../../model/cart');
+const OrderDetails = require('../../model/orderDetail');
 
 class VisitorController {
 
@@ -114,6 +115,7 @@ class VisitorController {
         let limit = 10
         let page = 1;
         let whereClause = [];
+        var soldProduct = [];
         global.productCount = 0;
         if (req.query && req.query.page) {
             page = req.query.page;
@@ -125,35 +127,55 @@ class VisitorController {
             loginId = mongoose.Types.ObjectId(loginId);
             userData = await User.findOne({ _id: loginId });
             whereClause.push({ user_id: { $ne: loginId } });       // user can not see its own book  
+            var orderUser = await OrderDetails.find({user_id : loginId}).select('-_id   product_id');
+            soldProduct = orderUser;
         }
+        let search , search_school, subject , price_range , tag;
         whereClause.push({ type: type }, { isDeleted: '0' }, { visiblity: '1' });
         let school = await School.find({});
         let tags = await Tag.find({});
         if (req.query.search && req.query.search != '') {
-            let search = new RegExp(req.query.search, 'i');
+            search = new RegExp(req.query.search, 'i');
             whereClause.push({ title: { $regex: search, $options: "i" } });
         }
         if (req.query.school && req.query.school != '') {
-            let school = req.query.school;
-            school = mongoose.Types.ObjectId(school);
-            whereClause.push({ scl_id: school });
+            search_school = req.query.school;
+            search_school = mongoose.Types.ObjectId(search_school);
+            whereClause.push({ scl_id: search_school });
         }
         if (req.query.subject && req.query.subject != '') {
-            let subject = req.query.subject;
+            subject = req.query.subject;
             subject = mongoose.Types.ObjectId(subject);
             whereClause.push({ sub_id: subject });
         }
         if (req.query.price_range && req.query.price_range > 0) {
-            let price_range = parseInt(req.query.price_range) + 1;
+            price_range = parseInt(req.query.price_range) + 1;
             whereClause.push({ price: { $lte: price_range } });
         }
         if (req.query.tag && req.query.tag != '') {
-            let tag = req.query.tag;
+            tag = req.query.tag;
             tag = mongoose.Types.ObjectId(tag);
             whereClause.push({ tag_id: { $in: tag } });
         }
         let bookCount = await Product.count({ $and: whereClause });
-        let bookData = await Product.find({ $and: whereClause }).limit(limit).skip(skip);
+        let bookData = await Product.aggregate([
+            {
+                $match: {
+                    $and: whereClause
+                }
+            },
+            {
+                $lookup: {
+                    from: 'reviews',
+                    let: { proId: '$_id' },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$product_id', '$$proId'] } } },
+                        { $project : {'rating':1 , '_id':0 } }
+                    ],
+                    as: 'reviews'
+                },
+            },
+        ]).limit(limit).skip(skip);
         let totalPages = Math.ceil(bookCount / limit);
         let remaining = (bookCount - skip) + skip;
         let cartItems = [];
@@ -165,7 +187,9 @@ class VisitorController {
             currentPage: page,
             limit, skip, school,
             bookCount, bookData,
-            totalPages, remaining, cartItems
+            totalPages, remaining, cartItems,
+            search , search_school , subject ,
+            price_range ,tag,soldProduct
         }
         if (req.session.isCustomerLoggedIn) {
             let userProducts = await Cart.find({ user_id: loginId }).select('product_id');
@@ -283,7 +307,7 @@ class VisitorController {
         let data = {};
         if (user) {
             if (user.isEmailVerify == '1') {
-                data.message = 'The email that you entereds,It is already verify'
+                data.message = 'The email that you entered, It is already verify'
                 res.json(data);
             } else {
                 let now = new Date();

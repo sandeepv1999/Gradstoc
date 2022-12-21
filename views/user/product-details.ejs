@@ -36,7 +36,7 @@
                                                 <!-- <embed src='uploads/<%- bookData.sample_file %>' width='100%' height='650px' frameborder='0'></embed> -->
                                                 <img src="uploads/<%- bookData.image %>" width="500px" alt="">
                                             </div>
-                                            <% if (userData.id != bookData.user_id ) { %>
+                                            <% if (userData.id !=bookData.user_id ) { %>
                                                 <div class="social-pro-cont">
                                                     <h4>Purchase the document to get full access instantly</h4>
                                                     <div class="social-pro-ct">
@@ -44,65 +44,65 @@
                                                             Course</span>
                                                         <span>
                                                             <% if(isUserLoggedIn) { %>
-                                                            <% if(isBookmark == 0 ){ %>
-                                                            <a href="#" onclick="addItem('<%- bookData._id %>')" class="btn"><i class="fas fa-bookmark"></i>
-                                                                <span id="bookmark">Add
-                                                                to bookmark</span></a>
-                                                             <% } else { %>
-                                                                <a href="#" onclick="removeItem('<%- bookData._id %>')" class="btn"><i class="fas fa-bookmark"></i>
-                                                                    <span id="bookmarkRemove">Remove
-                                                                     bookmark</span></a>
-                                                             <% } %>   
-                                                            <% } %>
+                                                                <% if(isBookmark==0 ){ %>
+                                                                    <a href="#" onclick="addItem('<%- bookData._id %>')"
+                                                                        class="btn"><i class="fas fa-bookmark"></i>
+                                                                        <span id="bookmark">Add
+                                                                            to bookmark</span></a>
+                                                                    <% } else { %>
+                                                                        <a href="#"
+                                                                            onclick="removeItem('<%- bookData._id %>')"
+                                                                            class="btn"><i class="fas fa-bookmark"></i>
+                                                                            <span id="bookmarkRemove">Remove
+                                                                                bookmark</span></a>
+                                                                        <% } %>
+                                                                            <% } %>
                                                         </span>
                                                     </div>1669210144649.pdf
                                                 </div>
                                                 <% } %>
                                         </div>
-
                                     </div>
                                     <div class="reviews-section">
-                                        <div class="sec-head">Reviews</div>
-                                        <div class="reviews-sec-divs">
-                                            <div class="reviews-sec-div box-sh card card-body">
-                                                <div class="reviews-ur-img">
-                                                    <span><i class="fas fa-user"></i></span>
-                                                </div>
-                                                <div class="reviews-ur-cont">
-                                                    <div class="reviews-stars">
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
+                                        <% if(reviews.length> 0) { %>
+                                            <div class="sec-head">Reviews</div>
+                                            <div class="reviews-sec-divs">
+                                                <% for(let i=0; i < reviews.length ; i++){ %>
+                                                    <div class="reviews-sec-div box-sh card card-body">
+                                                        <div class="reviews-ur-img">
+                                                            <span><img  src="/uploads/<%- reviews[i].review_user[0].profile %>" /></span>
+                                                        </div>
+                                                        <div class="reviews-ur-cont">
+                                                            <div class="reviews-stars">
+                                                                <% for (let x=0 ; x < reviews[i].rating; x++) { %>
+                                                                    <i class="fas fa-star" style="color:#FF912C;;"></i>
+                                                                    <% } %>
+                                                                        <% for (let y=reviews[i].rating;y < 5;y++) { %>
+                                                                            <i class="fas fa-star"></i>
+                                                                            <% } %>
+                                                            </div>
+                                                            <span class="my-5">
+                                                                <%- reviews[i].review %>
+                                                            </span>
+                                                            <div class="reviews-ur-nm">
+                                                                <p>By: <a href="/author?userId=<%- reviews[i].review_user[0]._id %>">
+                                                                        <%- reviews[i].review_user[0].firstName.charAt(0).toUpperCase()
+                                                                            +
+                                                                            reviews[i].review_user[0].firstName.slice(1)
+                                                                            + ' ' + reviews[i].review_user[0].lastName
+                                                                            %>
+                                                                    </a></p>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="reviews-ur-nm">
-                                                        <p>By: <a href="#">John doe</a> • 2 months ago</p>
-                                                    </div>
-                                                </div>
+                                                    <% } %>
+                                                        <!-- <div class="more-review-btn"><a href="#" class="btn">Show more reviews
+                                                    <i class="fas fa-chevron-down"></i><i></i></a></div> -->
                                             </div>
-                                            <div class="reviews-sec-div box-sh card card-body">
-                                                <div class="reviews-ur-img">
-                                                    <span><i class="fas fa-user"></i></span>
-                                                </div>
-                                                <div class="reviews-ur-cont">
-                                                    <div class="reviews-stars">
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                    </div>
-                                                    <div class="reviews-ur-nm">
-                                                        <p>By: <a href="#">John doe</a> • 2 months ago</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="more-review-btn"><a href="#" class="btn">Show more reviews
-                                                    <i class="fas fa-chevron-down"></i><i></i></a></div>
-                                        </div>
+                                            <% }else {%>
+                                                <div class="sec-head">No Reviews</div>
+                                                <% } %>
                                     </div>
-
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -110,13 +110,24 @@
                                     <div class="study-area aside-card box-sh card card-body">
                                         <div class="study-area-top">
                                             <div class="study-title">Study guide</div>
-                                            <div class="study-review">
+                                            <% if(avg > 0) { %>
+                                                <div class="reviews-stars" style="font-size:small;">
+                                                <% for (let x=0 ; x < avg; x++) { %>
+                                                    <i class="fas fa-star" style="color:#FF912C;;"></i>
+                                                    <% } %>
+                                                        <% for (let y=avg ;y < 5;y++) { %>
+                                                            <i class="fas fa-star"></i>
+                                                            <% } %>
+                                            </div>
+                                        <% } else { %>
+                                            <div class="reviews-stars" style="font-size:small;">
                                                 <i class="fas fa-star"></i>
                                                 <i class="fas fa-star"></i>
                                                 <i class="fas fa-star"></i>
                                                 <i class="fas fa-star"></i>
                                                 <i class="fas fa-star"></i>
                                             </div>
+                                            <% }  %>
                                             <div class="study-price">$ <%- bookData.price %>
                                             </div>
                                             <div class="study-addtocart ">
@@ -126,23 +137,24 @@
                                             </div>
                                             <% if (userData.id !=bookData.user_id ) { %>
                                                 <div class="study-addtocart">
-                                                    <% if(cartItems.length > 0) { %>
+                                                    <% if(cartItems.length> 0) { %>
                                                         <% if(cartItems.includes(bookData._id.toString())) { %>
-                                                            <a href="/my-cart"><i class="fas fa-eye my-2"></i><span>View Cart</span></a>
+                                                            <a href="/my-cart"><i class="fas fa-eye my-2"></i><span>View
+                                                                    Cart</span></a>
                                                             <% } else { %>
                                                                 <a href="#" class="btn"
                                                                     onclick="addToCart('<%- bookData._id %>')"><i
                                                                         id="cart" class="fas fa-shopping-cart"></i><span
                                                                         id="cartText">Add to cart</span></a>
                                                                 <% } %>
-                                                    <% } else { %>
-                                                        <a href="#" class="btn"
-                                                        onclick="addToCart('<%- bookData._id %>')"><i
-                                                            id="cart"
-                                                            class="fas fa-shopping-cart"></i><span
-                                                            id="cartText">Add to
-                                                            cart</span></a>
-                                                    <% } %>
+                                                                    <% } else { %>
+                                                                        <a href="#" class="btn"
+                                                                            onclick="addToCart('<%- bookData._id %>')"><i
+                                                                                id="cart"
+                                                                                class="fas fa-shopping-cart"></i><span
+                                                                                id="cartText">Add to
+                                                                                cart</span></a>
+                                                                        <% } %>
                                                 </div>
                                                 <% } %>
                                         </div>
@@ -176,7 +188,7 @@
                                                     <div class="seller-ur-name">
                                                         <%- bookData.user[0].firstName +' '+ bookData.user[0].lastName %></div>
                                                     <div class="seller-ur-dis">Member since <%- bookData.createdAt %>
-                                                        491 documents sold</div>
+                                                    </div>
                                                     <div class="seller-stars">
                                                         <i class="fas fa-star"></i>
                                                         <i class="fas fa-star"></i>
@@ -209,7 +221,7 @@
             </section>
             <%- include('../popup'); %>
         </div>
-        <%- include('../footer'); %>                                            
+<%- include('../footer'); %>
     </body>
 
     <script>
@@ -268,9 +280,9 @@
             })
         }
 
-         // ADD TO BOOKMARK FUNCTIONALITY 
+        // ADD TO BOOKMARK FUNCTIONALITY 
 
-         function removeItem(productId) {
+        function removeItem(productId) {
             $.ajax({
                 type: 'GET',
                 url: `/removeBookmark/${productId}`,

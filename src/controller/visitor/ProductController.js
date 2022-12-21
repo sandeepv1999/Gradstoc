@@ -14,13 +14,12 @@ const Order = require('../../model/order')
 const OrderDetails = require('../../model/orderDetail');
 const Admin_earning = require('../../model/admin_earning');
 const Wallets = require('../../model/wallet');
-const Wallet_transaction = require('../../model/wallet_transaction');
 const stripe = require('stripe')(process.env.SECRET_KEY);
 const AuthController = require('./AuthController');
 const transaction = require('../../../utils/transaction');
 const createPaypal = require('../../../config/paypal');
 const { v4 } = require("uuid");
-const paypal = require('paypal-rest-sdk');
+const Review = require('../../model/review');
 
 class ProductController {
 
@@ -62,9 +61,11 @@ class ProductController {
                 data.message = req.session.message;
                 delete req.session.status, req.session.message;
             }
-            if (req.body.start_date !== "" && req.body.end_date !== "" &&
-                req.body.end_date != undefined && req.body.end_date != " undefined" &&
-                req.body.start_date != undefined && req.body.start_date != "undefined") {
+            if (req.query.start_date !== "" && req.query.end_date !== "" &&
+                req.query.end_date != undefined && req.query.end_date != " undefined" &&
+                req.query.start_date != undefined && req.query.start_date != "undefined") {
+                start_date = req.query.start_date;
+                end_date = req.query.end_date;
                 var obj = {
                     createdAt: {
                         $gte: new Date(`${start_date}T00:00:00.00Z`),
@@ -82,11 +83,34 @@ class ProductController {
             whereClause.push({ type: productType });
             whereClause.push({ isDeleted: '0' });
             let bookCount = await Product.count({ $and: whereClause });
-            let bookData = await Product.find({ $and: whereClause }).limit(limit).skip(skip);
-            if (bookData.length > 0) {
-                let tags = await Tag.find({ _id: { $in: bookData[0].tag_id } });
-                data.tags = tags;
-            }
+            let bookData = await Product.aggregate([
+                {
+                    $match: {
+                        $and: whereClause
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'tags',
+                        let: { tagId: '$tag_id' },
+                        pipeline: [
+                            { $match: { $expr: { $in: ['$_id', '$$tagId'] } } }
+                        ],
+                        as: 'tags'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'reviews',
+                        let: { proId: '$_id' },
+                        pipeline: [
+                            { $match: { $expr: { $eq: ['$product_id', '$$proId'] } } },
+                            { $project : {'rating':1 , '_id':0 } }
+                        ],
+                        as: 'reviews'
+                    },
+                },
+            ]).limit(limit).skip(skip);
             let totalPages = Math.ceil(bookCount / limit);
             let remaining = (bookCount - skip) + skip;
             data.start_date = start_date;
@@ -339,7 +363,6 @@ class ProductController {
                         foreignField: '_id',
                         as: 'subject'
                     }
-
                 },
                 {
                     $lookup: {
@@ -396,6 +419,7 @@ class ProductController {
                 updatedAt: new Date(`${currentDate}T00:00:00.00Z`)
             }
             let tag_ids = body.tags;
+            console.log('tag_ids', tag_ids);
             if (tag_ids === undefined) {
                 productData.tag_id = product.tag_id.map((e) => {
                     return mongoose.Types.ObjectId(e);
@@ -412,6 +436,7 @@ class ProductController {
                     productData.tag_id = tags
                 }
             }
+            console.log('productData.tag_id', productData.tag_id);
             if (req.files && req.files.main_file) {
                 let mainFile = req.files.main_file;
                 let main_file = await AuthController.saveImageDirectorys(mainFile);
@@ -478,6 +503,8 @@ class ProductController {
     productDetails = async (req, res) => {
         try {
             let productId = req.query.productId;
+            let avg = req.query.avg;
+            avg = (avg == '') ?avg=0:avg; 
             let isUserLoggedIn = false;
             let userData = '';
             let cartItems = [];
@@ -494,10 +521,21 @@ class ProductController {
                     }
                 },
             ]);
+            let reviews = await Review.aggregate([
+                { $match: { product_id: productId } },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user_id',
+                        foreignField: '_id',
+                        as: 'review_user'
+                    }
+                },
+            ]);
             if (bookData.length > 0) {
                 var tags = await Tag.find({ _id: { $in: bookData[0].tag_id } });
             } else {
-                res.redirect('/my-cart')
+                res.redirect('/my-cart');
             }
             if (req.session.isCustomerLoggedIn) {
                 isUserLoggedIn = true;
@@ -532,8 +570,8 @@ class ProductController {
                 message: "",
                 isUserLoggedIn,
                 userData, isBookmark,
-                bookData: bookData[0],
-                viewCount, tags, cartItems
+                bookData: bookData[0], reviews,
+                viewCount, tags, cartItems,avg
             }
             if (req.session.status && req.session.message) {
                 data.status = req.session.status;
@@ -662,7 +700,6 @@ class ProductController {
                         grandTotal = parseFloat(amount) + parseFloat(serviceCharge)
                     }
                     let walletamount = await Wallets.findOne({ user_id: loginId });
-                    console.log('walletamount ', walletamount);
                     data.walletamount = walletamount.balance;
                     data.productCounts = productCount;
                     global.productCount = productCount;
@@ -735,7 +772,6 @@ class ProductController {
     getAuthor = async (req, res) => {
         try {
             let user_id = req.query.userId;
-            console.log('user_id', user_id);
             user_id = mongoose.Types.ObjectId(user_id);
             let isUserLoggedIn = false;
             let userData = ''
@@ -836,7 +872,6 @@ class ProductController {
                     }
                 }
             ]);
-            console.log('productIds', product_ids);
             let orderId = 'ORDER000' + Math.floor(Math.random() * 100) + Date.now();
             let currentDate = new Date().toLocaleDateString(`fr-CA`).split("/").join("-");
             let orderData = {
@@ -1104,15 +1139,15 @@ class ProductController {
     paypalCancel = async (req, res) => {
         try {
             const order_id = req.query.order_id;
-        let order = Order.findOne({ order_id });
-        await Order.updateOne({ _id: order._id }, {
-            payment_status: 'incomplete',
-            transaction_id: '---',
-        });
-        res.redirect(`/thank-you?order_id=${order_id}`);
+            let order = Order.findOne({ order_id });
+            await Order.updateOne({ _id: order._id }, {
+                payment_status: 'incomplete',
+                transaction_id: '---',
+            });
+            res.redirect(`/thank-you?order_id=${order_id}`);
         } catch (error) {
-          console.log('paypal cancel route',error);  
-        } 
+            console.log('paypal cancel route', error);
+        }
     }
 
     //*************** WALLET TRANSACTION  ****************
@@ -1237,6 +1272,29 @@ class ProductController {
         }
         res.render('user/thankyou', data);
     }
+
+
+    // ************ PRODUCT REVIEW **************
+
+    review = async (req, res) => {
+        try {
+            let { rating, review, productId } = req.body;
+            let loginId = req.session.isCustomerLoggedIn;
+            loginId = mongoose.Types.ObjectId(loginId);
+            productId = mongoose.Types.ObjectId(productId);
+            let data = {
+                user_id: loginId,
+                product_id: productId,
+                rating: rating,
+                review: review
+            }
+            await Review.create(data);
+            res.json({ success: true });
+        } catch (error) {
+            console.log('Review error', error);
+        }
+    }
+
 }
 
 module.exports = new ProductController();

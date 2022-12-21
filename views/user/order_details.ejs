@@ -1,0 +1,314 @@
+<%- include('../header') %>
+    <section class="section-middle">
+        <div class="page-title">
+            <div class="container">
+                <div class="page-title-in">
+                    <h2>My Orders Details</h2>
+                </div>
+            </div>
+        </div><!-- page-title -->
+        <div class="dashboard-content">
+            <div class="container">
+                <div class="row">
+                    <%- include('sidebar') %>
+                        <div class="col-lg-9 col-md-8">
+                            <div class="uploads-right-area">
+                                <div class="uploads-right-main">
+                                    <div class="uploads-right-main-items">
+                                        <div class="transaction-id"><span>Order Id</span> : #<%- order.order_id %>
+                                        </div>
+                                        <% for(let i=0;i < orderDetails.length;i++) { %>
+                                            <div class="uploads-right-main-item box-sh card card-body">
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        <div class="uploads-item-img">
+                                                            <a href="">
+                                                                <img
+                                                                    src="/uploads/<%- orderDetails[i].product[0].image %>">
+                                                                <img src="" alt="">
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="uploads-item-cont">
+                                                            <div class="uploads-item-title">
+                                                                <a href="">
+                                                                    <%- orderDetails[i].product[0].title %>
+                                                                </a>
+                                                            </div>
+                                                            <div class="uploads-item-dtls">
+                                                                <div class="uploads-item-dtls-left">
+                                                                    <div class="uploads-item-price">$ <span>
+                                                                            <%- orderDetails[i].product[0].price %>
+                                                                        </span></div>
+                                                                    <div class="uploads-item-author">
+                                                                        <p><a
+                                                                                href="/author?userId=<%- orderDetails[i].product[0].user_id%>">Author
+                                                                            </a></p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="payment-div">
+                                                            <% if(order.payment_type=='stripe' ) { %>
+                                                                <figure style="max-width:110px;">
+                                                                    <img src="/images/payment_03.png" alt="" />
+                                                                </figure>
+                                                                <% } else if (order.payment_type=='paypal' ) { %>
+                                                                    <figure>
+                                                                        <img src="/images/payment_07.png" alt="" />
+                                                                    </figure>
+                                                                    <%} else { %>
+                                                                        <img style="max-width:21px;"
+                                                                            src="/images/wallet.png"
+                                                                            alt="" /><span>wallet</span>
+                                                                        <% } %>
+                                                                            <p><b>Purchase Date</b>: <%-
+                                                                                    JSON.stringify(order.createdAt).slice(1,11).split('-').reverse().join('-');%>
+                                                                            </p>
+                                                                            <p><b>Transaction Id</b>: #<%-
+                                                                                    order.transaction_id %>
+                                                                            </p>
+                                                                            <p><b>Status</b> :
+                                                                                <% if(order.payment_status=='succeeded'
+                                                                                    ) { %>
+                                                                                    <span>Completed</span>
+                                                                                    <% } else
+                                                                                        if(order.payment_status=='incomplete'
+                                                                                        ){ %>
+                                                                                        <span>Cancelled</span>
+                                                                                        <% } else { %>
+                                                                                            <span>Pending</span>
+                                                                                            <% } %>
+                                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="uploads-item-right">
+                                                            <% if(orderDetails[i].review.length> 0) { %>
+                                                                <% let reviews=orderDetails[i].review
+                                                                    console.log('reviewsreviews',reviews) %>
+                                                                    <div class="seller-stars">
+                                                                        <% for (let i=0 ; i < reviews[0].rating ; i++) {
+                                                                            %>
+                                                                            <i class="fas fa-star"
+                                                                                style="color:#FF912C;;"></i>
+                                                                            <% } %>
+                                                                                <% for (let i=reviews[0].rating ;i < 5;
+                                                                                    i++) { %>
+                                                                                    <i class="fas fa-star"></i>
+                                                                                    <% } %>
+                                                                    </div>
+                                                                    <% } else{ %>
+                                                                        <div class="review-btn-div">
+                                                                            <button id="review"
+                                                                                onclick="giveReview('<%- orderDetails[i].product_id %>')"
+                                                                                class="btn" data-toggle="modal"
+                                                                                data-target="#addReview">Add
+                                                                                Review</button>
+                                                                        </div>
+                                                                        <% } %>
+                                                                            <div class="downloas-item-btn btnt">
+                                                                                <% if(order.payment_status=='succeeded'
+                                                                                    ) { %>
+                                                                                    <div class="downloas-item-btn btnt">
+                                                                                        <a href="uploads/<%-orderDetails[i].product[0].main_file %>"
+                                                                                            class="btn"
+                                                                                            download="Full version"><span>Download
+                                                                                                Full
+                                                                                                Version</span>
+                                                                                            <i
+                                                                                                class="fas fa-download"></i></a>
+                                                                                    </div>
+                                                                                    <% } else { %>
+                                                                                        <div
+                                                                                            class="downloas-item-btn btnt">
+                                                                                            <a href="uploads/<%-orderDetails[i].product[0].sample_file %>"
+                                                                                                class="btn"><span>Download
+                                                                                                    Sample</span>
+                                                                                                <i
+                                                                                                    class="fas fa-download"></i></a>
+                                                                                        </div>
+                                                                                        <% } %>
+                                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% } %>
+                                                <!-- <div class="uploads-right-main-item box-sh card card-body">
+                                                    No Order Found
+                                                </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="modal fade" id="addReview">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-sign-div">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="modal-sign-in">
+                        <div class="modal-sign-head">
+                            <h2>Rate Document</h2>
+                        </div>
+                        <div class="modal-body">
+                            <div class="rate-document-message"></div>
+                            <div class="sign-form">
+                                <form id="rateDocumentForm" method="post" action="javascript:void(0)">
+                                    <input type="hidden" name="document_id" value="1" class="doc_id">
+                                    <input type="hidden" name="doc_rating" class="rating_val" value="5">
+                                    <input type="hidden" name="productId" id="proId" value="">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Rating</label>
+                                                <!-- Rating Stars Box -->
+                                                <section class='rating-widget'>
+
+                                                    <!-- Rating Stars Box -->
+                                                    <div class='rating-stars text-center'>
+                                                        <ul id='stars'>
+                                                            <li class='star' title='Poor' data-value='1'>
+                                                                <i class='fa fa-star fa-fw'></i>
+                                                            </li>
+                                                            <li class='star' title='Fair' data-value='2'>
+                                                                <i class='fa fa-star fa-fw'></i>
+                                                            </li>
+                                                            <li class='star' title='Good' data-value='3'>
+                                                                <i class='fa fa-star fa-fw'></i>
+                                                            </li>
+                                                            <li class='star' title='Excellent' data-value='4'>
+                                                                <i class='fa fa-star fa-fw'></i>
+                                                            </li>
+                                                            <li class='star' title='WOW!!!' data-value='5'>
+                                                                <i class='fa fa-star fa-fw'></i>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <span id="ratingError" style="color:red;"></span>
+                                                    <div class='success-box'>
+                                                        <div class='clearfix'></div>
+                                                        <img alt='tick image' width='32'
+                                                            src='data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA0MjYuNjY3IDQyNi42NjciIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDQyNi42NjcgNDI2LjY2NzsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHdpZHRoPSI1MTJweCIgaGVpZ2h0PSI1MTJweCI+CjxwYXRoIHN0eWxlPSJmaWxsOiM2QUMyNTk7IiBkPSJNMjEzLjMzMywwQzk1LjUxOCwwLDAsOTUuNTE0LDAsMjEzLjMzM3M5NS41MTgsMjEzLjMzMywyMTMuMzMzLDIxMy4zMzMgIGMxMTcuODI4LDAsMjEzLjMzMy05NS41MTQsMjEzLjMzMy0yMTMuMzMzUzMzMS4xNTcsMCwyMTMuMzMzLDB6IE0xNzQuMTk5LDMyMi45MThsLTkzLjkzNS05My45MzFsMzEuMzA5LTMxLjMwOWw2Mi42MjYsNjIuNjIyICBsMTQwLjg5NC0xNDAuODk4bDMxLjMwOSwzMS4zMDlMMTc0LjE5OSwzMjIuOTE4eiIvPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K' />
+                                                        <div class='text-message'></div>
+                                                        <div class='clearfix'></div>
+                                                    </div>
+                                                </section>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Reviews <span>*</span></label>
+                                                <textarea class="form-control" placeholder="Write Reviews" name="review"
+                                                    id="review" value=""></textarea>
+                                                <span id="reviewError" style="color:red;"></span>
+                                                <span class="review-error error-validate">
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group loader-overlay-div">
+                                                <input type="submit" class="btn submit-rate" value="Submit">
+                                                <span class="loader-overlay" style="display: none;">
+                                                    <div class="loader"></div>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('../footer') %>
+
+        <script>
+            function giveReview(product_id) {
+                $('#proId').val(product_id);
+            }
+            $(document).ready(function () {
+                $('#stars li').on('mouseover', function () {
+                    var onStar = parseInt($(this).data('value'), 10); // The star currently mouse on
+                    // Now highlight all the stars that's not after the current hovered star
+                    $(this).parent().children('li.star').each(function (e) {
+                        if (e < onStar) {
+                            $(this).addClass('hover');
+                        }
+                        else {
+                            $(this).removeClass('hover');
+                        }
+                    });
+                }).on('mouseout', function () {
+                    $(this).parent().children('li.star').each(function (e) {
+                        $(this).removeClass('hover');
+                    });
+                });
+
+                /* 2. Action to perform on click */
+
+                $('#stars li').on('click', function () {
+                    var onStar = parseInt($(this).data('value'), 10); // The star currently selected
+                    var stars = $(this).parent().children('li.star');
+                    for (i = 0; i < stars.length; i++) {
+                        $(stars[i]).removeClass('selected');
+                    }
+                    for (i = 0; i < onStar; i++) {
+                        $(stars[i]).addClass('selected');
+                    }
+                    var ratingValue = parseInt($('#stars li.selected').last().data('value'), 10);
+                    var msg = "";
+                    if (ratingValue > 1) {
+                        msg = "Thanks! You rated this " + ratingValue + " stars.";
+                    }
+                    else {
+                        msg = "We will improve ourselves. You rated this " + ratingValue + " stars.";
+                    }
+                    responseMessage(msg);
+                });
+            });
+            function responseMessage(msg) {
+                $('.success-box').fadeIn(200);
+                $('.success-box div.text-message').html("<span>" + msg + "</span>");
+            }
+
+            $('#rateDocumentForm').submit((e) => {
+                let ratingValue = parseInt($('#stars li.selected').last().data('value'), 10);
+                let proId = $('#proId').val();
+                let review = $('textarea#review').val();
+                // if(ratingValue == 'NaN'){
+                //     $('#ratingError').html('Please give rating');
+                //     return false;
+                // }
+                console.log('review', review);
+                if (review == '') {
+                    $('#ratingError').html('');
+                    $('#reviewError').html('Please give review');
+                    return false;
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: `/add-review`,
+                    data: { rating: ratingValue, review, productId: proId },
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.success) {
+                            window.location.reload();
+                        }
+                    }
+                })
+            });
+
+
+        </script>

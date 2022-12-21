@@ -97,9 +97,19 @@
                                                     id="alertmsg">
                                                     <strong>No Record Found</strong>
                                                 </div>
-                                                <% } %>
+                                                <% } else { %>
                                                     <div class="uploads-right-main-items">
                                                         <% for (let book of bookData) { %>
+                                                            <% let avg ,rat, sum = 0; %>
+                                                            <% if( book.reviews.length > 0) { %>
+                                                                <% for(let i = 0; i < book.reviews.length; i++ ) { %>
+                                                                <%  sum  +=  book.reviews[i].rating ;
+                                                                    avg  = Math.round(parseFloat(sum/book.reviews.length))%>    
+                                                                <% } %>
+                                                                  <% rat = 1 %>      
+                                                                <% } else { %>
+                                                                    <% rat = 0; %>
+                                                                    <% }  %>
                                                             <div class="uploads-right-main-item box-sh card card-body">
                                                                 <div class="row">
                                                                     <div class="col-md-2">
@@ -120,13 +130,24 @@
                                                                                             <%- book.price %>
                                                                                         </span>
                                                                                     </div>
-                                                                                    <div class="reviews-stars">
+                                                                                    <% if(rat == 1) { %>
+                                                                                        <div class="reviews-stars" style="font-size:small;">
+                                                                                        <% for (let x=0 ; x < avg; x++) { %>
+                                                                                            <i class="fas fa-star" style="color:#FF912C;;"></i>
+                                                                                            <% } %>
+                                                                                                <% for (let y=avg ;y < 5;y++) { %>
+                                                                                                    <i class="fas fa-star"></i>
+                                                                                                    <% } %>
+                                                                                    </div>
+                                                                                <% } else { %>
+                                                                                    <div class="reviews-stars" style="font-size:small;">
                                                                                         <i class="fas fa-star"></i>
                                                                                         <i class="fas fa-star"></i>
                                                                                         <i class="fas fa-star"></i>
                                                                                         <i class="fas fa-star"></i>
                                                                                         <i class="fas fa-star"></i>
                                                                                     </div>
+                                                                                    <% }  %>
                                                                                 </div>
                                                                                 <div class="uploads-item-dtls-right">
                                                                                     <p>10 Sales<br />
@@ -141,7 +162,7 @@
                                                                             <div class="uploads-item-tags">
                                                                                 <label>Tags -</label>
                                                                                 <p>
-                                                                                    <% for(let tag of tags) { %>
+                                                                                    <% for(let tag of book.tags){ %>
                                                                                         <span>
                                                                                             <%- tag.name %>
                                                                                         </span>
@@ -159,7 +180,7 @@
                                                                                     data-toggle="tooltip"><i
                                                                                         class="fas fa-trash-alt text text-danger"></i>
                                                                                 </a>
-                                                                                <a href="/edit-product?productId=<%- book._id%>"
+                                                                                <a href="/edit-product?productId=<%- book._id%>&avg=<%- avg %>"
                                                                                     data-toggle="tooltip"><i
                                                                                         class="far fa-edit"></i>
                                                                                 </a>
@@ -223,11 +244,11 @@
                                                                                 <% } %>
                                                         </ul>
                                                     </div>
+                                                <% } %>    
                                         </div>
                                     </div>
                                 </div>
                                 <!--col-md-9-->
-
                         </div>
                         <!--row-->
                     </div>
@@ -244,6 +265,10 @@
         $('#search_book').submit((e) => {
             let start_date = $('#start_date').val();
             let end_date = $('#end_date').val();
+            let school = $('#search_school').val();
+            if(start_date == "" && end_date == "" &&  school== ""){
+                return false;
+            }
             if (start_date !== '' && end_date == '') {
                 $('#end_date_err').html('Please select end date');
                 return false;

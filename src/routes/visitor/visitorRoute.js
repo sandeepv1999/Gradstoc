@@ -5,7 +5,7 @@ const visitorController = require('../../controller/visitor/VisitorController');
 const AuthController = require('../../controller/visitor/AuthController');
 const CheckUser = require('../../../middleware/CheckUser');
 const passport = require('passport');
-
+const userController = require('../../controller/visitor/UserController');
 
 app.get('/',visitorController.homePage);
 
@@ -29,8 +29,6 @@ app.get('/logout',CheckUser.isValidUser,AuthController.logout);
 
 app.get('/school',visitorController.school);
 
-// app.get('/document',visitorController.document);
-
 app.get('/product',visitorController.product);
 
 app.get('/blog',visitorController.blog);
@@ -48,6 +46,9 @@ app.get('/add_Information', visitorController.addInformation);
 app.post('/add_Information', AuthController.add_additional_data);
 
 app.get('/terms-service', visitorController.termsAndService);
+
+// app.get('*' ,CheckUser.isValidUser, userController.new);
+
 
 
 

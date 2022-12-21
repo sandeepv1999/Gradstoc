@@ -12,6 +12,8 @@ const AuthController = require('./AuthController');
 const Wallet = require('../../model/wallet');
 const Wallet_transaction = require('../../model/wallet_transaction');
 const Order = require('../../model/order');
+const OrderDetails = require('../../model/orderDetail');
+const Review = require('../../model/review');
 
 
 class UserController {
@@ -30,7 +32,7 @@ class UserController {
                 loginId = mongoose.Types.ObjectId(loginId);
                 userData = await User.findOne({ _id: loginId });
             }
-            let myUploads = await Product.count({ user_id: loginId });
+            let myUploads = await Product.count({ user_id: loginId, type: 1 });
             let myBookmark = await Bookmark.count({ user_id: loginId });
             let remainingAmt = await Wallet.findOne({ user_id: loginId }).select('balance');
             let myEarning = await Wallet_transaction.aggregate([
@@ -193,21 +195,46 @@ class UserController {
         try {
             let isUserLoggedIn = false;
             let userData = ''
+            let whereClause = []
+            let start_date, end_date;
+            let page = 1;
+            if (req.query && req.query.page) {
+                page = req.query.page;
+            }
+            let limit = 5
+            let skip = (page - 1) * limit;
             if (req.session.isCustomerLoggedIn) {
                 isUserLoggedIn = true;
                 let loginId = req.session.isCustomerLoggedIn;
                 loginId = mongoose.Types.ObjectId(loginId);
                 userData = await User.findOne({ _id: loginId });
-                var myOrder = await Order.find({user_id : loginId});
-                var total_order = await Order.count({user_id : loginId});
+                whereClause.push({ user_id: loginId });
+                if (req.query.start_date !== "" && req.query.end_date !== "" &&
+                    req.query.end_date != undefined && req.query.end_date != " undefined" &&
+                    req.query.start_date != undefined && req.query.start_date != "undefined") {
+                    start_date = req.query.start_date;
+                    end_date = req.query.end_date;
+                    var obj = {
+                        createdAt: {
+                            $gte: new Date(`${start_date}T00:00:00.00Z`),
+                            $lte: new Date(`${end_date}T00:00:00.00Z`),
+                        },
+                    };
+                    whereClause.push(obj);
+                }
+                var myOrder = await Order.find({ $and: whereClause }).limit(limit).skip(skip);
+                var total_order = await Order.count({ $and: whereClause });
+                var totalPages = Math.ceil(total_order / limit);
             }
             let data = {
-                status: "", 
+                status: "",
                 message: "",
                 isUserLoggedIn,
                 userData,
                 myOrder,
-                total_order
+                currentPage: page,
+                total_order, totalPages,
+                start_date, end_date
             }
             if (req.session.status && req.session.message) {
                 data.status = req.session.status;
@@ -220,6 +247,141 @@ class UserController {
             res.send({ messsage: error.message })
         }
     }
+
+    //*************** ORDER DEATILS PAGE ****************
+
+    orderDetails = async (req, res) => {
+        try {
+            let isUserLoggedIn = false;
+            let userData = ''
+            var orderId = req.query.orderId;
+            if (req.session.isCustomerLoggedIn) {
+                isUserLoggedIn = true;
+                let loginId = req.session.isCustomerLoggedIn;
+                loginId = mongoose.Types.ObjectId(loginId);
+                userData = await User.findOne({ _id: loginId });
+                var order = await Order.findOne({ order_id: orderId });
+                var orderDetails = await OrderDetails.aggregate([
+                    {
+                        $match: { order_id: order.order_id }
+                    },
+                    {
+                        $project: { "product_id": 1, "user_id": 1 }
+                    },
+                    {
+                        $lookup:
+                        {
+                            from: "products",
+                            let: { productId: "$product_id" },
+                            pipeline: [
+                                {
+                                    $match:
+                                    {
+                                        $expr:
+                                            { $eq: ["$$productId", "$_id"] }
+                                    }
+                                },
+                            ],
+                            as: "product"
+                        }
+                    },
+                    {
+                        $lookup:
+                        {
+                            from: "reviews",
+                            let: { order_user_id: "$user_id", order_productId: "$product_id" },
+                            pipeline: [
+                                {
+                                    $match:
+                                    {
+                                        $expr:
+                                        {
+                                            $and: [
+                                                { $eq: ['$$order_user_id', '$user_id'] },
+                                                { $eq: ['$$order_productId', '$product_id'] },
+                                            ]
+                                        }
+                                    }
+                                },
+                            ],
+                            as: "review"
+                        }
+                    },
+                ]);
+            }
+            let data = {
+                status: "",
+                message: "",
+                isUserLoggedIn,
+                userData,
+                orderDetails,
+                order,
+            }
+            if (req.session.status && req.session.message) {
+                data.status = req.session.status;
+                data.message = req.session.message;
+                delete req.session.status, req.session.message;
+            }
+            res.render('user/order_details', data);
+        } catch (error) {
+            console.log('order details page error', error);
+            res.send({ messsage: error.message })
+        }
+    }
+
+    //*************** MY BOOKMARK  ****************
+
+    myBookmark = async (req, res) => {
+        try {
+            let isUserLoggedIn = false;
+            let userData = ''
+            let whereClause = [];
+            if (req.session.isCustomerLoggedIn) {
+                isUserLoggedIn = true;
+                let loginId = req.session.isCustomerLoggedIn;
+                loginId = mongoose.Types.ObjectId(loginId);
+                userData = await User.findOne({ _id: loginId });
+                whereClause.push({ user_id: loginId });
+            }
+            // var schoolData = await School.find({});
+            // if (req.query.start_date !== "" && req.query.end_date !== "" &&
+            //     req.query.end_date != undefined && req.query.end_date != " undefined" &&
+            //     req.query.start_date != undefined && req.query.start_date != "undefined") {
+            //     start_date = req.query.start_date;
+            //     end_date = req.query.end_date;
+            //     var obj = {
+            //         createdAt: {
+            //             $gte: new Date(`${start_date}T00:00:00.00Z`),
+            //             $lte: new Date(`${end_date}T00:00:00.00Z`),
+            //         },
+            //     };
+            //     whereClause.push(obj);
+            // }
+            // if (req.query.search_school && req.query.search_school !== '') {
+            //     search_school = req.query.search_school;
+            //     var scl_id = mongoose.Types.ObjectId(search_school);
+            //     whereClause.push({ scl_id: scl_id })
+            // }
+            // let productCount = await Product.count({ $and: whereClause });
+
+            let data = {
+                status: "",
+                message: "",
+                isUserLoggedIn,
+                userData
+            }
+            if (req.session.status && req.session.message) {
+                data.status = req.session.status;
+                data.message = req.session.message;
+                delete req.session.status, req.session.message;
+            }
+            res.render('user/bookmark', data);
+        } catch (error) {
+            console.log('Setting page error', error);
+            res.send({ messsage: error.message })
+        }
+    }
+
 
     //*************** GET SETTING PAGE ****************
 
@@ -250,6 +412,11 @@ class UserController {
             res.send({ messsage: error.message })
         }
     }
+
+    // new = async (req, res) => {
+
+    //     res.redirect('/');
+    // }
 }
 
 module.exports = new UserController();

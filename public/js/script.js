@@ -50,6 +50,7 @@ jQuery(document).ready(function ($) {
         $(".modal-resendMail-in").show();
         $(".modal-sign-up").hide();
     });
+   
 
     // $(".google_modal").click(function () {
     //     $(".modal-sign-in").hide();

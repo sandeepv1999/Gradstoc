@@ -16,8 +16,8 @@ module.exports.createPayment = async (payment) => {
             } else {
                 resolve(payment);
             }
-        })
-    })
+        });
+    });
 }
 
 module.exports.paymentExecute = async (paymentId, execute_payment_json) => {

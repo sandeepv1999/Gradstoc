@@ -15,7 +15,14 @@ app.post('/update-profile' , userController.updateUserProfile);
 
 app.get('/my-order' ,CheckUser.isValidUser, userController.myOrder);
 
+app.get('/bookmark' ,CheckUser.isValidUser, userController.myBookmark);
+
+app.get('/order-details' ,CheckUser.isValidUser, userController.orderDetails);
+
 app.get('/setting' ,CheckUser.isValidUser, userController.setting);
+
+// app.get('*' ,CheckUser.isValidUser, userController.new);
+
 
 
 module.exports = app

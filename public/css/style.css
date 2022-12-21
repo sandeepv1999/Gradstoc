@@ -1778,7 +1778,7 @@ form.signin-form {
 }
 
 .seller-stars {
-    color: #ffc600;
+   
     font-size: 12px;
 }
 
@@ -2906,7 +2906,7 @@ span.date-select-btn button.btn,
 .uploads-item-tags {
     display: flex;
     flex-wrap: wrap;
-    margin: 5px 0 0;
+    margin: 5px 5px 0px;
 }
 
 .uploads-item-tags label {
@@ -2996,7 +2996,7 @@ span.date-select-btn button.btn,
 }
 
 .btnt a i {
-    padding: .375rem .75rem;
+    padding: .360rem .30rem;
     display: inline-block;
 }
 
@@ -3007,6 +3007,7 @@ span.date-select-btn button.btn,
 
 .downloas-item-btn {
     margin: 0 0 15px;
+    font-size: 13px;
 }
 
 .downloas-item-btn a span {
@@ -3090,8 +3091,12 @@ div.dataTables_wrapper div.dataTables_paginate {
     text-align: center;
 }
 
+.uploads-item-cont{
+    margin-left: 6px;
+}
 .uploads-item-cont p {
-    margin: 0;
+    margin-left: 0px;
+    padding: 0px;
 }
 
 .sel-ttl-item>div p span {
@@ -3605,7 +3610,7 @@ form.uploads-document-form .form-group label.inputfile-label {
 }
 
 .payment-div {
-    padding: 10px 20px;
+    padding: 7px 20px;
     background: #e1e1e1;
     border-radius: 5px;
     margin: 10px 0 0;
@@ -3613,6 +3618,9 @@ form.uploads-document-form .form-group label.inputfile-label {
 
 .payment-div p {
     color: #545454;
+    margin: 0;
+    padding: 2px;
+    font-size:small;
 }
 
 .payment-div figure {
@@ -4089,7 +4097,7 @@ span.date-picker input.form-control {
     display: inline-block;
     vertical-align: middle;
     padding-left: 5px;
-    font-weight: 600;
+    font-weight: 900;
 }
 .my-Orders span.btn {
     padding: 0px 5px;
@@ -4114,6 +4122,30 @@ td.tr-ID {
     word-break: break-word;
     width: 160px;
 }
+
+.uploads-right-main-item.box-sh.card.card-body .uploads-item-right {
+    text-align: right;
+    margin-top: 5px;
+}
+
+.uploads-right-main-item.box-sh.card.card-body .uploads-item-right div {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.uploads-right-main-item.box-sh.card.card-body .review-btn-div button {
+    font-size: 15px;
+    margin-bottom: 0;
+}
+.review-btn-div button {
+    background: #2c2f8c;
+    color: #fff;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+.uploads-right-main-item.box-sh.card.card-body .downloas-item-btn {
+    margin: 0;
+}
 /* .text_area {
     display: flex;
     border: 1px solid rgba(32, 34, 134, 0.7) !important;
@@ -4125,4 +4157,123 @@ td.tr-ID {
     border-radius: 4px;
 } */
 
-/* chatBox css */
+
+  
+
+  
+  *:before, *:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  }
+  
+  .clearfix {
+    clear:both;
+  }
+  
+  .text-center {text-align:center;}
+  
+  a {
+    color: tomato;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    color: #2196f3;
+  }
+  
+  pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  color: #333;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #F5F5F5;
+  border: 1px solid #CCC;
+  border-radius: 4px;
+  }
+  
+ 
+ 
+  
+  .header h2 {
+    font-size:3em;
+    font-weight:300;
+    margin-bottom:0.2em;
+  }
+  
+  .header p {
+    font-size:14px;
+  }
+  
+  
+  
+  #a-footer {
+    margin: 20px 0;
+  }
+  
+  .new-react-version {
+    padding: 20px 20px;
+    border: 1px solid #eee;
+    border-radius: 20px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+    
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  
+  .new-react-version .react-svg-logo {
+    text-align: center;
+    max-width: 60px;
+    margin: 20px auto;
+    margin-top: 0;
+  }
+  
+  
+  
+  
+  
+  .success-box {
+    
+    padding:10px 10px;
+    border:1px solid #eee;
+    background:#f9f9f9;
+  }
+  
+  .success-box img {
+    margin-right:3px;
+    display:inline-block;
+    vertical-align:top;
+  }
+   
+  
+  /* Rating Star Widgets Style */
+  .rating-stars ul {
+    list-style-type:none;
+    padding:0;
+  }
+  .rating-stars ul > li.star {
+    display:inline-block;
+    
+  }
+  
+  /* Idle State of the stars */
+  .rating-stars ul > li.star > i.fa {
+    font-size:2.5em; /* Change the size of the stars */
+    color:#ccc; /* Color on idle state */
+  }
+  
+  /* Hover state of the stars */
+  .rating-stars ul > li.star.hover > i.fa {
+    color:#FFCC36;
+  }
+  
+  /* Selected state of the stars */
+  .rating-stars ul > li.star.selected > i.fa {
+    color:#FF912C;
+  }
+  

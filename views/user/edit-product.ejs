@@ -222,13 +222,23 @@
                                                                                     name="tags" multiple
                                                                                     data-live-search="true"
                                                                                     style="width: 250px;">
-                                                                                    <% for (let tag of tags) { %>
-                                                                                        <option value="<%- tag._id %>">
-                                                                                            <%- tag.name %>
-                                                                                        </option>
-                                                                                        <% } %>
+                                                                                        <% for(let tag of tags) { %>
+                                                                                            <% for(let i =0 ; i < product.tag_id.length ;i++) { %>
+                                                                                            <% if
+                                                                                                (product.tag_id[i]==tag.id
+                                                                                                ) { %>
+                                                                                                <option selected="selected"
+                                                                                                    value="<%-product.tag_id[i] %>">
+                                                                                                    <%- tag.name %>
+                                                                                                </option>
+                                                                                                <% } %>
+                                                                                            <% } %>
+                                                                                            <option
+                                                                                                value="<%- tag.id %>">
+                                                                                                <%- tag.name %>
+                                                                                            </option>
+                                                                                            <% } %>
                                                                                 </select>
-
                                                                                 <input type="button" size="50px"
                                                                                     style="position:absolute; margin-left: 12px; "
                                                                                     class="btn btn-primary"
@@ -872,8 +882,10 @@
             // Check title is valid or not
 
             let title = $('#title').val();
-            if(title = ''){
+            console.log('title' ,title );
+            if(title == ''){
                 $('#title_error').html('This field is required');
+                return false;
             }
             if (title.length > 45) {
                 $('#title_error').html('Title shoud be less than 30 charecter');
@@ -943,12 +955,12 @@
             } else {
                 $("#sample_file_err").html('');
             }
-
             // Check price  is valid or not
 
             let price = $("#price").val();
             console.log('price', price);
-            var numbers = /^(?!^0\.00$)(([1-9][\d]{0,6})|([0]))\.[\d]{2}$/gm
+            // var numbers = /^(?!^0\.00$)(([1-9][\d]{0,6})|([0]))\.[\d]{2}$/gm
+            var numbers = /^(\d{1,5}|\d{0,5}\.\d{1,2})$/gm
             if(price == ''){
                 $("#price_error").html("This field is required");
                 return false;
@@ -989,8 +1001,6 @@
             } else {
                 $("#full_description_error").html("");
             }
-         
-
         });
 
 

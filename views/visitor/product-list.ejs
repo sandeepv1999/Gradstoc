@@ -90,7 +90,7 @@
                                         id="alertmsg">
                                         <strong>No Record Found</strong>
                                     </div>
-                                    <% } %>
+                                    <% } else { %>
                                         <div class="product-page-main">
                                             <div class="product-page-top">
                                                 <% if(bookData.length> 0 ) {%>
@@ -104,12 +104,22 @@
                                             <div class="product-page-items">
                                                 <ul>
                                                     <% for(let book of bookData) { %>
+                                                        <% let avg ,rat, sum = 0; %>
+                                                        <% if( book.reviews.length > 0) { %>
+                                                            <% for(let i = 0; i < book.reviews.length; i++ ) { %>
+                                                            <%  sum  +=  book.reviews[i].rating ;
+                                                                avg  = Math.round(parseFloat(sum/book.reviews.length))%>    
+                                                            <% } %>
+                                                              <% rat = 1 %>      
+                                                            <% } else { %>
+                                                                <% rat = 0 %>
+                                                                <% }  %>
                                                         <li>
                                                             <div class="materials-item">
                                                                 <div class="materials-item-inn card">
                                                                     <div class="materials-item-img card-img">
                                                                         <a
-                                                                            href="/product-detail?productId=<%-book._id%>"><img
+                                                                            href="/product-detail?productId=<%-book._id%>&avg=<%- avg %>"><img
                                                                                 src="uploads/<%- book.image %>"
                                                                                 alt=""></a>
                                                                     </div>
@@ -119,7 +129,7 @@
                                                                                 <%= book.title.length> 15 ?
                                                                                     book.title.substring(0, 15)
                                                                                     +'..':book.title
-                                                                                    %>
+                                                                                %>
                                                                             </a>
                                                                         </div>
                                                                         <div class="materials-rt-ct">
@@ -127,29 +137,58 @@
                                                                                 <div class="materials-price">
                                                                                     <%- book.price %>
                                                                                 </div>
-                                                                                <div class="materials-rt">
-                                                                                    <i class="fas fa-star active"></i>
-                                                                                    <i class="fas fa-star active"></i>
-                                                                                    <i class="fas fa-star active"></i>
-                                                                                    <i class="fas fa-star"></i>
-                                                                                    <i class="fas fa-star"></i>
-                                                                                </div>
+
+                                                                                    <% if(rat == 1) { %>
+                                                                                                <div class="reviews-stars" style="font-size:small;">
+                                                                                                <% for (let x=0 ; x < avg; x++) { %>
+                                                                                                    <i class="fas fa-star" style="color:#FF912C;;"></i>
+                                                                                                    <% } %>
+                                                                                                        <% for (let y=avg ;y < 5;y++) { %>
+                                                                                                            <i class="fas fa-star"></i>
+                                                                                                            <% } %>
+                                                                                            </div>
+                                                                                        <% } else { %>
+                                                                                            <div class="reviews-stars" style="font-size:small;">
+                                                                                                <i class="fas fa-star"></i>
+                                                                                                <i class="fas fa-star"></i>
+                                                                                                <i class="fas fa-star"></i>
+                                                                                                <i class="fas fa-star"></i>
+                                                                                                <i class="fas fa-star"></i>
+                                                                                            </div>
+                                                                                            <% }  %>
                                                                             </div>
                                                                             <div class="materials-cart">
+                                                                                <% let flag = 0 %>
+                                                                                <% for(let i = 0; i< soldProduct.length; i++){ %>
+                                                                                    <% if(book._id.toString() == soldProduct[i].product_id.toString() ) { %>
+                                                                                         <% flag = 1%>        
+                                                                                    <% }  %>
+                                                                                <% } %> 
+
 
                                                                                 <% if(cartItems.length > 0) {  %>
                                                                                         <% if(cartItems.includes(book._id.toString())) { %> 
                                                                                              <a href="/my-cart" ><i
                                                                                         class="fas fa-eye"></i></a>
+                                                                                        <% } else if(flag == 1){ %>          <!-- user allready purchased -->
+                                                                                            <a href="#"
+                                                                                            onclick="addToCart('<%- book._id %>')"><i id="cart"
+                                                                                                class="fas fa-download "></i></a>
                                                                                         <% } else { %>
                                                                                             <a href="#"
                                                                                             onclick="addToCart('<%- book._id %>')"><i id="cart"
                                                                                                 class="fas fa-shopping-cart "></i></a>
-                                                                                        <% } %> 
+                                                                                            <%  } %> 
                                                                                     <% } else { %>
+                                                                                        <% if(flag == 1) { %>
+                                                                                            <a href="#"
+                                                                                            onclick="addToCart('<%- book._id %>')"><i id="cart"
+                                                                                                class="fas fa-download "></i></a>    
+                                                                                            <%  } else { %>
                                                                                         <a href="#"
                                                                                         onclick="addToCart('<%- book._id %>')"><i id="cart"
                                                                                             class="fas fa-shopping-cart "></i></a>
+                                                                                            <% } %>
                                                                                     <% } %>
                                                                             </div>
                                                                         </div>
@@ -165,27 +204,28 @@
                                                     <% for(let i=1; i <=totalPages; i++) { %>
                                                         <% if(i==1) { %>
                                                             <li class="page-item"><a class="page-link"
-                                                                    href="?page=<%- i %>"><i
+                                                                    href="?page=<%- i %>&search=<%- search %>&school=<%- search_school %>&subject=<%- subject %>&price_range=<%- price_range %>&tag=<%- tag %>&type=<%- type %>"><i
                                                                         class="fas fa-chevron-left"></i></a>
                                                             </li>
                                                             <% } %>
                                                                 <li
                                                                     class="page-item <%= (currentPage==i)? 'active': ''; %>">
-                                                                    <a class="page-link " href="?page=<%- i %>">
+                                                                    <a class="page-link" href="?page=<%- i %>&search=<%- search %>&school=<%- search_school %>&subject=<%- subject %>&price_range=<%- price_range %>&tag=<%- tag %>&type=<%- type %>">
                                                                         <%- i %>
                                                                     </a>
                                                                 </li>
                                                                 <% if(i==totalPages) { %>
 
                                                                     <li class="page-item"><a class="page-link"
-                                                                            href="?page=<%- totalPages %>">
+                                                                            href="?page=<%- totalPages %>&search=<%- search %>&school=<%- search_school %>&subject=<%- subject %>&price_range=<%- price_range %>&tag=<%- tag %>&type=<%- type %>">
                                                                             <i class="fas fa-chevron-right"></i></a>
                                                                     </li>
                                                                     <% } %>
-                                                                        <% } %>
+                                                                <% } %>
                                                 </ul>
                                             </div>
                                         </div>
+                                    <% } %>
                             </div>
                         </div>
                     </div>

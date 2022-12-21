@@ -43,7 +43,9 @@
                             <div class="row">
                               <div class="col-md-2">
                                 <div class="uploads-item-img">
+                                  <a href="/product-detail?productId=<%- product._id%>">
                                   <img src="uploads/<%- product.image %>" alt="">
+                                </a>
                                 </div>
                               </div>
                               <div class="col-md-8">
@@ -310,7 +312,7 @@
                   <input type="hidden" name="isUseWallet" id="isUseWallet" value="" />
                   <input type="hidden" name="wallet_amt" id="wallet_amt" value="" />
                   <input type="hidden" name="wallet_discount" id="wallet_dis" value="" />
-                  <div class="text text-center">
+                  <div class="text text-center" onclick="hidePopup()">
                     <script src="//checkout.stripe.com/v2/checkout.js" class="stripe-button "
                       data-key="pk_test_51LckTfSJDATToRSRZ5F0G1XIaOIs0ISClv7VN4ki5wMWttUE1edmKfNbTSJm27FUhU40FjZQoYUFOSXqTz6ZE4mX00NMsrRRRc"
                       data-currency="inr" data-name="<%- userData.firstName + ' '+userData.lastName  %>"
@@ -353,6 +355,13 @@
 
     <script>
 
+
+  function hidePopup(){
+    console.log('executeedd')
+    $('#stripe_modal').modal('hide');
+    
+   
+  }
       var use_wallet = false;
       var wallet_amt = parseFloat($('#wallet_amount').text()).toFixed(2);
       var wallet_discount = 0;

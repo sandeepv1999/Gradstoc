@@ -956,12 +956,12 @@
                     $("#sample_file_err").html('');
                 }
             }
-
             // Check price  is valid or not
 
             let price = $("#price").val();
             console.log('price', price);
-            var numbers = /^(?!^0\.00$)(([1-9][\d]{0,6})|([0]))\.[\d]{2}$/gm
+            // var numbers = /^(?!^0\.00$)(([1-9][\d]{0,6})|([0]))\.[\d]{2}$/gm
+            var numbers = /^(\d{1,5}|\d{0,5}\.\d{1,2})$/gm
             if (price == "") {
                 $("#price_error").html("Please enter an amount");
                 return false;
@@ -971,7 +971,6 @@
             } else {
                 $("#price_error").html("");
             }
-
             // Check subject is valid or not
 
             let tags = $("#tags").val();
