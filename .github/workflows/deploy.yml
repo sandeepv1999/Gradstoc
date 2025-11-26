@@ -10,37 +10,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Add SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+      - name: Add SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
-    - name: Deploy to EC2
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-          # Load nvm
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-          # Use Node.js 18 (install if missing)
-          nvm use 18 || nvm install 18
+            nvm use 18 || nvm install 18
 
-          # Install PM2 globally if not installed
-          npm list -g pm2 || npm install -g pm2
+            if ! command -v pm2 > /dev/null; then
+              npm install -g pm2
+            fi
 
-          # Deploy app
-          mkdir -p $APP_DIR
-          cd $APP_DIR
-          git init
-          git remote add origin https://github.com/${{ github.repository }}.git || true
-          git fetch origin
-          git reset --hard origin/main
-          npm install
+            mkdir -p $APP_DIR
+            cd $APP_DIR
+            git init
+            git remote add origin https://github.com/${{ github.repository }}.git || true
+            git fetch origin
+            git reset --hard origin/main
+            npm install
 
-          # Start or restart app with environment variables
-          pm2 restart all || pm2 start app.js --name "gradstoc" --env production --update-env
-EOF
+            pm2 restart all || pm2 start app.js --name "gradstoc" --env production --update-env
+          '
