@@ -1,137 +1,178 @@
 <%- include('../header') %>
 
-<body class="home">
-  <div class="main-wrapper">
-    <section class="section-middle">
-      <div class="page-title">
-        <div class="container">
-          <div class="page-title-in">
-            <h2>Tutor My Bookmarks</h2> 
+  <body class="home">
+    <div class="main-wrapper">
+      <section class="section-middle">
+        <div class="page-title">
+          <div class="container">
+            <div class="page-title-in">
+              <h2>Tutor My Bookmarks</h2>
+            </div>
           </div>
-        </div>
-      </div><!-- page-title -->
+        </div><!-- page-title -->
 
-      <div class="dashboard-content">
-        <div class="container">
-          <div class="row">
-            <%- include('sidebar') %>
-          
-            <div class="col-md-9">
-              <div class="uploads-right-area">
-                 <div class="uploads-right-top">
-                     <div class="row">
-                      <div class="col-md-9">
-                        <form method="get" action="/my-uploaded-products" id="search_book">
+        <div class="dashboard-content">
+          <div class="container">
+            <div class="row">
+              <%- include('sidebar') %>
+
+                <div class="col-md-9">
+                  <div class="uploads-right-area">
+                    <div class="uploads-right-top">
+                      <div class="row">
+                        <div class="col-md-9">
+                          <form method="get" action="/my-uploaded-products" id="search_book">
                             <div class="uploads-top-left">
-                                <span class="date-picker">
-                                    <input type="date" class="form-control" id="start_date"
-                                        name="start_date" value="" />
-                                </span>
-                                <span class="date-picker">
-                                    <input type="date" class="form-control" id="end_date"
-                                        name="end_date" value="" />
-                                    <input type="hidden" class="form-control" id="type"
-                                        name="type" value="" />
-                                </span>
-                                <span class="select-picker">
-                                    <select class="form-control" id="search_school"
-                                        name="search_school">
-                                        <option value="" selected="">Select school</option>
-                                            <option value="">
-                                            </option>
-                                    </select>
-                                </span>
-                                <span>
-                                    <button type="submit" class="btn">Search</button>
-                                </span>
+                              <span class="date-picker">
+                                <input type="date" class="form-control" id="start_date" name="start_date" value="" />
+                              </span>
+                              <span class="date-picker">
+                                <input type="date" class="form-control" id="end_date" name="end_date" value="" />
+                              </span>
+                              <span class="select-picker">
+                                <select class="form-control" id="search_school" name="search_school">
+                                  <option value="" selected="">Select school</option>
+                                  <% for(let key of schoolData) { %>
+                                    <option value="<%- key._id%>">
+                                      <%- key.name %>
+                                    </option>
+                                    <% } %>
+                                </select>
+                              </span>
+                              <span>
+                                <button type="submit" class="btn">Search</button>
+                              </span>
                             </div>
 
                             <span id="search_school_err" style="color:red ;"></span>
                             <span id="start_date_err" style="color:red ;"></span>
                             <span id="end_date_err" style="color:red ;"></span>
-                        </form>
-                    </div>
-                         <div class="col-md-3">
-                            <div class="uploads-top-right">
-                              <button class="btn">Continue Shopping</button>
-                            </div>
-                         </div>
-                     </div>
-                 </div>
-                 <div class="uploads-right-main">
-                    <div class="uploads-right-main-top">
-                      <div class="row">
-                        <div class="col-md-5">
-                          <div class="up-ct">Uploads : 1-3 of 15</div>
+                          </form>
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-md-3">
+                          <div class="uploads-top-right">
+                            <button class="btn">Continue Shopping</button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div class="uploads-right-main-items">
-                        <div class="uploads-right-main-item box-sh card card-body">
-                          <div class="row">
-                            <div class="col-md-2">
-                              <div class="uploads-item-img">
-                                <img src="images/businessTextbook.jpg" alt="" />
-                              </div>
-                            </div>
-                            <div class="col-md-7">
-                              <div class="uploads-item-cont">
-                                <div class="uploads-item-title">NR 507 FINAL EXAM(3 DIFFERENT VERSIONS) PLUS STUDY GUIDES</div>
-                                <div class="uploads-item-dtls">
-                                  <div class="uploads-item-dtls-left">
-                                    <div class="uploads-item-price">$ <span>149.00</span></div>
-                                    <div class="uploads-item-author">
-                                        <p><a href="#">Author Name</a></p>
-                                    </div>
-                                    <div class="reviews-stars">
-                                        <i class="fas fa-star active"></i>
-                                        <i class="fas fa-star active"></i>
-                                        <i class="fas fa-star active"></i>
-                                        <i class="fas fa-star active"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-md-3">
-                              <div class="uploads-item-right">
-                                <div class="subject-delete">
-                                    <a href="#" class="btn"><i class="far fa-trash-alt"></i></a>
-                                </div>
-                                <div class="add-item-btn btnt">
-                                    <a href="#" class="btn"><span>Add to card</span> <i class="fas fa-shopping-cart"></i></a>
-                                </div>
-                              </div>
-                            </div>
+                    <div class="uploads-right-main">
+                      <div class="uploads-right-main-top">
+                        <div class="row">
+                          <div class="col-md-5">
+                            <div class="up-ct">Uploads : 1-3 of 15</div>
+                          </div>
+                          <div class="col-md-7">
                           </div>
                         </div>
+                      </div>
+                      <% if(bookmarkData.length==0 ) {%>
+                        <div class="alert alert-danger" style="padding: 12px;" align="center" id="alertmsg">
+                          <strong>No Record Found</strong>
+                        </div>
+                        <% } else { %>
+                          <% for (let product of bookmarkData) { %>
+                            <% let avg ,rat, sum=0; %>
+                              <% if( product.reviews.length> 0) { %>
+                                <% for(let i=0; i < product.reviews.length; i++ ) { %>
+                                  <% sum +=product.reviews[i].rating ;
+                                    avg=Math.round(parseFloat(sum/product.reviews.length))%>
+                                    <% } %>
+                                      <% rat=1 %>
+                                        <% } else { %>
+                                          <% rat=0; %>
+                                            <% } %>
+                                              <div class="uploads-right-main-items">
+                                                <div class="uploads-right-main-item box-sh card card-body">
+                                                  <div class="row">
+                                                    <div class="col-md-2">
+                                                      <div class="uploads-item-img">
+                                                        <a href="/product-detail?productId=<%- product.products[0]._id %>"> 
+                                                        <img src="/uploads/<%- product.products[0].image %>" alt="" />
+                                                      </a>
+                                                      </div>
+                                                    </div>
+                                                    <a href="/product-detail?productId=<%- product.products[0]._id %>">
+                                                    <div class="col-md-7">
+                                                      <div class="uploads-item-cont">
+                                                        <div class="uploads-item-title"><%- product.products[0].title %>
+                                                        </div>
+                                                        <div class="uploads-item-dtls">
+                                                          <div class="uploads-item-dtls-left">
+                                                            <div class="uploads-item-price">$<span><%-
+                                                                  product.products[0].price %></span></div>
+                                                            <div class="uploads-item-author">
+                                                              <p><a href="/author?userId=<%- product.products[0].user_id %>">Author </a></p>
+                                                            </div>
+                                                            <% if(rat==1) { %>
+                                                              <div class="reviews-stars" style="font-size:small;">
+                                                                <% for (let x=0 ; x < avg; x++) { %>
+                                                                  <i class="fas fa-star" style="color:#FF912C;;"></i>
+                                                                  <% } %>
+                                                                    <% for (let y=avg ;y < 5;y++) { %>
+                                                                      <i class="fas fa-star"></i>
+                                                                      <% } %>
+                                                              </div>
+                                                              <% } else { %>
+                                                                <div class="reviews-stars" style="font-size:small;">
+                                                                  <i class="fas fa-star"></i>
+                                                                  <i class="fas fa-star"></i>
+                                                                  <i class="fas fa-star"></i>
+                                                                  <i class="fas fa-star"></i>
+                                                                  <i class="fas fa-star"></i>
+                                                                </div>
+                                                                <% } %>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </a>
+                                                    <div class="col-md-3">
+                                                      <div class="uploads-item-right">
+                                                        <div class="subject-delete">
+                                                          <a href="#" class="btn"><i class="far fa-trash-alt"></i></a>
+                                                        </div>
+                                                        <div class="add-item-btn btnt">
+                                                          <a href="#" class="btn"><span>Add to card</span> <i
+                                                              class="fas fa-shopping-cart"></i></a>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+
+                                                  </div>
+                                                </div>
+
+                                              </div>
+
+                                              <% } %>
+                                                <% } %>
+                                                  <div class="item-pagination">
+                                                    <ul class="pagination">
+                                                      <li class="page-item"><a class="page-link" href="#"><i
+                                                            class="fas fa-chevron-left"></i></a>
+                                                      </li>
+                                                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                                      <li class="page-item"><a class="page-link" href="#"><i
+                                                            class="fas fa-chevron-right"></i></a>
+                                                      </li>
+                                                    </ul>
+                                                  </div>
                     </div>
-                    <div class="item-pagination">
-                      <ul class="pagination">
-                        <li class="page-item"><a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a></li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a></li>
-                      </ul>
-                    </div>
-                 </div>
-              </div>
-            </div><!--col-md-9-->
+                  </div>
+                </div><!--col-md-9-->
 
-          </div><!--row-->
-        </div><!--container-->
-      </div><!--dashboard-content-->
-    </section>
-   
-    <%- include('../popup') %>
+            </div><!--row-->
+          </div><!--container-->
+        </div><!--dashboard-content-->
+      </section>
 
-  </div>
+      <%- include('../popup') %>
 
-  <%- include('../footer') %>
+    </div>
 
-  <script src="js/index.js" type="text/jscript"></script>
-</body>
+    <%- include('../footer') %>
+
+      <script src="js/index.js" type="text/jscript"></script>
+  </body>

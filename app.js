@@ -7,6 +7,7 @@ const mongoConnection = require('./dbConnection/connection');
 const flash = require('express-flash-messages');
 const session = require('express-session')
 const cookieParser = require('cookie-parser');
+const checkUser = require('./middleware/CheckUser');
 
 
 mongoConnection();
@@ -44,6 +45,10 @@ require('./config/passport-facebook');
 // calling other router
 
 app.use('/' , mainRouter);
+
+app.get('*' ,checkUser.isValidUser,  (req , res)=>{
+    res.send('hello');
+})
 
 // For server starting
 

@@ -14,6 +14,7 @@ const Wallet_transaction = require('../../model/wallet_transaction');
 const Order = require('../../model/order');
 const OrderDetails = require('../../model/orderDetail');
 const Review = require('../../model/review');
+const School = require('../../model/school');
 
 
 class UserController {
@@ -334,41 +335,85 @@ class UserController {
     myBookmark = async (req, res) => {
         try {
             let isUserLoggedIn = false;
-            let userData = ''
+            let page = 1;
+            if (req.query && req.query.page) {
+                page = req.query.page;
+            }
+            let limit = 3
+            let skip = (page - 1) * limit;
             let whereClause = [];
+            let userData, loginId;
+            let start_date , end_date;
             if (req.session.isCustomerLoggedIn) {
                 isUserLoggedIn = true;
-                let loginId = req.session.isCustomerLoggedIn;
+                loginId = req.session.isCustomerLoggedIn;
                 loginId = mongoose.Types.ObjectId(loginId);
                 userData = await User.findOne({ _id: loginId });
                 whereClause.push({ user_id: loginId });
             }
-            // var schoolData = await School.find({});
-            // if (req.query.start_date !== "" && req.query.end_date !== "" &&
-            //     req.query.end_date != undefined && req.query.end_date != " undefined" &&
-            //     req.query.start_date != undefined && req.query.start_date != "undefined") {
-            //     start_date = req.query.start_date;
-            //     end_date = req.query.end_date;
-            //     var obj = {
-            //         createdAt: {
-            //             $gte: new Date(`${start_date}T00:00:00.00Z`),
-            //             $lte: new Date(`${end_date}T00:00:00.00Z`),
-            //         },
-            //     };
-            //     whereClause.push(obj);
-            // }
-            // if (req.query.search_school && req.query.search_school !== '') {
-            //     search_school = req.query.search_school;
-            //     var scl_id = mongoose.Types.ObjectId(search_school);
-            //     whereClause.push({ scl_id: scl_id })
-            // }
-            // let productCount = await Product.count({ $and: whereClause });
-
+            var schoolData = await School.find({});
+            if (req.query.start_date !== "" && req.query.end_date !== "" &&
+                req.query.end_date != undefined && req.query.end_date != " undefined" &&
+                req.query.start_date != undefined && req.query.start_date != "undefined") {
+                start_date = req.query.start_date;
+                end_date = req.query.end_date;
+                var obj = {
+                    createdAt: {
+                        $gte: new Date(`${start_date}T00:00:00.00Z`),
+                        $lte: new Date(`${end_date}T00:00:00.00Z`),
+                    },
+                };
+                whereClause.push(obj);
+            }
+            if (req.query.search_school && req.query.search_school !== '') {
+                search_school = req.query.search_school;
+                var scl_id = mongoose.Types.ObjectId(search_school);
+                whereClause.push({ scl_id: scl_id })
+            }
+            let productCount = await Bookmark.count({ $and: whereClause });
+            let bookmarkData = await Bookmark.aggregate([
+                {
+                    $match: {
+                        $and: whereClause
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'products',
+                        let: { productId: '$product_id' },
+                        pipeline: [
+                            { $match: { $expr: { $eq: ['$_id', '$$productId'] } } },
+                        ],
+                        as: 'products'
+                    },
+                },
+                // {
+                //     $lookup: {
+                //         from: 'users',
+                //         let: { userId: '$products.user_id' },
+                //         pipeline: [
+                //             { $match: { $expr: { $eq: ['$$userId', '$_id'] } } },
+                //         ],
+                //         as: 'user'
+                //     },
+                // },
+                {
+                    $lookup: {
+                        from: 'reviews',
+                        let: { proId: '$product_id' },
+                        pipeline: [
+                            { $match: { $expr: { $eq: ['$product_id', '$$proId'] } } },
+                            { $project : {'rating':1 , '_id':0 } }
+                        ],
+                        as: 'reviews'
+                    },
+                },
+            ]).limit(limit).skip(skip);
             let data = {
                 status: "",
                 message: "",
-                isUserLoggedIn,
-                userData
+                isUserLoggedIn,bookmarkData,
+                userData,schoolData
             }
             if (req.session.status && req.session.message) {
                 data.status = req.session.status;
