@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: CI/CD Deployment
 
 on:
   push:
@@ -10,57 +10,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Setup SSH Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2key
-          chmod 600 ~/.ssh/ec2key
+    - name: Add SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
 
-      - name: Test SSH Connection
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/ec2key \
-            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo 'SSH Connected!'"
+    - name: Deploy to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-      - name: Deploy to EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/ec2key \
-            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          nvm use 18 || nvm install 18
 
-              export NVM_DIR="$HOME/.nvm"
-              [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+          if ! command -v pm2 > /dev/null; then
+            npm install -g pm2
+          fi
 
-              # Use Node 18
-              nvm install 18
-              nvm use 18
+          if [ ! -d "$APP_DIR" ]; then
+            mkdir -p $APP_DIR
+          fi
 
-              APP_DIR="/home/ubuntu/gradstoc"
+          cd $APP_DIR
 
-              # Create folder if not exists
-              mkdir -p $APP_DIR
-              cd $APP_DIR
+          if [ -d ".git" ]; then
+            echo "⬇ Pulling latest changes"
+            git pull origin main
+          else
+            echo "⬇ Cloning repository first time"
+            git clone ${{ secrets.REPO_URL }} .
+          fi
 
-              if [ -d ".git" ]; then
-                echo "🔄 Repo exists — pulling latest changes"
-                git fetch origin
-                git reset --hard origin/main
-              else
-                echo "⬇ Cloning repository first time"
-                git clone https://github.com/${GITHUB_REPOSITORY}.git .
-              fi
+          echo "📦 Installing dependencies..."
+          npm install
 
-              echo "📦 Installing dependencies..."
-              npm install --force
-
-              echo "🚀 Restarting PM2"
-              if pm2 list | grep -q "gradstoc"; then
-                pm2 restart gradstoc --update-env
-              else
-                pm2 start app.js --name "gradstoc"
-              fi
-
-              pm2 save
-
-          EOF
+          echo "🚀 Restarting PM2"
+          pm2 restart gradstoc || pm2 start app.js --name "gradstoc"
+        '
