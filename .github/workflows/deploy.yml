@@ -3,63 +3,73 @@ name: CI/CD Deployment
 on:
   push:
     branches:
-      - main  # Deploys on push to main
+      - main  # Deploy on push to main
 
 jobs:
+  # 1️⃣ Checkout code job
+  checkout:
+    runs-on: ubuntu-latest
+    outputs:
+      repo-path: ${{ steps.checkout.outputs.repository }}
+    steps:
+      - name: Checkout repository
+        id: checkout
+        uses: actions/checkout@v3
+
+  # 2️⃣ Add SSH key job
+  add-ssh-key:
+    runs-on: ubuntu-latest
+    needs: checkout
+    steps:
+      - name: Add SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+  # 3️⃣ Deploy job
   deploy:
     runs-on: ubuntu-latest
-
+    needs: add-ssh-key
+    env:
+      APP_DIR: ${{ secrets.APP_DIR }}  # e.g., /home/ubuntu/projects/Gradstoc
     steps:
-    # 1️⃣ Checkout repository
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
+            # Load NVM
+            export NVM_DIR=\"\$HOME/.nvm\"
+            [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\"
 
-    # 2️⃣ Add SSH private key
-    - name: Add SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+            # Use Node.js 18 or install if missing
+            nvm use 18 || nvm install 18
 
-    # 3️⃣ Deploy to EC2
-    - name: Deploy to EC2
-      env:
-        APP_DIR: ${{ secrets.APP_DIR }}       # e.g., /home/ubuntu/projects/Gradstoc
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
-          # Load NVM
-          export NVM_DIR=\"\$HOME/.nvm\"
-          [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\"
+            # Install PM2 globally if not installed
+            if ! command -v pm2 > /dev/null; then npm install -g pm2; fi
 
-          # Use Node.js 18 or install if missing
-          nvm use 18 || nvm install 18
+            # Ensure app directory exists
+            mkdir -p $APP_DIR
+            cd $APP_DIR
 
-          # Install PM2 globally if not installed
-          if ! command -v pm2 > /dev/null; then npm install -g pm2; fi
+            # Pull latest code from SSH origin
+            if [ -d \".git\" ]; then
+              git fetch origin
+              git reset --hard origin/main
+            else
+              git clone git@github.com:sandeepv1999/Gradstoc.git .
+            fi
 
-          # Ensure app directory exists
-          mkdir -p $APP_DIR
-          cd $APP_DIR
+            # Install dependencies
+            npm install
 
-          # Pull latest code from SSH origin
-          if [ -d \".git\" ]; then
-            git fetch origin
-            git reset --hard origin/main
-          else
-            git clone git@github.com:sandeepv1999/Gradstoc.git .
-          fi
+            # Build frontend if React/Vite project exists
+            if [ -f package.json ] && grep -q 'build' package.json; then
+              npm run build
+            fi
 
-          # Install dependencies
-          npm install
+            # Restart PM2 app
+            pm2 restart all || pm2 start app.js --name \"gradstoc\" --update-env
 
-          # Build frontend if React/Vite project exists
-          if [ -f package.json ] && grep -q 'build' package.json; then
-            npm run build
-          fi
-
-          # Restart PM2 app
-          pm2 restart all || pm2 start app.js --name \"gradstoc\" --update-env
-
-          # Save PM2 process list for restart on reboot
-          pm2 save
-        "
+            # Save PM2 process list
+            pm2 save
+          "
