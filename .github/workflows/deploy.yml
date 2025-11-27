@@ -3,51 +3,63 @@ name: CI/CD Deployment
 on:
   push:
     branches:
-      - main
+      - main  # Deploys on push to main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+    # 1️⃣ Checkout repository
     - name: Checkout code
       uses: actions/checkout@v3
 
+    # 2️⃣ Add SSH private key
     - name: Add SSH key
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
 
+    # 3️⃣ Deploy to EC2
     - name: Deploy to EC2
+      env:
+        APP_DIR: ${{ secrets.APP_DIR }}       # e.g., /home/ubuntu/projects/Gradstoc
       run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
+          # Load NVM
+          export NVM_DIR=\"\$HOME/.nvm\"
+          [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\"
 
+          # Use Node.js 18 or install if missing
           nvm use 18 || nvm install 18
 
-          if ! command -v pm2 > /dev/null; then
-            npm install -g pm2
-          fi
+          # Install PM2 globally if not installed
+          if ! command -v pm2 > /dev/null; then npm install -g pm2; fi
 
-          if [ ! -d "$APP_DIR" ]; then
-            mkdir -p $APP_DIR
-          fi
-
+          # Ensure app directory exists
+          mkdir -p $APP_DIR
           cd $APP_DIR
 
-          if [ -d ".git" ]; then
-            echo "⬇ Pulling latest changes"
-            git pull origin main
+          # Pull latest code from SSH origin
+          if [ -d \".git\" ]; then
+            git fetch origin
+            git reset --hard origin/main
           else
-            echo "⬇ Cloning repository first time"
-            git clone ${{ secrets.REPO_URL }} .
+            git clone git@github.com:sandeepv1999/Gradstoc.git .
           fi
 
-          echo "📦 Installing dependencies..."
+          # Install dependencies
           npm install
 
-          echo "🚀 Restarting PM2"
-          pm2 restart gradstoc || pm2 start app.js --name "gradstoc"
-        '
+          # Build frontend if React/Vite project exists
+          if [ -f package.json ] && grep -q 'build' package.json; then
+            npm run build
+          fi
+
+          # Restart PM2 app
+          pm2 restart all || pm2 start app.js --name \"gradstoc\" --update-env
+
+          # Save PM2 process list for restart on reboot
+          pm2 save
+        "
