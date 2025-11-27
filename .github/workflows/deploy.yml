@@ -6,34 +6,23 @@ on:
       - main  # Deploy on push to main
 
 jobs:
-  # 1️⃣ Checkout code job
-  checkout:
+  deploy:
     runs-on: ubuntu-latest
-    outputs:
-      repo-path: ${{ steps.checkout.outputs.repository }}
+    env:
+      APP_DIR: ${{ secrets.APP_DIR }}  # e.g., /home/ubuntu/projects/Gradstoc
     steps:
-      - name: Checkout repository
-        id: checkout
+      # 1️⃣ Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-  # 2️⃣ Add SSH key job
-  add-ssh-key:
-    runs-on: ubuntu-latest
-    needs: checkout
-    steps:
+      # 2️⃣ Add SSH key
       - name: Add SSH key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-  # 3️⃣ Deploy job
-  deploy:
-    runs-on: ubuntu-latest
-    needs: add-ssh-key
-    env:
-      APP_DIR: ${{ secrets.APP_DIR }}  # e.g., /home/ubuntu/projects/Gradstoc
-    steps:
+      # 3️⃣ Deploy to EC2
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
